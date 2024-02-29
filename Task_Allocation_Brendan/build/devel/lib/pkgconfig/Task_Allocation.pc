@@ -1,0 +1,8 @@
+prefix=/home/liam/git/Turtlebot_Warehouse/Task_Allocation_Brendan/build/devel
+
+Name: Task_Allocation
+Description: Description of Task_Allocation
+Version: 0.0.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
