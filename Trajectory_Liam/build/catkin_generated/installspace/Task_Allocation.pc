@@ -1,8 +1,0 @@
-prefix=/usr/local
-
-Name: Task_Allocation
-Description: Description of Task_Allocation
-Version: 0.0.1
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

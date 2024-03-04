@@ -1,0 +1,8 @@
+prefix=/home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build/devel
+
+Name: trajectory_liam
+Description: Description of trajectory_liam
+Version: 0.0.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
