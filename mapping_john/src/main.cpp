@@ -1,9 +1,9 @@
 
 #include "ros/ros.h"
 #include "method.h"
-#include "BoundaryDetection.h"
-#include "ErrorCalc.h"
-#include "TagRecog.h"
+#include "boundarydetection.h"
+#include "errorcalc.h"
+#include "tagrecog.h"
 #include <thread>
 
 
