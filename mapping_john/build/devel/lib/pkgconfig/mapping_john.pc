@@ -1,0 +1,8 @@
+prefix=/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/devel
+
+Name: mapping_john
+Description: Description of mapping_john
+Version: 0.0.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
