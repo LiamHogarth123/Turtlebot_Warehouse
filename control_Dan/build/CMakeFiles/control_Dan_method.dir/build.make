@@ -147,6 +147,7 @@ devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libboost_fil
 devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libboost_program_options.so
 devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libboost_system.so
 devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libtinyxml2.so
+devel/lib/control_Dan/control_Dan_method: devel/lib/libcontrol_Dan_control.so
 devel/lib/control_Dan/control_Dan_method: CMakeFiles/control_Dan_method.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable devel/lib/control_Dan/control_Dan_method"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/control_Dan_method.dir/link.txt --verbose=$(VERBOSE)

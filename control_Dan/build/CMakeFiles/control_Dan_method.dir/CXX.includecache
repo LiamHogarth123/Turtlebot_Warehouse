@@ -6,6 +6,16 @@
 
 #IncludeRegexTransform: 
 
+/home/dan/git/Turtlebot_Warehouse/control_Dan/src/control.h
+math.h
+-
+geometry_msgs/Point.h
+-
+geometry_msgs/Twist.h
+-
+nav_msgs/Odometry.h
+-
+
 /home/dan/git/Turtlebot_Warehouse/control_Dan/src/main.cpp
 ros/ros.h
 /home/dan/git/Turtlebot_Warehouse/control_Dan/src/ros/ros.h
@@ -29,6 +39,8 @@ time.h
 -
 nav_msgs/Odometry.h
 -
+image_data_struct.h
+-
 ros/ros.h
 /home/dan/git/Turtlebot_Warehouse/control_Dan/src/ros/ros.h
 fstream
@@ -47,6 +59,8 @@ sensor_msgs/LaserScan.h
 -
 sensor_msgs/Image.h
 -
+control.h
+/home/dan/git/Turtlebot_Warehouse/control_Dan/src/control.h
 ros/package.h
 -
 

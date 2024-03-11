@@ -207,6 +207,19 @@ topic_tools_generate_messages_eus/fast:
 .PHONY : topic_tools_generate_messages_eus/fast
 
 #=============================================================================
+# Target rules for targets named control_Dan_control
+
+# Build rule for target.
+control_Dan_control: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 control_Dan_control
+.PHONY : control_Dan_control
+
+# fast build rule for target.
+control_Dan_control/fast:
+	$(MAKE) -f CMakeFiles/control_Dan_control.dir/build.make CMakeFiles/control_Dan_control.dir/build
+.PHONY : control_Dan_control/fast
+
+#=============================================================================
 # Target rules for targets named std_srvs_generate_messages_py
 
 # Build rule for target.
@@ -882,6 +895,33 @@ gtest/fast:
 	$(MAKE) -f gtest/googlemock/gtest/CMakeFiles/gtest.dir/build.make gtest/googlemock/gtest/CMakeFiles/gtest.dir/build
 .PHONY : gtest/fast
 
+src/control.o: src/control.cpp.o
+
+.PHONY : src/control.o
+
+# target to build an object file
+src/control.cpp.o:
+	$(MAKE) -f CMakeFiles/control_Dan_control.dir/build.make CMakeFiles/control_Dan_control.dir/src/control.cpp.o
+.PHONY : src/control.cpp.o
+
+src/control.i: src/control.cpp.i
+
+.PHONY : src/control.i
+
+# target to preprocess a source file
+src/control.cpp.i:
+	$(MAKE) -f CMakeFiles/control_Dan_control.dir/build.make CMakeFiles/control_Dan_control.dir/src/control.cpp.i
+.PHONY : src/control.cpp.i
+
+src/control.s: src/control.cpp.s
+
+.PHONY : src/control.s
+
+# target to generate assembly for a file
+src/control.cpp.s:
+	$(MAKE) -f CMakeFiles/control_Dan_control.dir/build.make CMakeFiles/control_Dan_control.dir/src/control.cpp.s
+.PHONY : src/control.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -948,6 +988,7 @@ help:
 	@echo "... topic_tools_generate_messages_py"
 	@echo "... topic_tools_generate_messages_nodejs"
 	@echo "... topic_tools_generate_messages_eus"
+	@echo "... control_Dan_control"
 	@echo "... std_srvs_generate_messages_py"
 	@echo "... std_srvs_generate_messages_nodejs"
 	@echo "... topic_tools_generate_messages_lisp"
@@ -1004,6 +1045,9 @@ help:
 	@echo "... gmock"
 	@echo "... gtest_main"
 	@echo "... gtest"
+	@echo "... src/control.o"
+	@echo "... src/control.i"
+	@echo "... src/control.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

@@ -289,6 +289,9 @@ control_Dan_BINARY_DIR:STATIC=/home/dan/git/Turtlebot_Warehouse/control_Dan/buil
 //Value Computed by CMake
 control_Dan_SOURCE_DIR:STATIC=/home/dan/git/Turtlebot_Warehouse/control_Dan
 
+//Dependencies for target
+control_Dan_control_LIB_DEPENDS:STATIC=
+
 //The directory containing a CMake configuration file for cpp_common.
 cpp_common_DIR:PATH=/opt/ros/melodic/share/cpp_common/cmake
 

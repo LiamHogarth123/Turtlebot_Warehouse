@@ -27,8 +27,11 @@ include_directories(
   ${EIGEN3_INCLUDE_DIR}
 )
 
+## Declare a C++ library
+add_library(${PROJECT_NAME}_control src/control.cpp)
+
 add_executable(${PROJECT_NAME}_method src/main.cpp src/method.cpp)
 
 add_dependencies(${PROJECT_NAME}_method ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-target_link_libraries(${PROJECT_NAME}_method ${catkin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}_method ${catkin_LIBRARIES} ${PROJECT_NAME}_control)
