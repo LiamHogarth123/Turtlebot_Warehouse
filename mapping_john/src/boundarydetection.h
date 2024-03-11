@@ -5,7 +5,9 @@
 // #include "opencv2/core/core.hpp"
 // #include <opencv2/highgui.hpp>
 // #include "opencv2/highgui.hpp"
-#include <opencv2/highgui.hpp>
+// #include <opencv2/highgui.hpp>
+#include <../highgui.hpp>
+// #include <iostream>
 
 class BoundaryDetection
 {
