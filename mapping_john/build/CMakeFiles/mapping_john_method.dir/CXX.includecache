@@ -9,7 +9,7 @@
 /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/boundarydetection.h
 ros/ros.h
 /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/ros/ros.h
-../highgui.hpp
+opencv2/highgui.hpp
 -
 
 /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/errorcalc.h

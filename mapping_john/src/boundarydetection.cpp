@@ -17,7 +17,7 @@ BoundaryDetection::~BoundaryDetection()
 
 bool BoundaryDetection::detectColour(long image)
 {
-    cv::Mat input = cv::imread("image.jpg",1);
-    // cv::namedWindow("image",cv::setWindowProperty::WND_PROP_AUTOSIZE);
-    cv::imshow("image",input);
+    cv::Mat input = cv::imread("/home/john/Desktop/image.jpg");
+    cv::imshow("Window",input);
+    return 0;
 }
