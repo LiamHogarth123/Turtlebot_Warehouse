@@ -7,8 +7,6 @@
 #IncludeRegexTransform: 
 
 /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/boundarydetection.h
-ros/ros.h
-/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/ros/ros.h
 opencv2/highgui.hpp
 -
 

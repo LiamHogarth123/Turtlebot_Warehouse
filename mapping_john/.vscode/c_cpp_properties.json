@@ -10,8 +10,8 @@
                 "/opt/ros/noetic/include",
                 "/home/john/catkin_ws/src/usb_cam/include/**",
                 "/usr/include/**",
-                "/usr/local/**",
-                "/home/john/opencv/**"
+                "/usr/local/**"
+                // "/home/john/opencv/**"
                 // "/usr/local/opencv-4.x/**",
                 // "/usr/local/opencv-4.x/modules/highgui/include/opencv2/**",
                 // "/home/john/Desktop/**",
@@ -30,8 +30,8 @@
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",
             "compilerPath": "/usr/bin/gcc",
-            // "cStandard": "c17",
-            "cStandard": "gnull",
+            "cStandard": "c17",
+            // "cStandard": "gnull",
             // "cppStandard": "gnu++14",
             "cppStandard": "c++14"
             
