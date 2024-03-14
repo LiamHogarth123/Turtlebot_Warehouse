@@ -67,8 +67,8 @@ set(trajectory_liam_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(trajectory_liam_SOURCE_PREFIX /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam)
-  set(trajectory_liam_DEVEL_PREFIX /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build/devel)
+  set(trajectory_liam_SOURCE_PREFIX /home/liam/git/Turtlebot_Warehouse/trajectory_liam)
+  set(trajectory_liam_DEVEL_PREFIX /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/devel)
   set(trajectory_liam_INSTALL_PREFIX "")
   set(trajectory_liam_PREFIX ${trajectory_liam_DEVEL_PREFIX})
 else()

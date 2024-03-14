@@ -20,25 +20,21 @@ class Control
     */
     Control();
 
-    void newGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_Current_Pose );
+    void updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom );
 
     geometry_msgs::Twist reachGoal();
     bool collisionDetection();
 
-    bool goal_hit(nav_msgs::Odometry temp_Current_Pose);
+    bool goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom);
 
-    void change_stopping_distance(double value);
-
-    double calculateAngularVelocity();
-
-    bool goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_Current_Pose);
+    double distanceToGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom);
 
 
 
     //parameters
     private:
-    geometry_msgs::Point Goal;
-    nav_msgs::Odometry Current_Pose;
+    geometry_msgs::Point goal;
+    nav_msgs::Odometry odom;
 
     //Calculation variable declaration
     double DirectDistance;
@@ -48,6 +44,18 @@ class Control
     double default_velocity;
     double distance_from_goal;
 
+    
+    double Kp_;
+    double Ki_;
+    double Kd_;
+    double toleranceDistance;
+
+    double integral_;
+    double prev_error_;
+
+    double targetAngle;
+    double prev_heading_error_;
+    double heading_integral_;
 
 };
 

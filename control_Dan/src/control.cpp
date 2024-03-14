@@ -12,30 +12,22 @@
 */
 
 Control::Control(){
-    default_velocity = 0.1;
+    
     distance_from_goal = 0.5;
+
+    toleranceDistance = 0.3;
+    targetAngle = 0.1;
+    prev_error_ = 0;
+    Kp_ = 1;
+    Ki_ = 1;
+    Kd_ = 1;
 
 }
 
-/**
- * @brief Set a new movement goal and update the current pose.
- *
- * This function updates the movement goal and the current pose with the provided values.
- * It is typically used to set a new goal for a navigation system and update the robot's current pose
- * accordingly.
 
- * @param temp_goal The geometry_msgs::Point representing the new movement goal.
- * @param temp_Current_Pose The nav_msgs::Odometry representing the robot's current pose.
-
- * The function sets the new movement goal (Goal) and updates the robot's current pose (Current_Pose)
- * with the provided values.
-
- * @note This function is crucial for redefining the robot's navigation goal and ensuring that the
- * current pose is in sync with the robot's position and orientation.
- */
-void Control::newGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_Current_Pose){
-    Goal = temp_goal;
-    Current_Pose = temp_Current_Pose;
+void Control::updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom){
+    goal = temp_goal;
+    odom = temp_odom;
 }
 
 /**
@@ -62,12 +54,44 @@ void Control::newGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_Cu
  * robot moves towards its goal with the appropriate velocities and behaviors.
  */
 geometry_msgs::Twist Control::reachGoal(){
-    //do math to calculate the required linear and angular velocity to reach point
-    geometry_msgs::Twist Directions; 
 
+    ///////// Forward control /////////
+    double current_distance = distanceToGoal(goal, odom);
 
+    // Calculate error
+    double error = toleranceDistance - current_distance;
+
+    // Update integral and derivative terms
+    integral_ += error;
+    double derivative = error - prev_error_;
+
+    // Calculate control command
+    double control_command = Kp_ * error + Ki_ * integral_ + Kd_ * derivative;
+
+    ///////// Angular control /////////
     
-    return Directions;
+    double current_heading = 10;
+    double heading_error = targetAngle - current_heading;
+
+    // Update integral and derivative terms for heading error
+    heading_integral_ += heading_error;
+    double heading_derivative = heading_error - prev_heading_error_;
+
+    // Calculate control command for angular velocity
+    double angular_command = Kp_ * heading_error + Ki_ * heading_integral_ + Kd_ * heading_derivative;
+    
+
+    //// Create and publish Twist message for velocity control
+    geometry_msgs::Twist cmd_vel;
+    cmd_vel.linear.x = control_command;
+    cmd_vel.angular.z = angular_command;
+
+    // cmd_vel_pub_.publish(cmd_vel);
+
+    // Update previous error
+    prev_error_ = error;
+    
+    return cmd_vel;
     
 }
 
@@ -100,9 +124,9 @@ bool Control::collisionDetection() {
  * @note This function is useful for checking whether the robot has reached its intended goal, allowing
  * for decision-making in navigation and control systems.
  */
-bool Control::goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_Current_Pose){
-    double delta_x = Goal.x - Current_Pose.pose.pose.position.x;
-    double delta_y = Goal.y - Current_Pose.pose.pose.position.y;
+bool Control::goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom){
+    double delta_x = temp_goal.x - temp_odom.pose.pose.position.x;
+    double delta_y = temp_goal.y - temp_odom.pose.pose.position.y;
     DirectDistance = sqrt(std::pow(delta_x,2) + std::pow(delta_y,2));
     if (DirectDistance <= distance_from_goal) {
         return true;
@@ -110,64 +134,16 @@ bool Control::goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_C
     else{
         return false;
     }
+
+    integral_ = 0; //reset PID integral 
+
 } 
 
+double Control::distanceToGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom){
 
-/**
- * @brief Calculate the angular velocity required to align with the goal direction.
- *
- * This function calculates the angular velocity required to align the robot's orientation with the
- * direction of the goal point. It is essential for controlling the robot's rotation to face the goal.
+    double delta_x = temp_goal.x - temp_odom.pose.pose.position.x;
+    double delta_y = temp_goal.y - temp_odom.pose.pose.position.y;
+    double distance = sqrt(std::pow(delta_x,2) + std::pow(delta_y,2));
 
- * @return The calculated angular velocity (positive for clockwise, negative for counterclockwise).
-
- * The function starts by defining constants for ANGULAR_SPEED (maximum angular velocity) and ANGULAR_DEAD_ZONE
- * (a threshold to prevent wobbling due to small angle changes).
-
- * It extracts the current orientation of the robot from the provided nav_msgs::Odometry, normalizes the quaternion,
- * and calculates the heading direction vector (assumes the robot's heading is along the x-axis).
-
- * The function then calculates the vector from the robot's current position to the goal and determines the angle
- * between the heading direction and the goal vector.
-
- * Based on the calculated angle, the function adjusts the angular velocity:
- * - If the angle is within the ANGULAR_DEAD_ZONE, it returns a zero angular velocity to prevent excessive rotation.
- * - If the angle is positive (indicating a clockwise rotation is needed), it returns a positive ANGULAR_SPEED.
- * - If the angle is negative (indicating a counterclockwise rotation is needed), it returns a negative ANGULAR_SPEED.
-
- * @note This function plays a crucial role in achieving the correct orientation to face the goal during navigation
- * and motion control.
- */
-double Control::calculateAngularVelocity() {
-    double ANGULAR_SPEED = 1;
-    double ANGULAR_DEAD_ZONE = 0.1; // to help prevent wobbling due to angle changes
-
-    tf::Quaternion current_orientation;
-
-    tf::quaternionMsgToTF(Current_Pose.pose.pose.orientation, current_orientation);
-
-    // Normalize the quaternion
-    current_orientation.normalize();
-
-    // Calculate the heading direction vector
-    tf::Vector3 heading_vector(1, 0, 0);  // Assumes the robot's heading direction is along the x-axis
-
-    // Rotate the heading vector to the current orientation
-    heading_vector = tf::quatRotate(current_orientation, heading_vector);
-
-    // Calculate the vector to the goal
-    tf::Vector3 goal_vector(Goal.x - Current_Pose.pose.pose.position.x, Goal.y - Current_Pose.pose.pose.position.y, 0);
-
-    // Calculate the angle between the heading direction and the goal vector
-    double angle = atan2(goal_vector.y(), goal_vector.x()) - atan2(heading_vector.y(), heading_vector.x());
-
-    // Adjust the angular velocity based on the relative angle
-    if (fabs(angle) < ANGULAR_DEAD_ZONE) {
-        return 0.0;
-    } else if (angle > 0) {
-        return ANGULAR_SPEED;
-    } else {
-        return -ANGULAR_SPEED;
-    }
-    
+    return distance;
 }

@@ -29,8 +29,6 @@ Method::Method(ros::NodeHandle nh) :
 
 
 
- GPS.change_stopping_distance(0.5);
- GuiderGPS.change_stopping_distance(0.1);
  goal_index = 0;
 
 // Robot 1 -----------------------------------------------------
@@ -107,12 +105,6 @@ void Method::seperateThread() {
       telop_mode = true;
       break;
       }
-    case 4:{
-      std::cout <<"Super Secret debugging bog" << std::endl;
-      scanData.Newdata(Update_Robot_Image_data());
-      scanData.PrintLaserSpec();
-      break;
-    }
     default:{
     std::cout << "invalid input - therefore using default goals"<< std::endl;
     }
@@ -150,7 +142,7 @@ void Method::seperateThread() {
   }
   else if(telop_mode){
     while (true){
-      followingRobotRun();
+      
       std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
 
@@ -180,7 +172,7 @@ void Method::seperateThread() {
  * one after the other, within a single thread.
  */
 void Method::singleThread() {
-  followingRobotRun();
+ 
   guiderBotMovement();
 }
 
@@ -204,7 +196,7 @@ void Method::singleThread() {
 void Method::multiThread(){  
   std::thread Lead_robot_thread(&Method::guiderBotMovement, this);
   while (true){
-    followingRobotRun();
+    
   }
 }
 
@@ -225,7 +217,7 @@ void Method::multiThread(){
  */
 void Method::followingRobotThread(){
   while(true){
-    followingRobotRun();
+    
   }
 }
 
@@ -274,7 +266,7 @@ void Method::guiderBotMovement(){
    
 
     GuiderGPS.newGoal(guiderGoal, guider_Odom);
-    geometry_msgs::Twist guiderTraj = GuiderGPS.guiderReachGoal();
+    geometry_msgs::Twist guiderTraj = GuiderGPS.reachGoal();
     Send_cmd_tb2(guiderTraj);
     if (GuiderGPS.goal_hit(guiderGoal, guider_Odom)){
       if (goal_index != Leader_goals.size()){
@@ -282,57 +274,6 @@ void Method::guiderBotMovement(){
       }
     }
   }
-}
-
-/**
- * @brief Run the control logic for the following robot.
- *
- * This function is responsible for executing the control logic for the following robot. It includes the following steps:
- * 1. Updates the robot's sensor data by calling 'Newdata' with updated image data obtained from 'Update_Robot_Image_data'.
- * 2. Determines the goal point for the following robot by calling 'findTurtlebot' on the updated sensor data.
- * 3. Sets the goal for the following robot using the determined point.
- * 4. Calculates the trajectory to reach the goal by calling 'reachGoal' on the GPS (Global Positioning System).
- * 5. Sends the calculated trajectory to control the motion of the following robot.
-
- * This function is essential for managing the behavior of the following robot as it tracks the goal, taking into account
- * sensor data and GPS-based navigation.
-
- * @note The control logic executed in this function ensures that the following robot actively pursues the goal
- * and maintains its trajectory accordingly.
- */
-void Method::followingRobotRun(){
-        
-
-  scanData.Newdata(Update_Robot_Image_data());
-
-  
-  if (house){
-    std::vector<geometry_msgs::Point> NewPoints;
-    NewPoints = scanData.findAllLaserPoints();
-    NewPoints = adjustLaserDataVector(NewPoints, Current_Odom);
-
-    goal = motion_dection(current_map, NewPoints);
-    
-    std::cout << "goal golabl" <<std::endl;
-    std::cout << goal.x <<std::endl;
-    std::cout << goal.y <<std::endl;
-    if (goal.x != 0 && goal.y != 0){
-      goal = global_To_local(goal, Current_Odom);
-    }
-    std::cout << "goal local" <<std::endl;
-    std::cout << goal.x <<std::endl;
-    std::cout << goal.y <<std::endl;
-
-
-    current_map = NewPoints;
-  }
-  else {
-    goal = scanData.findTurtlebotworld();
-  }
-
-  GPS.newGoal(goal, Current_Odom);  
-  traj = GPS.reachGoal();
-  Send_cmd_tb1(traj);
 }
 
 
@@ -469,108 +410,6 @@ bool Method::readGoal(bool house) {
     }
 
     return true; 
-}
-
-
-//data Adjustement function
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-/**
- * @brief Adjust laser data coordinates based on robot orientation and position.
- *
- * This function adjusts the laser data coordinates to be in the robot's reference frame, considering its
- * orientation and position. It performs a coordinate transformation and applies the robot's current pose.
-
- * @param laser_data The original laser data in the global reference frame.
- * @param Position The current odometry position of the robot.
-
- * @return The adjusted laser data coordinates in the robot's reference frame.
-
- * The function takes the original laser data in the global reference frame and the robot's current odometry position.
- * It first extracts the robot's orientation from the odometry message and converts it to Euler angles (roll, pitch, yaw).
- * Using these angles, it performs a coordinate transformation to adjust the laser data coordinates to the robot's
- * reference frame.
-
- * The adjusted values are further adjusted by adding the robot's current position offset. The resulting adjusted
- * coordinates are returned.
-
- * @note This function is critical for aligning laser data with the robot's orientation and position, ensuring
- * accurate data interpretation for navigation and mapping.
- */
-//data Adjustement function
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-geometry_msgs::Point Method::adjustLaserData(geometry_msgs::Point laser_data, nav_msgs::Odometry Position) {
-  geometry_msgs::Point adjustedValues;
-  
-  // Get the orientation from the odometry message
-  geometry_msgs::Quaternion orientation = Position.pose.pose.orientation;
-  
-  // Convert the quaternion to Euler angles (roll, pitch, yaw)
-  tf::Matrix3x3 mat(tf::Quaternion(orientation.x, orientation.y, orientation.z, orientation.w));
-  double roll, pitch, yaw;
-  mat.getRPY(roll, pitch, yaw);
-  
-  // Perform the coordinate transformation
-  adjustedValues.x = laser_data.x * cos(yaw) - laser_data.y * sin(yaw);
-  adjustedValues.y = laser_data.x * sin(yaw) + laser_data.y * cos(yaw);
-  
-  // Add the position offset
-  adjustedValues.x += Position.pose.pose.position.x;
-  adjustedValues.y += Position.pose.pose.position.y;
-  
-  return adjustedValues;
-}
-
-
-std::vector<geometry_msgs::Point> Method::adjustLaserDataVector(std::vector<geometry_msgs::Point> laser_data, nav_msgs::Odometry Position) {
-  std::vector<geometry_msgs::Point> adjustedValues;
-  geometry_msgs::Point temp;
-  
-   // Get the orientation from the odometry message
-  geometry_msgs::Quaternion orientation = Position.pose.pose.orientation;
-  
-  // Convert the quaternion to Euler angles (roll, pitch, yaw)
-  tf::Matrix3x3 mat(tf::Quaternion(orientation.x, orientation.y, orientation.z, orientation.w));
-  double roll, pitch, yaw;
-  mat.getRPY(roll, pitch, yaw);
-
-  for (int i = 0; i < laser_data.size(); i++){
-    // Perform the coordinate transformation
-    temp.x = laser_data.at(i).x * cos(yaw) - laser_data.at(i).y * sin(yaw);
-    temp.y = laser_data.at(i).x * sin(yaw) + laser_data.at(i).y * cos(yaw);
-    // Add the position offset
-    temp.x += Position.pose.pose.position.x;
-    temp.y += Position.pose.pose.position.y;
-    adjustedValues.push_back(temp);
-  }
-  return adjustedValues;
-}
-
-
-geometry_msgs::Point Method::global_To_local(geometry_msgs::Point globalPoint, nav_msgs::Odometry robotPose) {
-    // Extract the robot's orientation (Quaternion) from robotPose
-  geometry_msgs::Quaternion orientation = robotPose.pose.pose.orientation;
-
-  // Convert the quaternion to Euler angles (roll, pitch, yaw)
-  tf::Matrix3x3 mat(tf::Quaternion(orientation.x, orientation.y, orientation.z, orientation.w));
-  double roll, pitch, yaw;
-  mat.getRPY(roll, pitch, yaw);
-
-  // Perform the coordinate transformation to move the point back to the original local frame
-  double rotatedX = globalPoint.x * cos(yaw) - globalPoint.y * sin(yaw);
-  double rotatedY = globalPoint.x * sin(yaw) + globalPoint.y * cos(yaw);
-
-  // Add the position offset to move the point back to the local frame
-  double localX = rotatedX + robotPose.pose.pose.position.x;
-  double localY = rotatedY + robotPose.pose.pose.position.y;
-
-  geometry_msgs::Point localPoint;
-  localPoint.x = localX;
-  localPoint.y = localY;
-
-  return localPoint;
 }
 
 

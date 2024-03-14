@@ -922,60 +922,6 @@ src/control.cpp.s:
 	$(MAKE) -f CMakeFiles/control_Dan_control.dir/build.make CMakeFiles/control_Dan_control.dir/src/control.cpp.s
 .PHONY : src/control.cpp.s
 
-src/main.o: src/main.cpp.o
-
-.PHONY : src/main.o
-
-# target to build an object file
-src/main.cpp.o:
-	$(MAKE) -f CMakeFiles/control_Dan_method.dir/build.make CMakeFiles/control_Dan_method.dir/src/main.cpp.o
-.PHONY : src/main.cpp.o
-
-src/main.i: src/main.cpp.i
-
-.PHONY : src/main.i
-
-# target to preprocess a source file
-src/main.cpp.i:
-	$(MAKE) -f CMakeFiles/control_Dan_method.dir/build.make CMakeFiles/control_Dan_method.dir/src/main.cpp.i
-.PHONY : src/main.cpp.i
-
-src/main.s: src/main.cpp.s
-
-.PHONY : src/main.s
-
-# target to generate assembly for a file
-src/main.cpp.s:
-	$(MAKE) -f CMakeFiles/control_Dan_method.dir/build.make CMakeFiles/control_Dan_method.dir/src/main.cpp.s
-.PHONY : src/main.cpp.s
-
-src/method.o: src/method.cpp.o
-
-.PHONY : src/method.o
-
-# target to build an object file
-src/method.cpp.o:
-	$(MAKE) -f CMakeFiles/control_Dan_method.dir/build.make CMakeFiles/control_Dan_method.dir/src/method.cpp.o
-.PHONY : src/method.cpp.o
-
-src/method.i: src/method.cpp.i
-
-.PHONY : src/method.i
-
-# target to preprocess a source file
-src/method.cpp.i:
-	$(MAKE) -f CMakeFiles/control_Dan_method.dir/build.make CMakeFiles/control_Dan_method.dir/src/method.cpp.i
-.PHONY : src/method.cpp.i
-
-src/method.s: src/method.cpp.s
-
-.PHONY : src/method.s
-
-# target to generate assembly for a file
-src/method.cpp.s:
-	$(MAKE) -f CMakeFiles/control_Dan_method.dir/build.make CMakeFiles/control_Dan_method.dir/src/method.cpp.s
-.PHONY : src/method.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -1048,12 +994,6 @@ help:
 	@echo "... src/control.o"
 	@echo "... src/control.i"
 	@echo "... src/control.s"
-	@echo "... src/main.o"
-	@echo "... src/main.i"
-	@echo "... src/main.s"
-	@echo "... src/method.o"
-	@echo "... src/method.i"
-	@echo "... src/method.s"
 .PHONY : help
 
 
