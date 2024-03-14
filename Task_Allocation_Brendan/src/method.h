@@ -21,9 +21,6 @@
 #include <ros/package.h>
 
 
-
-
-
 class Method
 {
 public:
@@ -32,20 +29,19 @@ public:
 
   void seperateThread();
 
-  
+
+std::vector<std::pair<geometry_msgs::Point, std::pair<double, double>>>euclideanDistance(const std::vector<geometry_msgs::Point>& itemLocations, const geometry_msgs::Pose& robot1Location, const geometry_msgs::Pose& robot2Location);
 
 
-
-  // Prameters for ROS
+  // Parameters for ROS
   ros::NodeHandle nh_;
   
+private:
 
+  nav_msgs::Odometry robot1Location;
+  nav_msgs::Odometry robot2Location;
 
 
 };
-
-  
-
-
 
 #endif // SAMPLE_H
