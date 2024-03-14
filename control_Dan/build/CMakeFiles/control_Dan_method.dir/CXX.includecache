@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+../src/image_data_struct.h
+sensor_msgs/Image.h
+-
+sensor_msgs/LaserScan.h
+-
+
 /home/dan/git/Turtlebot_Warehouse/control_Dan/src/control.h
 math.h
 -
@@ -58,6 +64,8 @@ nav_msgs/Odometry.h
 sensor_msgs/LaserScan.h
 -
 sensor_msgs/Image.h
+-
+image_data_struct.h
 -
 control.h
 /home/dan/git/Turtlebot_Warehouse/control_Dan/src/control.h

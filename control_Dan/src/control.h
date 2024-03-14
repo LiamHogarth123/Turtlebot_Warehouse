@@ -48,6 +48,18 @@ class Control
     double default_velocity;
     double distance_from_goal;
 
+    
+    double Kp_;
+    double Ki_;
+    double Kd_;
+    double toleranceDistance;
+
+    double integral_;
+    double prev_error_;
+
+    double targetAngle;
+    double prev_heading_error_;
+    double heading_integral_;
 
 };
 

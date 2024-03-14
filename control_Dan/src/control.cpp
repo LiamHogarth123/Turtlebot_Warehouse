@@ -12,8 +12,14 @@
 */
 
 Control::Control(){
-    default_velocity = 0.1;
+    
     distance_from_goal = 0.5;
+
+    toleranceDistance = 0.3;
+    prev_error_ = 0;
+    Kp_ = 0;
+    Ki_ = 0;
+    Kd_ = 0;
 
 }
 
@@ -62,12 +68,48 @@ void Control::newGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_Cu
  * robot moves towards its goal with the appropriate velocities and behaviors.
  */
 geometry_msgs::Twist Control::reachGoal(){
-    //do math to calculate the required linear and angular velocity to reach point
-    geometry_msgs::Twist Directions; 
+
+    ///////// Forward control /////////
+    double current_distance = 0.1;
+
+    // Calculate error
+    double error = toleranceDistance - current_distance;
+
+    // Update integral and derivative terms
+    integral_ += error;
+    double derivative = error - prev_error_;
+
+    // Calculate control command
+    double control_command = Kp_ * error + Ki_ * integral_ + Kd_ * derivative;
+
+    ///////// Angular control /////////
+    
+    double current_heading = 0.1;
+    double heading_error = targetAngle - current_heading;
+
+    // Update integral and derivative terms for heading error
+    heading_integral_ += heading_error;
+    double heading_derivative = heading_error - prev_heading_error_;
+
+    // Calculate control command for angular velocity
+    double angular_command = Kp_ * heading_error + Ki_ * heading_integral_ + Kd_ * heading_derivative;
+    
+
+    //// Create and publish Twist message for velocity control
+    geometry_msgs::Twist cmd_vel;
+    cmd_vel.linear.x = control_command;
+    cmd_vel.angular.z = angular_command;
+
+    // cmd_vel_pub_.publish(cmd_vel);
+
+    // Update previous error
+    prev_error_ = error;
+
+
 
 
     
-    return Directions;
+    return cmd_vel;
     
 }
 
@@ -110,6 +152,9 @@ bool Control::goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_C
     else{
         return false;
     }
+
+    integral_ = 0; //reset PID integral 
+
 } 
 
 
@@ -139,35 +184,5 @@ bool Control::goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_C
  * and motion control.
  */
 double Control::calculateAngularVelocity() {
-    double ANGULAR_SPEED = 1;
-    double ANGULAR_DEAD_ZONE = 0.1; // to help prevent wobbling due to angle changes
 
-    tf::Quaternion current_orientation;
-
-    tf::quaternionMsgToTF(Current_Pose.pose.pose.orientation, current_orientation);
-
-    // Normalize the quaternion
-    current_orientation.normalize();
-
-    // Calculate the heading direction vector
-    tf::Vector3 heading_vector(1, 0, 0);  // Assumes the robot's heading direction is along the x-axis
-
-    // Rotate the heading vector to the current orientation
-    heading_vector = tf::quatRotate(current_orientation, heading_vector);
-
-    // Calculate the vector to the goal
-    tf::Vector3 goal_vector(Goal.x - Current_Pose.pose.pose.position.x, Goal.y - Current_Pose.pose.pose.position.y, 0);
-
-    // Calculate the angle between the heading direction and the goal vector
-    double angle = atan2(goal_vector.y(), goal_vector.x()) - atan2(heading_vector.y(), heading_vector.x());
-
-    // Adjust the angular velocity based on the relative angle
-    if (fabs(angle) < ANGULAR_DEAD_ZONE) {
-        return 0.0;
-    } else if (angle > 0) {
-        return ANGULAR_SPEED;
-    } else {
-        return -ANGULAR_SPEED;
-    }
-    
 }

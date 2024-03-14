@@ -1,8 +1,3 @@
-/**
- @file sample.h
- @brief Header file for the Sample class.
-*/
-
 #ifndef SAMPLE_H
 #define SAMPLE_H
 
@@ -13,7 +8,7 @@
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/LaserScan.h>
 #include <sensor_msgs/Image.h>
-
+#include <image_data_struct.h>
 //Keep only the headers needed
 
 
@@ -45,7 +40,7 @@ public:
   void guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg);
 
  
-
+  RobotData Update_Robot_Image_data();
 
 
 
@@ -56,8 +51,6 @@ public:
   void threadForSensor();
 
   void seperateThread();
-
-  void followingRobotRun();
 
   bool readGoal(bool house);
 
@@ -117,6 +110,9 @@ public:
   sensor_msgs::Image updated_RGB;
   sensor_msgs::LaserScan updated_Lida;
   sensor_msgs::Image updated_imageDepth;
+
+//SensorData Object
+  RobotData Image_data;
 
 //Geometry variable to do with movenment;
   geometry_msgs::Point goal;

@@ -7,7 +7,7 @@
 int main(int argc, char **argv){
 
 
-  ros::init(argc, argv, "Task_Allocation");
+  ros::init(argc, argv, "control_Dan");
 
   ros::NodeHandle nh;
 
