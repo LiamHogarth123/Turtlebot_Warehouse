@@ -1,4 +1,4 @@
-prefix=/home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build/devel
+prefix=/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/devel
 
 Name: trajectory_liam
 Description: Description of trajectory_liam

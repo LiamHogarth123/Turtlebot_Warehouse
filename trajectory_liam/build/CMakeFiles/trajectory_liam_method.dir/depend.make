@@ -76,6 +76,8 @@ CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o: /opt/ros/melodic/include/x
 
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: ../src/method.cpp
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: ../src/method.h
+CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: ../src/readMap.cpp
+CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: ../src/readMap.h
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: /opt/ros/melodic/include/geometry_msgs/Point.h
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: /opt/ros/melodic/include/geometry_msgs/Pose.h
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: /opt/ros/melodic/include/geometry_msgs/PoseWithCovariance.h

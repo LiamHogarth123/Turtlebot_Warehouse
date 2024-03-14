@@ -7,7 +7,9 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build/devel:$CMAKE_PREFIX_PATH"
-export PWD='/home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build'
-export ROSLISP_PACKAGE_DIRECTORIES="/home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
-export ROS_PACKAGE_PATH="/home/liam/git/Turtlebot_Warehouse/Trajectory_Liam:$ROS_PACKAGE_PATH"
+export CMAKE_PREFIX_PATH="/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/devel:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/devel/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
+export PWD='/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build'
+export ROSLISP_PACKAGE_DIRECTORIES="/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
+export ROS_PACKAGE_PATH="/home/liam/git/Turtlebot_Warehouse/Trajectory_Liam:/home/liam/git/Turtlebot_Warehouse/trajectory_liam:$ROS_PACKAGE_PATH"
