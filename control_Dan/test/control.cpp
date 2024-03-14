@@ -24,10 +24,25 @@ Control::Control(){
 
 }
 
+/**
+ * @brief Set a new movement goal and update the current pose.
+ *
+ * This function updates the movement goal and the current pose with the provided values.
+ * It is typically used to set a new goal for a navigation system and update the robot's current pose
+ * accordingly.
 
-void Control::updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom){
-    goal = temp_goal;
-    odom = temp_odom;
+ * @param temp_goal The geometry_msgs::Point representing the new movement goal.
+ * @param temp_Current_Pose The nav_msgs::Odometry representing the robot's current pose.
+
+ * The function sets the new movement goal (Goal) and updates the robot's current pose (Current_Pose)
+ * with the provided values.
+
+ * @note This function is crucial for redefining the robot's navigation goal and ensuring that the
+ * current pose is in sync with the robot's position and orientation.
+ */
+void Control::newGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_Current_Pose){
+    Goal = temp_goal;
+    Current_Pose = temp_Current_Pose;
 }
 
 /**
@@ -56,7 +71,7 @@ void Control::updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp
 geometry_msgs::Twist Control::reachGoal(){
 
     ///////// Forward control /////////
-    double current_distance = distanceToGoal(goal, odom);
+    double current_distance = 10;
 
     // Calculate error
     double error = toleranceDistance - current_distance;
@@ -90,6 +105,10 @@ geometry_msgs::Twist Control::reachGoal(){
 
     // Update previous error
     prev_error_ = error;
+
+
+
+
     
     return cmd_vel;
     
@@ -124,9 +143,9 @@ bool Control::collisionDetection() {
  * @note This function is useful for checking whether the robot has reached its intended goal, allowing
  * for decision-making in navigation and control systems.
  */
-bool Control::goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom){
-    double delta_x = temp_goal.x - temp_odom.pose.pose.position.x;
-    double delta_y = temp_goal.y - temp_odom.pose.pose.position.y;
+bool Control::goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_Current_Pose){
+    double delta_x = Goal.x - Current_Pose.pose.pose.position.x;
+    double delta_y = Goal.y - Current_Pose.pose.pose.position.y;
     DirectDistance = sqrt(std::pow(delta_x,2) + std::pow(delta_y,2));
     if (DirectDistance <= distance_from_goal) {
         return true;
@@ -139,11 +158,32 @@ bool Control::goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_o
 
 } 
 
-double Control::distanceToGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom){
 
-    double delta_x = temp_goal.x - temp_odom.pose.pose.position.x;
-    double delta_y = temp_goal.y - temp_odom.pose.pose.position.y;
-    double distance = sqrt(std::pow(delta_x,2) + std::pow(delta_y,2));
+/**
+ * @brief Calculate the angular velocity required to align with the goal direction.
+ *
+ * This function calculates the angular velocity required to align the robot's orientation with the
+ * direction of the goal point. It is essential for controlling the robot's rotation to face the goal.
 
-    return distance;
+ * @return The calculated angular velocity (positive for clockwise, negative for counterclockwise).
+
+ * The function starts by defining constants for ANGULAR_SPEED (maximum angular velocity) and ANGULAR_DEAD_ZONE
+ * (a threshold to prevent wobbling due to small angle changes).
+
+ * It extracts the current orientation of the robot from the provided nav_msgs::Odometry, normalizes the quaternion,
+ * and calculates the heading direction vector (assumes the robot's heading is along the x-axis).
+
+ * The function then calculates the vector from the robot's current position to the goal and determines the angle
+ * between the heading direction and the goal vector.
+
+ * Based on the calculated angle, the function adjusts the angular velocity:
+ * - If the angle is within the ANGULAR_DEAD_ZONE, it returns a zero angular velocity to prevent excessive rotation.
+ * - If the angle is positive (indicating a clockwise rotation is needed), it returns a positive ANGULAR_SPEED.
+ * - If the angle is negative (indicating a counterclockwise rotation is needed), it returns a negative ANGULAR_SPEED.
+
+ * @note This function plays a crucial role in achieving the correct orientation to face the goal during navigation
+ * and motion control.
+ */
+double Control::calculateAngularVelocity() {
+
 }
