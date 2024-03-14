@@ -1,0 +1,42 @@
+{
+    "configurations": [
+        {
+            "browse": {
+                "databaseFilename": "${default}",
+                "limitSymbolsToIncludedHeaders": false
+            },
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/ros/noetic/include",
+                "/home/john/catkin_ws/src/usb_cam/include/**",
+                "/usr/include/**",
+                "/usr/local/**"
+                // "/home/john/opencv/**"
+                // "/usr/local/opencv-4.x/**",
+                // "/usr/local/opencv-4.x/modules/highgui/include/opencv2/**",
+                // "/home/john/Desktop/**",
+                // "/home/john/opencv-4.x/**",
+                // "/home/john/opencv_contrib-4.x/**",
+                // "/home/john/build/**",
+                // "/home/john/opencv-4.x/modules/highgui/include/opencv2/**",
+                // "/home/john/opencv-4.x/modules/highgui/include/opencv2/highgui"
+                // "/home/john/Desktop/opencv-4.x/**",
+                // "/home/john/Desktop/opencv-4.x/include/**",
+                // "/home/john/Desktop/opencv-4.x/modules/objdetect/include/**",
+                // "/home/john/Desktop/opencv-4.x/modules/highgui/include",
+                // "/home/john/Desktop/opencv_contrib-4.x/modules/cudaarithm/src"
+            ],
+            // "defines": [],
+            "name": "ROS",
+            "intelliSenseMode": "gcc-x64",
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            // "cStandard": "gnull",
+            // "cppStandard": "gnu++14",
+            "cppStandard": "c++14"
+            
+            // "configurationProvider": "ms-vscode.cmake-tools"
+        }
+    ],
+    "version": 4
+}
