@@ -11,5 +11,4 @@ export CMAKE_PREFIX_PATH="/home/john/Desktop/Turtlebot_Warehouse/mapping_john/bu
 export LD_LIBRARY_PATH="/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/devel/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build'
-export ROSLISP_PACKAGE_DIRECTORIES="/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
 export ROS_PACKAGE_PATH="/home/john/Desktop/Turtlebot_Warehouse/mapping_john:$ROS_PACKAGE_PATH"

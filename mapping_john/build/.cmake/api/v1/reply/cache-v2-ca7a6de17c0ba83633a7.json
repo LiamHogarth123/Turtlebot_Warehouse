@@ -2618,6 +2618,18 @@
 			"value" : "/opt/ros/noetic/share/nav_msgs/cmake"
 		},
 		{
+			"name" : "opencv_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for opencv."
+				}
+			],
+			"type" : "PATH",
+			"value" : "opencv_DIR-NOTFOUND"
+		},
+		{
 			"name" : "pluginlib_DIR",
 			"properties" : 
 			[
