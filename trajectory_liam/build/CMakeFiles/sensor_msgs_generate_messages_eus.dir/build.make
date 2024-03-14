@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam
+CMAKE_SOURCE_DIR = /home/liam/git/Turtlebot_Warehouse/trajectory_liam
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build
+CMAKE_BINARY_DIR = /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build
 
 # Utility rule file for sensor_msgs_generate_messages_eus.
 
@@ -67,6 +67,6 @@ CMakeFiles/sensor_msgs_generate_messages_eus.dir/clean:
 .PHONY : CMakeFiles/sensor_msgs_generate_messages_eus.dir/clean
 
 CMakeFiles/sensor_msgs_generate_messages_eus.dir/depend:
-	cd /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build/CMakeFiles/sensor_msgs_generate_messages_eus.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/liam/git/Turtlebot_Warehouse/trajectory_liam /home/liam/git/Turtlebot_Warehouse/trajectory_liam /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/CMakeFiles/sensor_msgs_generate_messages_eus.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/sensor_msgs_generate_messages_eus.dir/depend
 

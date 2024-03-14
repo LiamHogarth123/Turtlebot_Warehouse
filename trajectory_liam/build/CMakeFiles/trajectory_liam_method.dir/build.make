@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam
+CMAKE_SOURCE_DIR = /home/liam/git/Turtlebot_Warehouse/trajectory_liam
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build
+CMAKE_BINARY_DIR = /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/trajectory_liam_method.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/trajectory_liam_method.dir/flags.make
 
 CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o: CMakeFiles/trajectory_liam_method.dir/flags.make
 CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o: ../src/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o -c /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o -c /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/main.cpp
 
 CMakeFiles/trajectory_liam_method.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/trajectory_liam_method.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/src/main.cpp > CMakeFiles/trajectory_liam_method.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/main.cpp > CMakeFiles/trajectory_liam_method.dir/src/main.cpp.i
 
 CMakeFiles/trajectory_liam_method.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/trajectory_liam_method.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/src/main.cpp -o CMakeFiles/trajectory_liam_method.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/main.cpp -o CMakeFiles/trajectory_liam_method.dir/src/main.cpp.s
 
 CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o.requires:
 
@@ -83,16 +83,16 @@ CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o.provides.build: CMakeFiles/
 
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: CMakeFiles/trajectory_liam_method.dir/flags.make
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: ../src/method.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o -c /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/src/method.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o -c /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/method.cpp
 
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/trajectory_liam_method.dir/src/method.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/src/method.cpp > CMakeFiles/trajectory_liam_method.dir/src/method.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/method.cpp > CMakeFiles/trajectory_liam_method.dir/src/method.cpp.i
 
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/trajectory_liam_method.dir/src/method.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/src/method.cpp -o CMakeFiles/trajectory_liam_method.dir/src/method.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/method.cpp -o CMakeFiles/trajectory_liam_method.dir/src/method.cpp.s
 
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o.requires:
 
@@ -147,8 +147,9 @@ devel/lib/trajectory_liam/trajectory_liam_method: /usr/lib/x86_64-linux-gnu/libb
 devel/lib/trajectory_liam/trajectory_liam_method: /usr/lib/x86_64-linux-gnu/libboost_program_options.so
 devel/lib/trajectory_liam/trajectory_liam_method: /usr/lib/x86_64-linux-gnu/libboost_system.so
 devel/lib/trajectory_liam/trajectory_liam_method: /usr/lib/x86_64-linux-gnu/libtinyxml2.so
+devel/lib/trajectory_liam/trajectory_liam_method: devel/lib/libmylib.so
 devel/lib/trajectory_liam/trajectory_liam_method: CMakeFiles/trajectory_liam_method.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable devel/lib/trajectory_liam/trajectory_liam_method"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable devel/lib/trajectory_liam/trajectory_liam_method"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/trajectory_liam_method.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -166,6 +167,6 @@ CMakeFiles/trajectory_liam_method.dir/clean:
 .PHONY : CMakeFiles/trajectory_liam_method.dir/clean
 
 CMakeFiles/trajectory_liam_method.dir/depend:
-	cd /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build/CMakeFiles/trajectory_liam_method.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/liam/git/Turtlebot_Warehouse/trajectory_liam /home/liam/git/Turtlebot_Warehouse/trajectory_liam /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/CMakeFiles/trajectory_liam_method.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/trajectory_liam_method.dir/depend
 

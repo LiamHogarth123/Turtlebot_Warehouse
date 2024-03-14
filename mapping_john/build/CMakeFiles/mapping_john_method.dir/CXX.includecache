@@ -7,8 +7,8 @@
 #IncludeRegexTransform: 
 
 /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/boundarydetection.h
-ros/ros.h
-/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/ros/ros.h
+opencv2/highgui.hpp
+-
 
 /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/errorcalc.h
 ros/ros.h
@@ -34,26 +34,6 @@ tagrecog.h
 thread
 -
 
-/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/method.cpp
-method.h
-/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/method.h
-iostream
--
-cmath
--
-thread
--
-chrono
--
-time.h
--
-nav_msgs/Odometry.h
--
-ros/ros.h
-/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/ros/ros.h
-fstream
--
-
 /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/method.h
 ros/ros.h
 /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/ros/ros.h
@@ -73,6 +53,10 @@ ros/package.h
 /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/tagrecog.h
 ros/ros.h
 /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/ros/ros.h
+opencv2/highgui.hpp
+-
+opencv2/objdetect/aruco_detector.hpp
+-
 
 /opt/ros/noetic/include/geometry_msgs/Point.h
 string

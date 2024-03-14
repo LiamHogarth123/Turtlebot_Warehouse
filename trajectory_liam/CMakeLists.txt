@@ -10,7 +10,12 @@ find_package(catkin REQUIRED COMPONENTS
   rosbag
   roslib
   message_generation  # Add this line for message generation
+  # OpenCV REQUIRED  
+  
+
 )
+# OpenCV
+# include_directories(${OpenCV_INCLUDE_DIRS})
 
 find_package(Eigen3 REQUIRED)
 
@@ -25,10 +30,16 @@ include_directories(
   src
   ${catkin_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIR}
+  # ${OpenCV_INCLUDE_DIRS}
 )
 
 add_executable(${PROJECT_NAME}_method src/main.cpp src/method.cpp)
 
 add_dependencies(${PROJECT_NAME}_method ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+add_library(mylib src/readMap.cpp)
+
 target_link_libraries(${PROJECT_NAME}_method ${catkin_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}_method mylib)
+
+# target_link_libraries(${PROJECT_NAME}_method ${OpenCV_LIBS})

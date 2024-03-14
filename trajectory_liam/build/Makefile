@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam
+CMAKE_SOURCE_DIR = /home/liam/git/Turtlebot_Warehouse/trajectory_liam
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build
+CMAKE_BINARY_DIR = /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -137,9 +137,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build/CMakeFiles /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/CMakeFiles /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/liam/git/Turtlebot_Warehouse/Trajectory_Liam/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -270,6 +270,19 @@ actionlib_msgs_generate_messages_py: cmake_check_build_system
 actionlib_msgs_generate_messages_py/fast:
 	$(MAKE) -f CMakeFiles/actionlib_msgs_generate_messages_py.dir/build.make CMakeFiles/actionlib_msgs_generate_messages_py.dir/build
 .PHONY : actionlib_msgs_generate_messages_py/fast
+
+#=============================================================================
+# Target rules for targets named mylib
+
+# Build rule for target.
+mylib: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 mylib
+.PHONY : mylib
+
+# fast build rule for target.
+mylib/fast:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/build
+.PHONY : mylib/fast
 
 #=============================================================================
 # Target rules for targets named actionlib_msgs_generate_messages_lisp
@@ -936,6 +949,33 @@ src/method.cpp.s:
 	$(MAKE) -f CMakeFiles/trajectory_liam_method.dir/build.make CMakeFiles/trajectory_liam_method.dir/src/method.cpp.s
 .PHONY : src/method.cpp.s
 
+src/readMap.o: src/readMap.cpp.o
+
+.PHONY : src/readMap.o
+
+# target to build an object file
+src/readMap.cpp.o:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/readMap.cpp.o
+.PHONY : src/readMap.cpp.o
+
+src/readMap.i: src/readMap.cpp.i
+
+.PHONY : src/readMap.i
+
+# target to preprocess a source file
+src/readMap.cpp.i:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/readMap.cpp.i
+.PHONY : src/readMap.cpp.i
+
+src/readMap.s: src/readMap.cpp.s
+
+.PHONY : src/readMap.s
+
+# target to generate assembly for a file
+src/readMap.cpp.s:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/readMap.cpp.s
+.PHONY : src/readMap.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -953,6 +993,7 @@ help:
 	@echo "... topic_tools_generate_messages_lisp"
 	@echo "... std_srvs_generate_messages_lisp"
 	@echo "... actionlib_msgs_generate_messages_py"
+	@echo "... mylib"
 	@echo "... actionlib_msgs_generate_messages_lisp"
 	@echo "... actionlib_msgs_generate_messages_eus"
 	@echo "... rosgraph_msgs_generate_messages_nodejs"
@@ -1010,6 +1051,9 @@ help:
 	@echo "... src/method.o"
 	@echo "... src/method.i"
 	@echo "... src/method.s"
+	@echo "... src/readMap.o"
+	@echo "... src/readMap.i"
+	@echo "... src/readMap.s"
 .PHONY : help
 
 

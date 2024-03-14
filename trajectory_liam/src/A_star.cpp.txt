@@ -1,0 +1,30 @@
+#include "redblobgames/pathfinding/a-star/implementation.cpp"
+
+void breadth_first_search(SimpleGraph graph, char start) {
+  std::queue<char> frontier;
+  frontier.push(start);
+
+  std::unordered_set<char> reached;
+  reached.insert(start);
+
+  while (!frontier.empty()) {
+    char current = frontier.front();
+    frontier.pop();
+
+    std::cout << "  Visiting " << current << '\n';
+    for (char next : graph.neighbors(current)) {
+      if (reached.find(next) == reached.end()) {
+        frontier.push(next);
+        reached.insert(next);
+      }
+    }
+  }
+}
+
+
+int main() {
+  std::cout << "Reachable from A:\n";
+  breadth_first_search(example_graph, 'A');
+  std::cout << "Reachable from E:\n";
+  breadth_first_search(example_graph, 'E');
+}

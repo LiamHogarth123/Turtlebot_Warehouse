@@ -32,12 +32,13 @@ public:
 
   void seperateThread();
 
-  
+ 
 
 
 
   // Prameters for ROS
   ros::NodeHandle nh_;
+  ros::Subscriber map_sub;
   
 
 
