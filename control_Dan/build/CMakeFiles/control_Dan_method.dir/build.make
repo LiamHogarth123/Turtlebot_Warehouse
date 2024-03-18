@@ -57,7 +57,108 @@ include CMakeFiles/control_Dan_method.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/control_Dan_method.dir/flags.make
 
-CMakeFiles/control_Dan_method.dir/requires:
+CMakeFiles/control_Dan_method.dir/src/main.cpp.o: CMakeFiles/control_Dan_method.dir/flags.make
+CMakeFiles/control_Dan_method.dir/src/main.cpp.o: ../src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/control_Dan_method.dir/src/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/control_Dan_method.dir/src/main.cpp.o -c /home/dan/git/Turtlebot_Warehouse/control_Dan/src/main.cpp
+
+CMakeFiles/control_Dan_method.dir/src/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/control_Dan_method.dir/src/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dan/git/Turtlebot_Warehouse/control_Dan/src/main.cpp > CMakeFiles/control_Dan_method.dir/src/main.cpp.i
+
+CMakeFiles/control_Dan_method.dir/src/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/control_Dan_method.dir/src/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dan/git/Turtlebot_Warehouse/control_Dan/src/main.cpp -o CMakeFiles/control_Dan_method.dir/src/main.cpp.s
+
+CMakeFiles/control_Dan_method.dir/src/main.cpp.o.requires:
+
+.PHONY : CMakeFiles/control_Dan_method.dir/src/main.cpp.o.requires
+
+CMakeFiles/control_Dan_method.dir/src/main.cpp.o.provides: CMakeFiles/control_Dan_method.dir/src/main.cpp.o.requires
+	$(MAKE) -f CMakeFiles/control_Dan_method.dir/build.make CMakeFiles/control_Dan_method.dir/src/main.cpp.o.provides.build
+.PHONY : CMakeFiles/control_Dan_method.dir/src/main.cpp.o.provides
+
+CMakeFiles/control_Dan_method.dir/src/main.cpp.o.provides.build: CMakeFiles/control_Dan_method.dir/src/main.cpp.o
+
+
+CMakeFiles/control_Dan_method.dir/src/method.cpp.o: CMakeFiles/control_Dan_method.dir/flags.make
+CMakeFiles/control_Dan_method.dir/src/method.cpp.o: ../src/method.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/control_Dan_method.dir/src/method.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/control_Dan_method.dir/src/method.cpp.o -c /home/dan/git/Turtlebot_Warehouse/control_Dan/src/method.cpp
+
+CMakeFiles/control_Dan_method.dir/src/method.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/control_Dan_method.dir/src/method.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dan/git/Turtlebot_Warehouse/control_Dan/src/method.cpp > CMakeFiles/control_Dan_method.dir/src/method.cpp.i
+
+CMakeFiles/control_Dan_method.dir/src/method.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/control_Dan_method.dir/src/method.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dan/git/Turtlebot_Warehouse/control_Dan/src/method.cpp -o CMakeFiles/control_Dan_method.dir/src/method.cpp.s
+
+CMakeFiles/control_Dan_method.dir/src/method.cpp.o.requires:
+
+.PHONY : CMakeFiles/control_Dan_method.dir/src/method.cpp.o.requires
+
+CMakeFiles/control_Dan_method.dir/src/method.cpp.o.provides: CMakeFiles/control_Dan_method.dir/src/method.cpp.o.requires
+	$(MAKE) -f CMakeFiles/control_Dan_method.dir/build.make CMakeFiles/control_Dan_method.dir/src/method.cpp.o.provides.build
+.PHONY : CMakeFiles/control_Dan_method.dir/src/method.cpp.o.provides
+
+CMakeFiles/control_Dan_method.dir/src/method.cpp.o.provides.build: CMakeFiles/control_Dan_method.dir/src/method.cpp.o
+
+
+# Object files for target control_Dan_method
+control_Dan_method_OBJECTS = \
+"CMakeFiles/control_Dan_method.dir/src/main.cpp.o" \
+"CMakeFiles/control_Dan_method.dir/src/method.cpp.o"
+
+# External object files for target control_Dan_method
+control_Dan_method_EXTERNAL_OBJECTS =
+
+devel/lib/control_Dan/control_Dan_method: CMakeFiles/control_Dan_method.dir/src/main.cpp.o
+devel/lib/control_Dan/control_Dan_method: CMakeFiles/control_Dan_method.dir/src/method.cpp.o
+devel/lib/control_Dan/control_Dan_method: CMakeFiles/control_Dan_method.dir/build.make
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/librosbag.so
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/librosbag_storage.so
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/libclass_loader.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/libPocoFoundation.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libdl.so
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/libroslz4.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/liblz4.so
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/libtopic_tools.so
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/libroscpp.so
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/librosconsole.so
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/librosconsole_log4cxx.so
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/librosconsole_backend_interface.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/liblog4cxx.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libboost_regex.so
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/libroscpp_serialization.so
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/libxmlrpcpp.so
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/librostime.so
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/libcpp_common.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libboost_thread.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libboost_chrono.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libboost_date_time.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libboost_atomic.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libpthread.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/libroslib.so
+devel/lib/control_Dan/control_Dan_method: /opt/ros/melodic/lib/librospack.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libpython2.7.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libboost_program_options.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libboost_system.so
+devel/lib/control_Dan/control_Dan_method: /usr/lib/x86_64-linux-gnu/libtinyxml2.so
+devel/lib/control_Dan/control_Dan_method: devel/lib/libcontrol_Dan_control.so
+devel/lib/control_Dan/control_Dan_method: CMakeFiles/control_Dan_method.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable devel/lib/control_Dan/control_Dan_method"
+	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/control_Dan_method.dir/link.txt --verbose=$(VERBOSE)
+
+# Rule to build all files generated by this target.
+CMakeFiles/control_Dan_method.dir/build: devel/lib/control_Dan/control_Dan_method
+
+.PHONY : CMakeFiles/control_Dan_method.dir/build
+
+CMakeFiles/control_Dan_method.dir/requires: CMakeFiles/control_Dan_method.dir/src/main.cpp.o.requires
+CMakeFiles/control_Dan_method.dir/requires: CMakeFiles/control_Dan_method.dir/src/method.cpp.o.requires
 
 .PHONY : CMakeFiles/control_Dan_method.dir/requires
 

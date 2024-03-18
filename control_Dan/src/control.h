@@ -6,10 +6,6 @@
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/Twist.h>
 #include <nav_msgs/Odometry.h>
-/**
- @file dataprocessing.h
- @brief This file contains the implementation of the DataProcessing class.
-*/
 
 class Control
 {
@@ -27,9 +23,9 @@ class Control
 
     bool goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom);
 
-    double distanceToGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom);
+    double distanceToGoal();
 
-
+    double angleToGoal();
 
     //parameters
     private:
