@@ -6,5 +6,5 @@ CXX_FLAGS = -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu+
 
 CXX_DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"mapping_john\"
 
-CXX_INCLUDES = -I/home/john/Desktop/Turtlebot_Warehouse/mapping_john/include -I/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 
+CXX_INCLUDES = -I/home/john/Desktop/Turtlebot_Warehouse/mapping_john/include -I/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -isystem /usr/local/include/opencv4 
 
