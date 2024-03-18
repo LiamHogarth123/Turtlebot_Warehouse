@@ -29,7 +29,8 @@ public:
      * @param[in] image Image from webcam
      * @return True if boundary detected, else false
      */
-    bool detectColour(long image);
+    // bool detectColour(long image);
+    bool detectColour();
 };
 
 #endif
