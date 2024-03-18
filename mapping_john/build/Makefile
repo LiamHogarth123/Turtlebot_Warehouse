@@ -882,6 +882,33 @@ gtest/fast:
 	$(MAKE) -f gtest/googletest/CMakeFiles/gtest.dir/build.make gtest/googletest/CMakeFiles/gtest.dir/build
 .PHONY : gtest/fast
 
+src/boundarydetection.o: src/boundarydetection.cpp.o
+
+.PHONY : src/boundarydetection.o
+
+# target to build an object file
+src/boundarydetection.cpp.o:
+	$(MAKE) -f CMakeFiles/mapping_john_method.dir/build.make CMakeFiles/mapping_john_method.dir/src/boundarydetection.cpp.o
+.PHONY : src/boundarydetection.cpp.o
+
+src/boundarydetection.i: src/boundarydetection.cpp.i
+
+.PHONY : src/boundarydetection.i
+
+# target to preprocess a source file
+src/boundarydetection.cpp.i:
+	$(MAKE) -f CMakeFiles/mapping_john_method.dir/build.make CMakeFiles/mapping_john_method.dir/src/boundarydetection.cpp.i
+.PHONY : src/boundarydetection.cpp.i
+
+src/boundarydetection.s: src/boundarydetection.cpp.s
+
+.PHONY : src/boundarydetection.s
+
+# target to generate assembly for a file
+src/boundarydetection.cpp.s:
+	$(MAKE) -f CMakeFiles/mapping_john_method.dir/build.make CMakeFiles/mapping_john_method.dir/src/boundarydetection.cpp.s
+.PHONY : src/boundarydetection.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -1004,6 +1031,9 @@ help:
 	@echo "... gmock"
 	@echo "... gtest_main"
 	@echo "... gtest"
+	@echo "... src/boundarydetection.o"
+	@echo "... src/boundarydetection.i"
+	@echo "... src/boundarydetection.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

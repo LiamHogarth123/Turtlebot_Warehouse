@@ -10,7 +10,8 @@
                 "/opt/ros/noetic/include",
                 "/home/john/catkin_ws/src/usb_cam/include/**",
                 "/usr/include/**",
-                "/usr/local/**"
+                "/usr/local/**",
+                "/home/john/opencv/**"
                 // "/home/john/opencv/**"
                 // "/usr/local/opencv-4.x/**",
                 // "/usr/local/opencv-4.x/modules/highgui/include/opencv2/**",

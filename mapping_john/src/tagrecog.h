@@ -2,7 +2,7 @@
 #define TAGRECOG_H
 #include "ros/ros.h"
 #include <opencv2/highgui.hpp>
-#include <opencv2/objdetect/aruco_detector.hpp>
+// #include <opencv2/objdetect/aruco_detector.hpp>
 
 class TagRecog
 {
