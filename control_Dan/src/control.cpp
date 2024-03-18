@@ -19,9 +19,9 @@ Control::Control(){
     targetAngle = 0.1;
     prev_error_ = 0;
     prev_heading_error_ = 0;
-    Kp_ = 0.1;
-    Ki_ = 0.1;
-    Kd_ = 0.1;
+    Kp_ = 0.01;
+    Ki_ = 0.01;
+    Kd_ = 0.01;
 
 }
 
