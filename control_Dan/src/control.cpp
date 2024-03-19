@@ -21,7 +21,11 @@ Control::Control(){
     prev_heading_error_ = 0;
     Kp_ = 0.01;
     Ki_ = 0.01;
-    Kd_ = 0.01;
+    Kd_ = 0.05;
+
+    Kp_h = 0.01;
+    Ki_h = 0.01;
+    Kd_h = 0.1;
 
 }
 
@@ -46,9 +50,9 @@ geometry_msgs::Twist Control::reachGoal(){
 
     // Calculate control command
     double control_command = Kp_ * error + Ki_ * integral_ + Kd_ * derivative;
+    control_command *= 0.5; //scaling down
 
     ///////// Angular control /////////
-    
     double current_heading = angleToGoal();
     double heading_error = targetAngle - current_heading;
 
@@ -57,8 +61,14 @@ geometry_msgs::Twist Control::reachGoal(){
     double heading_derivative = heading_error - prev_heading_error_;
 
     // Calculate control command for angular velocity
-    double angular_command = Kp_ * heading_error + Ki_ * heading_integral_ + Kd_ * heading_derivative;
+    double angular_command = Kp_h * heading_error + Ki_h * heading_integral_ + Kd_h * heading_derivative;
     
+    // Ensure the angular command corresponds to the sign of the heading error
+    if (heading_error > 0) {
+        angular_command = fabs(angular_command);  // Turn right
+    } else {
+        angular_command = -fabs(angular_command); // Turn left
+    }
 
     //// Create and publish Twist message for velocity control
     geometry_msgs::Twist cmd_vel;
@@ -69,9 +79,11 @@ geometry_msgs::Twist Control::reachGoal(){
     prev_error_ = error;
     prev_heading_error_ = heading_error;
     
-    std::cout << "Hello, world!" << std::endl;
-    std::cout << goal.x << std::endl;
-    std::cout << odom.pose.pose.position.x << std::endl;
+    std::cout << "---------------------------------------------" << std::endl;
+    std::cout << "distanceToGoal: " << distanceToGoal() << std::endl;
+    std::cout << "angleToGoal: " << angleToGoal() << std::endl;
+    std::cout << "headingError: " << heading_error << std::endl;
+    std::cout << "angularCommand: " << angular_command << std::endl;
 
     return cmd_vel;
     

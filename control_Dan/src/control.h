@@ -45,10 +45,12 @@ class Control
     double Ki_;
     double Kd_;
     double toleranceDistance;
-
     double integral_;
     double prev_error_;
 
+    double Kp_h;
+    double Ki_h;
+    double Kd_h;
     double targetAngle;
     double prev_heading_error_;
     double heading_integral_;

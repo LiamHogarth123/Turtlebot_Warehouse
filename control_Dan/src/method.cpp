@@ -99,7 +99,7 @@ void Method::seperateThread() {
   else{
     while (true){
       singleThread();
-      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+      std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
   }
 }
@@ -115,21 +115,28 @@ void Method::singleThread() {
 void Method::guiderBotMovement(){
 
     geometry_msgs::Point guiderGoal;
-
+    
+    std::cout << "here1" << std::endl;
+    std::cout << Leader_goals.size() << std::endl;
+    std::cout << goal_index << std::endl;
     guiderGoal = Leader_goals.at(goal_index);
-   
+    
 
     GuiderGPS.updateGoal(guiderGoal, guider_Odom);
     geometry_msgs::Twist guiderTraj = GuiderGPS.reachGoal();
     
     if (GuiderGPS.goal_hit(guiderGoal, guider_Odom)){
-      if (goal_index != Leader_goals.size()){
+        std::cout << "goal hit" << std::endl;
+      if (goal_index != Leader_goals.size() - 1){
+         
          goal_index++;
+         
       }
     }
+    
 
     Send_cmd_tb2(guiderTraj);
-  
+    
 }
 
 
