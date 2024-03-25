@@ -27,6 +27,12 @@ class Control
 
     double angleToGoal();
 
+    double steeringPID();
+
+    double velocityPID();
+
+    
+
     //parameters
     private:
     geometry_msgs::Point goal;
@@ -47,6 +53,7 @@ class Control
     double toleranceDistance;
     double integral_;
     double prev_error_;
+    double prev_integral_;
 
     double Kp_h;
     double Ki_h;
@@ -54,7 +61,15 @@ class Control
     double targetAngle;
     double prev_heading_error_;
     double heading_integral_;
+    double prev_heading_integral_;
 
+    double maxVelx;
+    double maxVelz;
+
+    double maxIntegral;
+    double maxHeadingIntegral;
+
+ 
 };
 
 #endif // DETECTCABINET_H

@@ -13,19 +13,26 @@
 
 Control::Control(){
     
-    distance_from_goal = 0.5;
+    distance_from_goal = 0.2;
 
     toleranceDistance = 0.3;
-    targetAngle = 0.1;
+    targetAngle = 0.05;
     prev_error_ = 0;
     prev_heading_error_ = 0;
-    Kp_ = 0.01;
-    Ki_ = 0.01;
-    Kd_ = 0.05;
+    
+    Kp_ = 0.4;
+    Ki_ = 0.1;
+    Kd_ = 1.5;
 
-    Kp_h = 0.01;
-    Ki_h = 0.01;
-    Kd_h = 0.1;
+    Kp_h = 0.6;
+    Ki_h = 0.1;
+    Kd_h = 2;
+
+    maxVelx = 0.26; // m/s
+    maxVelz = 1.82; //rad/s
+
+    maxIntegral = 10;
+    maxHeadingIntegral = 0.5;
 
 }
 
@@ -42,52 +49,114 @@ geometry_msgs::Twist Control::reachGoal(){
     double current_distance = distanceToGoal();
 
     // Calculate error
-    double error = toleranceDistance - current_distance;
+    double error = -(toleranceDistance - current_distance);
 
     // Update integral and derivative terms
     integral_ += error;
+
+    if (integral_ > maxIntegral) {
+        integral_ = maxIntegral;
+    }
+    else if (integral_ < -maxIntegral){
+        integral_ = -maxIntegral;
+    }
+
     double derivative = error - prev_error_;
+
+    // std::cout << "integral: " << integral_ << std::endl;
 
     // Calculate control command
     double control_command = Kp_ * error + Ki_ * integral_ + Kd_ * derivative;
-    control_command *= 0.5; //scaling down
+    control_command *= 0.15; //scaling down
 
-    ///////// Angular control /////////
-    double current_heading = angleToGoal();
-    double heading_error = targetAngle - current_heading;
-
-    // Update integral and derivative terms for heading error
-    heading_integral_ += heading_error;
-    double heading_derivative = heading_error - prev_heading_error_;
-
-    // Calculate control command for angular velocity
-    double angular_command = Kp_h * heading_error + Ki_h * heading_integral_ + Kd_h * heading_derivative;
-    
-    // Ensure the angular command corresponds to the sign of the heading error
-    if (heading_error > 0) {
-        angular_command = fabs(angular_command);  // Turn right
-    } else {
-        angular_command = -fabs(angular_command); // Turn left
+    if (control_command > maxVelx){
+        control_command = maxVelx;
     }
+
 
     //// Create and publish Twist message for velocity control
     geometry_msgs::Twist cmd_vel;
     cmd_vel.linear.x = control_command;
-    cmd_vel.angular.z = angular_command;
+    cmd_vel.angular.z = steeringPID();
+    // cmd_vel.angular.z = 0;
 
-    // Update previous error
+
+    // Update previous error and integral
     prev_error_ = error;
-    prev_heading_error_ = heading_error;
+    // prev_heading_error_ = heading_error;
+  
     
     std::cout << "---------------------------------------------" << std::endl;
     std::cout << "distanceToGoal: " << distanceToGoal() << std::endl;
+    std::cout << "control_command: " << control_command << std::endl;
     std::cout << "angleToGoal: " << angleToGoal() << std::endl;
-    std::cout << "headingError: " << heading_error << std::endl;
-    std::cout << "angularCommand: " << angular_command << std::endl;
+    std::cout << "angular_command: " << steeringPID() << std::endl;
+    
+    
+    // std::cout << "headingError: " << heading_error << std::endl;
+    // std::cout << "angularCommand: " << angular_command << std::endl;
 
     return cmd_vel;
     
 }
+
+
+double Control::steeringPID(){
+///////// Angular control /////////
+    double current_heading = angleToGoal();
+    double heading_error = -(targetAngle - current_heading);
+
+    // Update integral and derivative terms for heading error
+    heading_integral_ += heading_error;
+
+    if (heading_integral_ > maxHeadingIntegral) {
+            heading_integral_ = maxHeadingIntegral;
+        }
+        else if (integral_ < -maxHeadingIntegral){
+            integral_ = -maxHeadingIntegral;
+        }
+
+    double heading_derivative = heading_error - prev_heading_error_;
+
+    // Calculate control command for angular velocity
+    double angular_command = Kp_h * heading_error + Ki_h * heading_integral_ + Kd_h * heading_derivative;
+    angular_command *= 0.6; //scaling down
+
+    if (fabs(angular_command) > maxVelz){
+            angular_command = maxVelz;
+        }
+
+    if (fabs(angleToGoal()) < targetAngle){
+        angular_command = 0;
+        heading_integral_ = 0;
+    }
+
+
+    // Ensure the angular command corresponds to the sign of the heading error and is within range
+    if (heading_error > 0) {
+        angular_command = fabs(angular_command);  // Turn right
+        if (angular_command > maxVelz){
+            angular_command = maxVelz;
+        }
+    } else {
+        angular_command = -fabs(angular_command); // Turn left
+        if (angular_command < -maxVelz){
+            angular_command = -maxVelz;
+        }
+    }
+
+    
+
+    return angular_command;
+}
+
+
+
+double Control::velocityPID(){
+
+}
+
+
 
 
 bool Control::collisionDetection() {
@@ -103,6 +172,7 @@ bool Control::goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_o
     if (distanceToGoal() <= distance_from_goal) {
         
         integral_ = 0; //reset PID integral 
+        heading_integral_ = 0;
         return true;
     }
     else{

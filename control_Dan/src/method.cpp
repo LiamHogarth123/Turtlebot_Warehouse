@@ -98,17 +98,12 @@ void Method::seperateThread() {
   }
   else{
     while (true){
-      singleThread();
-      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+      guiderBotMovement();
+      
     }
   }
 }
 
-
-void Method::singleThread() {
- 
-  guiderBotMovement();
-}
 
 
 
@@ -137,6 +132,7 @@ void Method::guiderBotMovement(){
 
     Send_cmd_tb2(guiderTraj);
     
+    std::this_thread::sleep_for(std::chrono::milliseconds(200)); // GuiderGPS.getIterationTime()
 }
 
 
