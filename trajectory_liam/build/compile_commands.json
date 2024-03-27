@@ -1,18 +1,23 @@
 [
 {
   "directory": "/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build",
-  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"trajectory_liam\\\" -Dmylib_EXPORTS -I/home/liam/git/Turtlebot_Warehouse/trajectory_liam/include -I/home/liam/git/Turtlebot_Warehouse/trajectory_liam/src -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g -fPIC   -std=gnu++11 -o CMakeFiles/mylib.dir/src/readMap.cpp.o -c /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/readMap.cpp",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"trajectory_liam\\\" -Dtrajectory_liam_readMap_EXPORTS -I/home/liam/git/Turtlebot_Warehouse/trajectory_liam/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -I/usr/include/opencv   -Wno-deprecated -Wdeprecated-declarations -g -fPIC   -std=gnu++11 -o CMakeFiles/trajectory_liam_readMap.dir/src/readMap.cpp.o -c /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/readMap.cpp",
   "file": "/home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/readMap.cpp"
 },
 {
   "directory": "/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build",
-  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"trajectory_liam\\\" -I/home/liam/git/Turtlebot_Warehouse/trajectory_liam/include -I/home/liam/git/Turtlebot_Warehouse/trajectory_liam/src -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o -c /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/main.cpp",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"trajectory_liam\\\" -I/home/liam/git/Turtlebot_Warehouse/trajectory_liam/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -isystem /usr/include/opencv   -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o -c /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/main.cpp",
   "file": "/home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/main.cpp"
 },
 {
   "directory": "/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build",
-  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"trajectory_liam\\\" -I/home/liam/git/Turtlebot_Warehouse/trajectory_liam/include -I/home/liam/git/Turtlebot_Warehouse/trajectory_liam/src -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o -c /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/method.cpp",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"trajectory_liam\\\" -I/home/liam/git/Turtlebot_Warehouse/trajectory_liam/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -isystem /usr/include/opencv   -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o -c /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/method.cpp",
   "file": "/home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/method.cpp"
+},
+{
+  "directory": "/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"trajectory_liam\\\" -Dtrajectory_liam_prm_EXPORTS -I/home/liam/git/Turtlebot_Warehouse/trajectory_liam/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -I/usr/include/opencv   -Wno-deprecated -Wdeprecated-declarations -g -fPIC   -std=gnu++11 -o CMakeFiles/trajectory_liam_prm.dir/src/prm.cpp.o -c /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/prm.cpp",
+  "file": "/home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/prm.cpp"
 },
 {
   "directory": "/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/gtest/googlemock",

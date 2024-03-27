@@ -12,4 +12,4 @@ export LD_LIBRARY_PATH="/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build
 export PKG_CONFIG_PATH="/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build'
 export ROSLISP_PACKAGE_DIRECTORIES="/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
-export ROS_PACKAGE_PATH="/home/liam/git/Turtlebot_Warehouse/Trajectory_Liam:/home/liam/git/Turtlebot_Warehouse/trajectory_liam:$ROS_PACKAGE_PATH"
+export ROS_PACKAGE_PATH="/home/liam/git/Turtlebot_Warehouse/trajectory_liam:$ROS_PACKAGE_PATH"

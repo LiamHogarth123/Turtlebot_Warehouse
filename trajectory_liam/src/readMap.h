@@ -3,13 +3,12 @@
  @brief Header file for the Sample class.
 */
 
-#ifndef SAMPLE_H
-#define SAMPLE_H
-
-
+#ifndef READMAP_H
+#define READMAP_H
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
 #include <atomic>
 #include <mutex>
-#include "opencv2/opencv.hpp"
 #include <ros/package.h>
 #include <geometry_msgs/Point.h>
 
@@ -22,7 +21,7 @@
 
 
 struct MapSpecs {
-    cv::mat mapImage;
+    cv::Mat mapImage;
     std::string image;
     float resolution;
     std::vector<float> origin;
@@ -36,29 +35,27 @@ public:
 
     readMap();
 
-    void read_Map_data(const std::string& yamlFile, const std::string& mapFile);
+    void read_Map_data(const std::string& mapFile);
 
-    MapSpecs loadMapSpecs(const std::string& yamlFile, MapSpecs map);
+    MapSpecs loadMapSpecs( MapSpecs map);
 
     cv::Mat Load_Map(const std::string& mapFile);
 
     std::vector<geometry_msgs::Point> Found_Object_Points();
 
- 
 
 
-public:
+
+
+
+
+
+
     MapSpecs map;
-
-
-
-
-
-
 };
 
   
 
 
 
-#endif // SAMPLE_H
+#endif // READMAP_H

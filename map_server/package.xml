@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>map_server</name>
+  <version>0.0.0</version>
+  <description>The map_server package</description>
+
+  <maintainer email="liam@todo.todo">Liam</maintainer>
+
+  <license>TODO</license>
+
+  <!-- Dependencies -->
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>roscpp</build_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>roscpp</exec_depend>
+
+  <export>
+    <!-- Additional tags can go here if needed -->
+  </export>
+</package>

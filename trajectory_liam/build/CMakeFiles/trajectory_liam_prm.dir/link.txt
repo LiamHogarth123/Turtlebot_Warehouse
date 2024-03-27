@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -Wno-deprecated -Wdeprecated-declarations -g  -shared -Wl,-soname,libtrajectory_liam_prm.so -o devel/lib/libtrajectory_liam_prm.so CMakeFiles/trajectory_liam_prm.dir/src/prm.cpp.o 

@@ -1,0 +1,3 @@
+[submodule "trajectory_liam/third-party/yaml-cpp"]
+	path = trajectory_liam/third-party/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp
