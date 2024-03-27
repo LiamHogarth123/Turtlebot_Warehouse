@@ -1,8 +1,10 @@
 #ifndef TAGRECOG_H
 #define TAGRECOG_H
-#include "ros/ros.h"
+#include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
-#include <opencv2/objdetect/aruco_detector.hpp>
+#include <opencv2/aruco/dictionary.hpp>
+// #include <opencv2/objdetect/
+#include <opencv2/aruco.hpp>
 
 class TagRecog
 {
@@ -22,7 +24,7 @@ public:
      * @param[in] image Image from webcam
      * @return Number of tag observed OR return -1 if no tag
      */
-    int detectMarker(long image);
+    double detectMarker(cv::Mat image);
 };
 
 #endif

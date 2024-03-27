@@ -1042,9 +1042,7 @@ help:
 	@echo "... src/method.s"
 .PHONY : help
 
-#=============================================================================
-# OpenCV
-LIBS = `pkg-config opencv --cflags --libs`
+
 
 #=============================================================================
 # Special targets to cleanup operation of make.

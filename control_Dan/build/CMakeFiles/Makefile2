@@ -628,7 +628,7 @@ CMakeFiles/control_Dan_method.dir/all: CMakeFiles/nav_msgs_generate_messages_cpp
 CMakeFiles/control_Dan_method.dir/all: CMakeFiles/nav_msgs_generate_messages_eus.dir/all
 	$(MAKE) -f CMakeFiles/control_Dan_method.dir/build.make CMakeFiles/control_Dan_method.dir/depend
 	$(MAKE) -f CMakeFiles/control_Dan_method.dir/build.make CMakeFiles/control_Dan_method.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num= "Built target control_Dan_method"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num=3,4,5 "Built target control_Dan_method"
 .PHONY : CMakeFiles/control_Dan_method.dir/all
 
 # Include target in all.
@@ -638,7 +638,7 @@ all: CMakeFiles/control_Dan_method.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/control_Dan_method.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles 5
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/control_Dan_method.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles 0
 .PHONY : CMakeFiles/control_Dan_method.dir/rule
@@ -1823,7 +1823,7 @@ gtest/googlemock/preinstall: gtest/googlemock/gtest/preinstall
 gtest/googlemock/CMakeFiles/gmock_main.dir/all:
 	$(MAKE) -f gtest/googlemock/CMakeFiles/gmock_main.dir/build.make gtest/googlemock/CMakeFiles/gmock_main.dir/depend
 	$(MAKE) -f gtest/googlemock/CMakeFiles/gmock_main.dir/build.make gtest/googlemock/CMakeFiles/gmock_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num=6,7,8,9 "Built target gmock_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num=9,10,11,12 "Built target gmock_main"
 .PHONY : gtest/googlemock/CMakeFiles/gmock_main.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1855,7 +1855,7 @@ clean: gtest/googlemock/CMakeFiles/gmock_main.dir/clean
 gtest/googlemock/CMakeFiles/gmock.dir/all:
 	$(MAKE) -f gtest/googlemock/CMakeFiles/gmock.dir/build.make gtest/googlemock/CMakeFiles/gmock.dir/depend
 	$(MAKE) -f gtest/googlemock/CMakeFiles/gmock.dir/build.make gtest/googlemock/CMakeFiles/gmock.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num=3,4,5 "Built target gmock"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num=6,7,8 "Built target gmock"
 .PHONY : gtest/googlemock/CMakeFiles/gmock.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1906,7 +1906,7 @@ gtest/googlemock/gtest/preinstall:
 gtest/googlemock/gtest/CMakeFiles/gtest_main.dir/all: gtest/googlemock/gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f gtest/googlemock/gtest/CMakeFiles/gtest_main.dir/build.make gtest/googlemock/gtest/CMakeFiles/gtest_main.dir/depend
 	$(MAKE) -f gtest/googlemock/gtest/CMakeFiles/gtest_main.dir/build.make gtest/googlemock/gtest/CMakeFiles/gtest_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num=12,13 "Built target gtest_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num=15,16 "Built target gtest_main"
 .PHONY : gtest/googlemock/gtest/CMakeFiles/gtest_main.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1938,7 +1938,7 @@ clean: gtest/googlemock/gtest/CMakeFiles/gtest_main.dir/clean
 gtest/googlemock/gtest/CMakeFiles/gtest.dir/all:
 	$(MAKE) -f gtest/googlemock/gtest/CMakeFiles/gtest.dir/build.make gtest/googlemock/gtest/CMakeFiles/gtest.dir/depend
 	$(MAKE) -f gtest/googlemock/gtest/CMakeFiles/gtest.dir/build.make gtest/googlemock/gtest/CMakeFiles/gtest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num=10,11 "Built target gtest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles --progress-num=13,14 "Built target gtest"
 .PHONY : gtest/googlemock/gtest/CMakeFiles/gtest.dir/all
 
 # Build rule for subdir invocation for target.

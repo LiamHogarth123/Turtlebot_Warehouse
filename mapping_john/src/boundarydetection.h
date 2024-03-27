@@ -27,9 +27,15 @@ public:
     /**
      * @brief Detect boundary colour
      * @param[in] image Image from webcam
-     * @return True if boundary detected, else false
+     * @return Double boundary detected and colour
      */
-    bool detectColour(long image);
+    double detectColour(cv::Mat image);
+
+    bool openCVtest();
+
+private:
+    double red_threshold_ = 180;
+    double blue_threshold_ = 180;
 };
 
 #endif
