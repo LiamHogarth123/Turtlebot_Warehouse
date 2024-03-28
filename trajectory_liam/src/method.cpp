@@ -49,13 +49,7 @@ void Method::seperateThread() {
  
   prmMap.UpdateMapData(latestMapData_, latestMapMetaData_);
 
-  prmMap.samplePoints();
-  std::cout << "finished sampling points" << std::endl;
-
-  
-  prmMap.visualise_PRM();
-  std::cout << "finshed" << std::endl;
-
+  prmMap.test();
 }
 
 

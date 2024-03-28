@@ -18,11 +18,11 @@ public:
 
     void setMap(MapSpecs temp);
 
-    void samplePoints();
+    std::vector<Node> samplePoints();
     
-    void visualise_PRM();
+    void visualise_PRM(std::vector<Node> Graph_);
 
-    void createNodesAndEdges(std::vector<Node> Graph);
+    std::vector<Node> createNodesAndEdges(std::vector<Node> Graph_);
 
     void findPath(int startNodeId, int goalNodeId);
 
@@ -34,6 +34,8 @@ public:
     
     bool pathIsClear(Node Node_A, Node Node_B);
 
+    void test();
+
 public:
     std::vector<Node> nodes;
     MapSpecs slam_map;
@@ -42,6 +44,10 @@ public:
     nav_msgs::OccupancyGrid SlamMapData;
     nav_msgs::MapMetaData latestMapMetaData_;
 
+
+
     int numberOfPoints_;
 
+
+    std::vector<cv::Point> path_points;
 };
