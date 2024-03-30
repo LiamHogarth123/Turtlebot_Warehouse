@@ -23,7 +23,11 @@ int main(int argc, char **argv){
 
   BoundaryDetection boundary;
 
-  bool test = boundary.detectColour();
+  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_red_static1.jpg");
+
+  double flag = boundary.detectColour(input);
+
+  std::cout << flag << "\n";
 
   // std::thread t(&Sample::control,sample);
 

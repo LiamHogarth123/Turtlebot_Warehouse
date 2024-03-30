@@ -34,8 +34,8 @@ public:
     bool openCVtest();
 
 private:
-    double red_threshold_ = 180;
-    double blue_threshold_ = 180;
+    double red_threshold_ = 205;
+    double blue_threshold_ = 210;
 };
 
 #endif
