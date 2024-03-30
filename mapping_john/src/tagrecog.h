@@ -20,11 +20,18 @@ public:
     ~TagRecog();
 
     /**
+     * @brief Draw AR tag marker
+     * @param[in] image Image from webcam
+     * @return Number of tag observed OR return -1 if no tag
+     */
+    void drawMarker();
+
+    /**
      * @brief Detect AR tag marker
      * @param[in] image Image from webcam
      * @return Number of tag observed OR return -1 if no tag
      */
-    double detectMarker(cv::Mat image);
+    std::vector<int> detectMarker(cv::Mat image);
 };
 
 #endif
