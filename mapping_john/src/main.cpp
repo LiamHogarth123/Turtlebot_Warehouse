@@ -32,9 +32,9 @@ int main(int argc, char **argv){
 
   TagRecog tag;
 
-  // tag.drawMarker();
+  // tag.drawMarker(17);
 
-  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_marker_33.jpg");
+  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_marker_17.jpg");
 
   std::vector<int> tag_ids = tag.detectMarker(input);
 

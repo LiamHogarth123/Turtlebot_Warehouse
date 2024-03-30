@@ -21,10 +21,10 @@ public:
 
     /**
      * @brief Draw AR tag marker
-     * @param[in] image Image from webcam
-     * @return Number of tag observed OR return -1 if no tag
+     * @param[in] value Value of marker to be generated
+     * @return void
      */
-    void drawMarker();
+    void drawMarker(double value);
 
     /**
      * @brief Detect AR tag marker

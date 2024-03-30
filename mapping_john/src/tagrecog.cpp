@@ -13,13 +13,13 @@ TagRecog::~TagRecog()
 
 }
 
-void TagRecog::drawMarker()
+void TagRecog::drawMarker(double value)
 {
     cv::Mat marker;
 
     const cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
 
-    cv::aruco::drawMarker(dictionary, 33, 200, marker, 1);
+    cv::aruco::drawMarker(dictionary, value, 200, marker, 1);
 
     cv::imshow("Window",marker);
     cv::waitKey(0);
@@ -46,7 +46,10 @@ std::vector<int> TagRecog::detectMarker(cv::Mat image)
     // cv::aruco::detectMarkers(image,dictionary,markerCorners,markerIds);
     cv::aruco::detectMarkers(image,dictionary,markerCorners,markerIds,parameters,rejectedCandidates);
 
-    std::cout << markerIds.size();
+    for (unsigned int i = 0; i < markerIds.size(); i++)
+    {
+        std::cout << "ID = " << markerIds.at(i) << "\n";
+    }
 
     return markerIds;
 }
