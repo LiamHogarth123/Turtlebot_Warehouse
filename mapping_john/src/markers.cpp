@@ -1,31 +1,36 @@
-#include "tagrecog.h"
+#include "markers.h"
 #include <math.h>
 #include <vector>
 #include <iostream>
 
-TagRecog::TagRecog()
+Markers::Markers()
 {
-
 }
 
-TagRecog::~TagRecog()
+Markers::~Markers()
 {
-
 }
 
-void TagRecog::drawMarker(double value)
+double Markers::calibrate()
+{
+    // Code
+    double placeholder = 0.0;
+    return placeholder;
+}
+
+void Markers::drawMarker(double value)
 {
     cv::Mat marker;
 
     const cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
 
-    cv::aruco::drawMarker(dictionary, value, 200, marker, 1);
+    cv::aruco::drawMarker(dictionary, value, markerLength_, marker, 1);
 
-    cv::imshow("Window",marker);
+    cv::imshow("Window", marker);
     cv::waitKey(0);
 }
 
-std::vector<int> TagRecog::detectMarker(cv::Mat image)
+std::vector<int> Markers::detectMarker(cv::Mat image)
 {
     // std::vector<int, std::allocator<int>> markerIds;
     std::vector<int> markerIds;
@@ -42,14 +47,27 @@ std::vector<int> TagRecog::detectMarker(cv::Mat image)
     std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
 
     // cv::aruco::ArucoDetector detector(dictionary,detectorParams);
-    
-    // cv::aruco::detectMarkers(image,dictionary,markerCorners,markerIds);
-    cv::aruco::detectMarkers(image,dictionary,markerCorners,markerIds,parameters,rejectedCandidates);
 
-    for (unsigned int i = 0; i < markerIds.size(); i++)
+    // cv::aruco::detectMarkers(image,dictionary,markerCorners,markerIds);
+    cv::aruco::detectMarkers(image, dictionary, markerCorners, markerIds, parameters, rejectedCandidates);
+
+    if (markerIds.size() >= 1)
     {
-        std::cout << "ID = " << markerIds.at(i) << "\n";
+        for (unsigned int i = 0; i < markerIds.size(); i++)
+        {
+            std::cout << "ID = " << markerIds.at(i) << "\n";
+        }
+    }
+    else
+    {
+        markerIds.push_back(-1);
+        std::cout << "ID = " << markerIds.at(0) << "\n";
     }
 
     return markerIds;
+}
+
+void Markers::markerPose(double value, std::vector<std::vector<cv::Point2f>> markerCorners)
+{
+    // Code
 }

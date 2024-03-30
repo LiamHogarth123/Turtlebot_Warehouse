@@ -19,14 +19,20 @@
 
 {
   "directory": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build",
-  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"mapping_john\\\" -I../include -I../src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -isystem /usr/local/include/opencv4  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/mapping_john_method.dir/src/tagrecog.cpp.o -c /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/tagrecog.cpp",
-  "file": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/tagrecog.cpp"
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"mapping_john\\\" -I../include -I../src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -isystem /usr/local/include/opencv4  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/mapping_john_method.dir/src/markers.cpp.o -c /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/markers.cpp",
+  "file": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/markers.cpp"
 },
 
 {
   "directory": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build",
   "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"mapping_john\\\" -I../include -I../src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -isystem /usr/local/include/opencv4  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/mapping_john_method.dir/src/obstaclerecog.cpp.o -c /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/obstaclerecog.cpp",
   "file": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/obstaclerecog.cpp"
+},
+
+{
+  "directory": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"mapping_john\\\" -I../include -I../src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -isystem /usr/local/include/opencv4  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/mapping_john_method.dir/src/errorcalc.cpp.o -c /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/errorcalc.cpp",
+  "file": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/errorcalc.cpp"
 },
 
 {

@@ -3,7 +3,7 @@
 #include "method.h"
 #include "boundarydetection.h"
 #include "errorcalc.h"
-#include "tagrecog.h"
+#include "markers.h"
 #include <iostream>
 #include <thread>
 
@@ -30,15 +30,13 @@ int main(int argc, char **argv){
 
   // std::cout << flag << "\n";
 
-  TagRecog tag;
+  Markers markers;
 
   // tag.drawMarker(17);
 
   cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_marker_17.jpg");
 
-  std::vector<int> tag_ids = tag.detectMarker(input);
-
-  // std::cout << tag_ids;
+  std::vector<int> marker_ids = markers.detectMarker(input);
 
   // std::thread t(&Sample::control,sample);
 
