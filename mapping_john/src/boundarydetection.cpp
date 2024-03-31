@@ -6,14 +6,21 @@
 // #include <opencv2/highgui/highgui.hpp>
 // #include <opencv2/highgui.hpp>
 
+BoundaryDetection::BoundaryDetection(ros::NodeHandle nh)
+{
+    subCam_ = nh_.subscribe("/usb_cam/image_raw", 1000, &BoundaryDetection::webcamCallback, this);
+}
+
 BoundaryDetection::BoundaryDetection()
 {
-
 }
 
 BoundaryDetection::~BoundaryDetection()
 {
+}
 
+void BoundaryDetection::webcamCallback(const sensor_msgs::Image::ConstPtr &msg)
+{
 }
 
 bool BoundaryDetection::openCVtest()

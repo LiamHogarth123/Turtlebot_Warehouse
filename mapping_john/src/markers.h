@@ -1,5 +1,8 @@
 #ifndef MARKERS_H
 #define MARKERS_H
+
+#include "ros/ros.h"
+#include "sensor_msgs/Image.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/aruco/dictionary.hpp>
@@ -13,6 +16,12 @@ class Markers
 public:
     /**
      * @brief Constructor
+     * @param[in] nh nodehandle
+     */
+    Markers(ros::NodeHandle nh);
+
+    /**
+     * @brief Constructor
      */
     Markers();
 
@@ -20,6 +29,14 @@ public:
      * @brief Destructor
      */
     ~Markers();
+
+    /**
+     * @brief markers thread.
+     *
+     *  The main processing thread that will run continously and utilise the data
+     *  When data needs to be combined then running a thread seperate to callback will guarantee data is processed
+     */
+    void markersThread();
 
     /**
      * @brief Calibrate AR tag detector
@@ -58,10 +75,30 @@ public:
 
     /** Marker length*/
     double markerLength_ = 200;
-    
+
     /** Calibration parameters*/
     std::vector<int> cameraMatrix_;
     std::vector<int> distCoeffs_;
+
+private:
+    /**
+     * @brief RGBD Callback
+     * @param sensor_msgs::Image::ConstPtr - The scan message
+     * @note This function and the declaration are ROS specific
+     * @return void
+     */
+    void RGBDCallback(const sensor_msgs::Image::ConstPtr &msg);
+
+protected:
+    /** Nodehandle for this node. Note, only 1 nodehandle is required (there is only 1 node).*/
+    ros::NodeHandle nh_;
+
+    /**
+     * Subscriber to image topic to get image from RGB-D sensor
+     * @typedef sensor_msgs/Image
+     * @topic /camera/color/image_raw
+     */
+    ros::Subscriber subRGBD_;
 };
 
 #endif

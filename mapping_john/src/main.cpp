@@ -15,6 +15,8 @@ int main(int argc, char **argv){
 
   // ros::NodeHandle nh;
 
+  // Markers::subRGBD_;
+
   /**
    * Let's start seperate thread first, to do that we need to create object
    * and thereafter start the thread on the function desired

@@ -3,11 +3,20 @@
 #include <vector>
 #include <iostream>
 
+Markers::Markers(ros::NodeHandle nh)
+{
+    subRGBD_ = nh_.subscribe("/camera/color/image_raw", 1000, &Markers::RGBDCallback, this);
+}
+
 Markers::Markers()
 {
 }
 
 Markers::~Markers()
+{
+}
+
+void Markers::RGBDCallback(const sensor_msgs::Image::ConstPtr &msg)
 {
 }
 

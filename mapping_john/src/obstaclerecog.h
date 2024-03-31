@@ -1,12 +1,17 @@
 #ifndef OBSTACLERECOG_H
 #define OBSTACLERECOG_H
-// #include "ros/ros.h"
+#include "ros/ros.h"
 #include "sensor_msgs/LaserScan.h"
 #include <vector>
 
 class ObstacleRecog
 {
 public:
+    /**
+     * @brief Constructor with nodehandle
+     */
+    ObstacleRecog(ros::NodeHandle nh);
+    
     /**
      * @brief Constructor
      */
@@ -44,6 +49,25 @@ private:
 
     /** Cartesian coordinates of obstacle points*/
     std::vector<std::pair<double,double>> obstacle_carts_;
+
+    /**
+     * @brief Scan Callback
+     * @param sensor_msgs::LaserScan::ConstPtr - The scan message
+     * @note This function and the declaration are ROS specific
+     * @return void
+     */
+    void scanCallback(const sensor_msgs::LaserScan::ConstPtr &msg);
+
+protected:
+    /** Nodehandle for this node. Note, only 1 nodehandle is required (there is only 1 node).*/
+    ros::NodeHandle nh_;
+
+    /**
+     * Subscriber to image topic to get image from RGB-D sensor
+     * @typedef sensor_msgs/LaserScan
+     * @topic /scan
+     */
+    ros::Subscriber subScan_;
 };
 
 #endif

@@ -3,11 +3,20 @@
 #include <vector>
 #include <iostream>
 
+ObstacleRecog::ObstacleRecog(ros::NodeHandle nh) : THRESHOLD_RANGE(0.3), THRESHOLD_WIDTH(0.01)
+{
+    subScan_ = nh_.subscribe("/scan", 1000, &ObstacleRecog::scanCallback, this);
+}
+
 ObstacleRecog::ObstacleRecog() : THRESHOLD_RANGE(0.3), THRESHOLD_WIDTH(0.01)
 {
 }
 
 ObstacleRecog::~ObstacleRecog()
+{
+}
+
+void ObstacleRecog::scanCallback(const sensor_msgs::LaserScan::ConstPtr &msg)
 {
 }
 
