@@ -34,11 +34,19 @@ int main(int argc, char **argv){
 
   Markers markers;
 
-  // tag.drawMarker(17);
+  /** Draw marker*/
+  // markers.drawMarker(17);
 
-  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_marker_17.jpg");
+  /** Detect marker*/
+  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_marker_17.jpg");
+  // std::vector<int> marker_ids = markers.detectMarker(input);
 
-  std::vector<int> marker_ids = markers.detectMarker(input);
+  /** Calibrate*/
+  cv::Mat calibImage = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_charuco_online.jpg");
+  // cv::imshow("Window",calibImage);
+  // cv::waitKey(0);
+  double output = markers.calibrate(calibImage);
+  // std::vector<int> marker_ids = markers.detectMarker(calibImage);
 
   // std::thread t(&Sample::control,sample);
 
