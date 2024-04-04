@@ -60,18 +60,27 @@ void Method::seperateThread() {
 
   switch (input_int) {
     case 1: {
-      default_goals = true;
+      geometry_msgs::Point point1;
+      point1.x = 1.0;
+      point1.y = -0.5;
+      Leader_goals.push_back(point1);
+
+      geometry_msgs::Point point2;
+      point2.x = 3.0;
+      point2.y = 0.0;
+      Leader_goals.push_back(point2);
       break;
       }
     case 2:{
       Leader_goals.clear();
       geometry_msgs::Point temp;
+      std::string userInput; // Assuming userInput is declared as string
       std::cout << "enter x"<< std::endl;
       std::cin >> userInput;
-      temp.x = std::stoi(userInput);
+      temp.x = std::stod(userInput); // Convert string to double
       std::cout << "enter y"<< std::endl;
       std::cin >> userInput;
-      temp.y = std::stoi(userInput);
+      temp.y = std::stod(userInput); // Convert string to double
       Leader_goals.push_back(temp);
       break;
       }
@@ -111,9 +120,8 @@ void Method::guiderBotMovement(){
 
     geometry_msgs::Point guiderGoal;
     
-    std::cout << "here1" << std::endl;
-    std::cout << Leader_goals.size() << std::endl;
-    std::cout << goal_index << std::endl;
+    // std::cout << Leader_goals.size() << std::endl;
+    // std::cout << goal_index << std::endl;
     guiderGoal = Leader_goals.at(goal_index);
     
 
@@ -132,7 +140,7 @@ void Method::guiderBotMovement(){
 
     Send_cmd_tb2(guiderTraj);
     
-    std::this_thread::sleep_for(std::chrono::milliseconds(200)); // GuiderGPS.getIterationTime()
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
 }
 
 
