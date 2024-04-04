@@ -4,6 +4,8 @@
 CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o
  /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/main.cpp
  /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/method.h
+ /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/prm.h
+ /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/readMap.h
  /opt/ros/melodic/include/geometry_msgs/Point.h
  /opt/ros/melodic/include/geometry_msgs/Pose.h
  /opt/ros/melodic/include/geometry_msgs/PoseWithCovariance.h
@@ -11,6 +13,8 @@ CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o
  /opt/ros/melodic/include/geometry_msgs/Twist.h
  /opt/ros/melodic/include/geometry_msgs/TwistWithCovariance.h
  /opt/ros/melodic/include/geometry_msgs/Vector3.h
+ /opt/ros/melodic/include/nav_msgs/MapMetaData.h
+ /opt/ros/melodic/include/nav_msgs/OccupancyGrid.h
  /opt/ros/melodic/include/nav_msgs/Odometry.h
  /opt/ros/melodic/include/ros/advertise_options.h
  /opt/ros/melodic/include/ros/advertise_service_options.h
@@ -77,7 +81,7 @@ CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o
  /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/method.cpp
  /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/method.h
- /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/readMap.cpp
+ /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/prm.h
  /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/readMap.h
  /opt/ros/melodic/include/geometry_msgs/Point.h
  /opt/ros/melodic/include/geometry_msgs/Pose.h
@@ -86,6 +90,8 @@ CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o
  /opt/ros/melodic/include/geometry_msgs/Twist.h
  /opt/ros/melodic/include/geometry_msgs/TwistWithCovariance.h
  /opt/ros/melodic/include/geometry_msgs/Vector3.h
+ /opt/ros/melodic/include/nav_msgs/MapMetaData.h
+ /opt/ros/melodic/include/nav_msgs/OccupancyGrid.h
  /opt/ros/melodic/include/nav_msgs/Odometry.h
  /opt/ros/melodic/include/ros/advertise_options.h
  /opt/ros/melodic/include/ros/advertise_service_options.h

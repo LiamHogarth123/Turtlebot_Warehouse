@@ -19,15 +19,16 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../include"
-  "../src"
   "/opt/ros/melodic/include"
   "/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
   "/usr/include/eigen3"
+  "/usr/include/opencv"
   )
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/CMakeFiles/mylib.dir/DependInfo.cmake"
+  "/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/CMakeFiles/trajectory_liam_readMap.dir/DependInfo.cmake"
+  "/home/liam/git/Turtlebot_Warehouse/trajectory_liam/build/CMakeFiles/trajectory_liam_prm.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

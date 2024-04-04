@@ -24,7 +24,7 @@ public:
      * @param[in] tagPose AR tag pose
      * @return Vector of doubles identifying 
      */
-    std::pair<double,double> positionError(nav_msgs::Odometry roboPos, geometry_msgs::Pose tagPose);
+    // std::pair<double,double> positionError(nav_msgs::Odometry roboPos, geometry_msgs::Pose tagPose);
 };
 
 #endif

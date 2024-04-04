@@ -1,32 +1,35 @@
-#include <yaml-cpp/yaml.h>
+
 #include <iostream>
 #include <string>
-#include "opencv2/opencv.hpp"
+#include <opencv2/core/mat.hpp>
 #include "readMap.h"
 
 
-readMap::readMap(){
-    
+readMap::readMap() {
+    // Empty constructor body
 }
 
 
-void readMap::read_Map_data(const std::string& yamlFile, const std::string& mapFile){
-    MapSpecs map;
-    map = loadMapSpecs(yamlFile, map);
+void readMap::read_Map_data( const std::string& mapFile){
+   
+    map = loadMapSpecs(map);
     map.mapImage = Load_Map(mapFile);
 
 }
 
-MapSpecs readMap::loadMapSpecs(const std::string& yamlFile, MapSpecs map) {
-    YAML::Node config = YAML::LoadFile(yamlFile);
-
+MapSpecs readMap::loadMapSpecs( MapSpecs map) {
+   
+    std::vector<float> temp;
+    temp.push_back(-10.000000);
+    temp.push_back(-10.000000);
+    temp.push_back(0.000000);
     
-    map.image = config["image"].as<std::string>();
-    map.resolution = config["resolution"].as<float>();
-    map.origin = config["origin"].as<std::vector<float>>();
-    map.negate = config["negate"].as<int>();
-    map.occupied_thresh = config["occupied_thresh"].as<float>();
-    map.free_thresh = config["free_thresh"].as<float>();
+    map.image = "/home/dan/map.pgm";
+    map.resolution = 0.050000;
+    map.origin = temp;
+    map.negate = 0;
+    map.occupied_thresh = 0.65;
+    map.free_thresh = 0.196;
 
     return map;
 }
@@ -34,9 +37,9 @@ MapSpecs readMap::loadMapSpecs(const std::string& yamlFile, MapSpecs map) {
 cv::Mat readMap::Load_Map(const std::string& mapFile){
     cv::Mat mapImage = cv::imread(mapFile, cv::IMREAD_GRAYSCALE);
     if(mapImage.empty()) {
-        std::cout << "Could not read the map file: " << specs.image << std::endl;
+        std::cout << "Could not read the map file: "<< std::endl;
     }
-    mapImage.
+
     return mapImage;
 }
 

@@ -2,6 +2,7 @@
 #include "ros/ros.h"
 #include "method.h"
 #include <thread>
+#include "yaml-cpp/yaml.h"
 
 
 int main(int argc, char **argv){

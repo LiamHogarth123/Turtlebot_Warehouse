@@ -32,7 +32,7 @@ include_directories(
   ${OpenCV_INCLUDE_DIR}
 )
 
-add_executable(${PROJECT_NAME}_method src/main.cpp src/method.cpp src/boundarydetection.h src/boundarydetection.cpp)
+add_executable(${PROJECT_NAME}_method src/main.cpp src/method.cpp src/boundarydetection.h src/boundarydetection.cpp src/markers.h src/markers.cpp src/obstaclerecog.h src/obstaclerecog.cpp src/errorcalc.h src/errorcalc.cpp)
 
 add_dependencies(${PROJECT_NAME}_method ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 

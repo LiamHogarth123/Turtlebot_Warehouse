@@ -3,7 +3,8 @@
 #include "method.h"
 #include "boundarydetection.h"
 #include "errorcalc.h"
-#include "tagrecog.h"
+#include "markers.h"
+#include <iostream>
 #include <thread>
 
 
@@ -14,6 +15,8 @@ int main(int argc, char **argv){
 
   // ros::NodeHandle nh;
 
+  // Markers::subRGBD_;
+
   /**
    * Let's start seperate thread first, to do that we need to create object
    * and thereafter start the thread on the function desired
@@ -21,9 +24,33 @@ int main(int argc, char **argv){
   // std::shared_ptr<Method> method(new Method(nh));
   // std::thread t(&Method::seperateThread, method);
 
+  /** Detect boundary*/
   BoundaryDetection boundary;
 
-  bool test = boundary.detectColour();
+  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_blue_static3.jpg");
+  // cv::imshow("Window", input);
+  // cv::waitKey(0);
+
+  double flag = boundary.detectColour(input);
+
+  std::cout << flag << "\n";
+
+  // Markers markers;
+
+  /** Draw marker*/
+  // markers.drawMarker(17);
+
+  /** Detect marker*/
+  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_marker_17.jpg");
+  // std::vector<int> marker_ids = markers.detectMarker(input);
+
+  /** Calibrate*/
+  // cv::Mat calibImage = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_charuco_online.jpg");
+  // cv::imshow("Window",calibImage);
+  // cv::waitKey(0);
+  // double output = markers.calibrate(calibImage);
+  
+  // std::vector<int> marker_ids = markers.detectMarker(calibImage);
 
   // std::thread t(&Sample::control,sample);
 
