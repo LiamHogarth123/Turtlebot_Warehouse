@@ -24,15 +24,18 @@ int main(int argc, char **argv){
   // std::shared_ptr<Method> method(new Method(nh));
   // std::thread t(&Method::seperateThread, method);
 
-  // BoundaryDetection boundary;
+  /** Detect boundary*/
+  BoundaryDetection boundary;
 
-  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_blue_static1.jpg");
+  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_blue_static3.jpg");
+  // cv::imshow("Window", input);
+  // cv::waitKey(0);
 
-  // double flag = boundary.detectColour(input);
+  double flag = boundary.detectColour(input);
 
-  // std::cout << flag << "\n";
+  std::cout << flag << "\n";
 
-  Markers markers;
+  // Markers markers;
 
   /** Draw marker*/
   // markers.drawMarker(17);
@@ -42,10 +45,11 @@ int main(int argc, char **argv){
   // std::vector<int> marker_ids = markers.detectMarker(input);
 
   /** Calibrate*/
-  cv::Mat calibImage = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_charuco_online.jpg");
+  // cv::Mat calibImage = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_charuco_online.jpg");
   // cv::imshow("Window",calibImage);
   // cv::waitKey(0);
-  double output = markers.calibrate(calibImage);
+  // double output = markers.calibrate(calibImage);
+  
   // std::vector<int> marker_ids = markers.detectMarker(calibImage);
 
   // std::thread t(&Sample::control,sample);

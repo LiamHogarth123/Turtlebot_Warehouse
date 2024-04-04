@@ -11,6 +11,7 @@
 // #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 class BoundaryDetection
 {
@@ -18,7 +19,7 @@ public:
     /**
      * @brief Constructor
      */
-    BoundaryDetection(ros::NodeHandle nh);
+    // BoundaryDetection(ros::NodeHandle nh);
     
     /**
      * @brief Constructor
@@ -40,8 +41,13 @@ public:
     bool openCVtest();
 
 private:
-    double red_threshold_ = 205;
-    double blue_threshold_ = 210;
+    // double red_threshold_ = 205; /** Intensity threshold for detecting red pixel*/
+    // double blue_threshold_ = 210; /** Intensity threshold for detecting blue pixel*/
+    double red_threshold_ = 180; /** Intensity threshold for detecting red pixel*/
+    double blue_threshold_ = 210; /** Intensity threshold for detecting blue pixel*/
+    double colour_id_threshold_ = 1000; /** Number of same coloured pixels to identify a colour*/
+
+    double colour_tolerance_ = 15;
 
     /**
      * @brief webcam Callback
@@ -53,14 +59,14 @@ private:
 
 protected:
     /** Nodehandle for this node. Note, only 1 nodehandle is required (there is only 1 node).*/
-    ros::NodeHandle nh_;
+    // ros::NodeHandle nh_;
 
     /**
      * Subscriber to image topic to get image from webcam
      * @typedef sensor_msgs/Image
      * @topic /usb_cam/image_raw
      */
-    ros::Subscriber subCam_;
+    // ros::Subscriber subCam_;
 };
 
 #endif
