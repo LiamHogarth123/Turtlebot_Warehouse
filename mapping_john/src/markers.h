@@ -56,8 +56,9 @@ public:
     /**
      * @brief Detect AR tag marker
      * @param[in] image Image from webcam
-     * @return Number of tag observed OR return -1 if no tag
+     * @return Number of tag observed OR return -1 if no tag | Corners of tag OR return -1 if no tag
      */
+    // std::pair<std::vector<int>,std::vector<std::vector<cv::Point2f>>> detectMarker(cv::Mat image);
     std::vector<int> detectMarker(cv::Mat image);
 
     /**

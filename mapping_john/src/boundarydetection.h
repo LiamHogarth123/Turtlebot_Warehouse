@@ -20,7 +20,7 @@ public:
      * @brief Constructor
      */
     // BoundaryDetection(ros::NodeHandle nh);
-    
+
     /**
      * @brief Constructor
      */
@@ -38,16 +38,15 @@ public:
      */
     double detectColour(cv::Mat image);
 
-    bool openCVtest();
+    /**
+     * @brief Run boundary detection
+     * @param[in] running Boolean to run
+     * @return If boundary is detected
+     */
+    double runBoundaryDetection(bool running);
 
 private:
-    // double red_threshold_ = 205; /** Intensity threshold for detecting red pixel*/
-    // double blue_threshold_ = 210; /** Intensity threshold for detecting blue pixel*/
-    double red_threshold_ = 180; /** Intensity threshold for detecting red pixel*/
-    double blue_threshold_ = 210; /** Intensity threshold for detecting blue pixel*/
-    double colour_id_threshold_ = 1000; /** Number of same coloured pixels to identify a colour*/
-
-    double colour_tolerance_ = 15;
+    double colour_id_threshold_ = 1000; /** Number of -1 pixels to identify a colour*/
 
     /**
      * @brief webcam Callback

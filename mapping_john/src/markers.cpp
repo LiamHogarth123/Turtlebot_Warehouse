@@ -100,6 +100,7 @@ void Markers::drawMarker(double value)
 }
 
 std::vector<int> Markers::detectMarker(cv::Mat image)
+// std::pair<std::vector<int>,std::vector<std::vector<cv::Point2f>>> Markers::detectMarker(cv::Mat image)
 {
     // std::vector<int, std::allocator<int>> markerIds;
     std::vector<int> markerIds;

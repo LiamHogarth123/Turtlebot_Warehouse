@@ -27,13 +27,11 @@ int main(int argc, char **argv){
   /** Detect boundary*/
   BoundaryDetection boundary;
 
-  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_blue_static3.jpg");
-  // cv::imshow("Window", input);
-  // cv::waitKey(0);
+  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_red_static2.jpg");
 
   double flag = boundary.detectColour(input);
 
-  std::cout << flag << "\n";
+  std::cout << "flag = " << flag << std::endl;
 
   // Markers markers;
 
