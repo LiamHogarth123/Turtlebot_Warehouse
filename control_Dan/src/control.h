@@ -19,6 +19,7 @@ class Control
     void updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom );
 
     geometry_msgs::Twist reachGoal();
+    
     bool collisionDetection();
 
     bool goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom);
@@ -39,29 +40,19 @@ class Control
     nav_msgs::Odometry odom;
 
     //Calculation variable declaration
-    double DirectDistance;
-    double Angle;
-    double theta;
-    double radius;
-    double default_velocity;
-    double distance_from_goal;
-
-    
     double Kp_;
     double Ki_;
     double Kd_;
     double toleranceDistance;
     double integral_;
     double prev_error_;
-    double prev_integral_;
 
     double Kp_h;
     double Ki_h;
     double Kd_h;
-    double targetAngle;
-    double prev_heading_error_;
+    double toleranceAngle;
     double heading_integral_;
-    double prev_heading_integral_;
+    double prev_heading_error_;
 
     double maxVelx;
     double maxVelz;

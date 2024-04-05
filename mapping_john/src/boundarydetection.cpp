@@ -1,63 +1,99 @@
 #include "boundarydetection.h"
-#include <math.h>
-#include <vector>
-#include <iostream>
 
-// #include <opencv2/highgui/highgui.hpp>
-// #include <opencv2/highgui.hpp>
-
-BoundaryDetection::BoundaryDetection()
+BoundaryDetection::BoundaryDetection(ros::NodeHandle nh)
 {
-
+    subCam_ = nh_.subscribe("/usb_cam/image_raw", 1000, &BoundaryDetection::webcamCallback, this);
 }
 
 BoundaryDetection::~BoundaryDetection()
 {
-
 }
 
-bool BoundaryDetection::openCVtest()
+void BoundaryDetection::webcamCallback(const sensor_msgs::Image::ConstPtr &msg)
 {
-    cv::Mat input = cv::imread("/home/john/Desktop/image.jpg");
-    cv::imshow("Window",input);
-    cv::waitKey(0);
-
-    return 0;
+    // cam_ = &msg;
 }
 
 double BoundaryDetection::detectColour(cv::Mat image)
 {
-    // Define variables
+    /** Values to convert image to Hue Saturation Value (HSV) from Blue Green Red (BGR)*/
+    unsigned int hlr = 0; // Lower hue value (red)
+    unsigned int hur = 15; // Upper hue value (red)
+    unsigned int hlb = 110; // Lower hue value (blue)
+    unsigned int hub = 130; // Upper hue value (blue)
+    unsigned int sl = 80; // Lower saturation value
+    unsigned int su = 255; // Upper saturation value
+    unsigned int vl = 0; // Lower value
+    unsigned int vu = 255; // Upper value
+
+    /** Matrix to store processed image*/
+    cv::Mat image_hsv;
+
+    /** Convert image to HSV*/
+    cv::cvtColor(image,image_hsv,cv::COLOR_BGR2HSV);
+
+    /** Check for blue*/
+    cv::Mat output_blue;
+    cv::inRange(image_hsv, cv::Scalar(hlb,sl,vl), cv::Scalar(hub,su,vu),output_blue);
+
+    /** Check for red*/
+    cv::Mat output_red;
+    cv::inRange(image_hsv, cv::Scalar(hlr,sl,vl), cv::Scalar(hur,su,vu),output_red);
+    
+    /** Define variables*/
     double boundaryFlag = 0; // Default to no boundary
-    double y; // Image 'y' coordinate
-    double x; // Image 'x' coordinate
-    cv::Size imageSize = image.size();
-    cv::Point3_<uchar>* pixelRGB = image.ptr<cv::Point3_<uchar>>(y,x);
+    cv::Size imageSize = image_hsv.size();
+    double y = imageSize.height; // Image 'y' coordinate
+    double x = imageSize.width; // Image 'x' coordinate
 
-    /* Where
-    pixelRGB.x = blue
-    pixelRGB.y = green
-    pixelRGB.z = red
-    */
+    /** Define vectors for threshold exceedance*/
+    std::vector<unsigned int> bluePix = {};
+    std::vector<unsigned int> redPix = {};
 
-    // Iterate through each pixel, top left to bottom right
-    for (int i = 0; i < imageSize.height; i++)
+    /** Iterate through each pixel, top left to bottom right*/
+    for (int i = 1; i < y; i++)
     {
-        for (int j = 0; i < imageSize.width; i++)
+        for (int j = 1; j < x; j++)
         {
-            // Check if blue intensity is above threshold
-            if (pixelRGB->x > blue_threshold_)
+            /** Check if blue intensity is above threshold*/
+            if (output_blue.at<int>(i,j) > -1 - 1e-3 && output_blue.at<int>(i,j) < -1 + 1e-3)
             {
-                return boundaryFlag = 1;
+                bluePix.push_back(1);
+                if (bluePix.size() >= colour_id_threshold_)
+                {
+                    std::cout << "blue over threshold at y = " << i << "x = " << j << std::endl; // DEBUG ONLY
+                    return boundaryFlag = 1;
+                }
             }
 
-            // Check if red intensity is above threshold
-            if (pixelRGB->z > red_threshold_)
+            /** Check if red intensity is above threshold*/
+            if (output_red.at<int>(i,j) > -1 - 1e-3 && output_red.at<int>(i,j) < -1 + 1e-3)
             {
-                return boundaryFlag = 2;
+                redPix.push_back(1);
+                if (redPix.size() >= colour_id_threshold_)
+                {
+                    std::cout << "red over threshold at y = " << i << "x = " << j << std::endl; // DEBUG ONLY
+                    return boundaryFlag = 2;
+                }
             }
         }
     }
     
+    return boundaryFlag;
+}
+
+double BoundaryDetection::runBoundaryDetection(bool running)
+{
+    double boundaryFlag = 0;
+    unsigned int counter = 0;
+    while (running == true)
+    {
+        counter++;
+        if (counter == 10)
+        {
+            // double flag = BoundaryDetection::detectColour();
+            counter = 0;
+        }
+    }
     return boundaryFlag;
 }

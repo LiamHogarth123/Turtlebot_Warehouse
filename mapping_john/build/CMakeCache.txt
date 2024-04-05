@@ -303,13 +303,13 @@ EMPY_SCRIPT:STRING=/usr/lib/python3/dist-packages/em.py
 Eigen3_DIR:PATH=/usr/lib/cmake/eigen3
 
 //Path to a library.
-GMOCK_LIBRARY:FILEPATH=GMOCK_LIBRARY-NOTFOUND
+GMOCK_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libgmock.a
 
 //Path to a library.
 GMOCK_LIBRARY_DEBUG:FILEPATH=GMOCK_LIBRARY_DEBUG-NOTFOUND
 
 //Path to a library.
-GMOCK_MAIN_LIBRARY:FILEPATH=GMOCK_MAIN_LIBRARY-NOTFOUND
+GMOCK_MAIN_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libgmock_main.a
 
 //Path to a library.
 GMOCK_MAIN_LIBRARY_DEBUG:FILEPATH=GMOCK_MAIN_LIBRARY_DEBUG-NOTFOUND
@@ -333,7 +333,7 @@ GTEST_MAIN_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libgtest_main.a
 GTEST_MAIN_LIBRARY_DEBUG:FILEPATH=GTEST_MAIN_LIBRARY_DEBUG-NOTFOUND
 
 //The directory containing a CMake configuration file for GTest.
-GTest_DIR:PATH=GTest_DIR-NOTFOUND
+GTest_DIR:PATH=/home/john/miniconda3/lib/cmake/GTest
 
 //Enable installation of googletest. (Projects embedding googletest
 // may want to turn this OFF.)

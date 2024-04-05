@@ -19,6 +19,30 @@
 
 {
   "directory": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"mapping_john\\\" -I../include -I../src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -isystem /usr/local/include/opencv4  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/mapping_john_method.dir/src/markers.cpp.o -c /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/markers.cpp",
+  "file": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/markers.cpp"
+},
+
+{
+  "directory": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"mapping_john\\\" -I../include -I../src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -isystem /usr/local/include/opencv4  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/mapping_john_method.dir/src/obstaclerecog.cpp.o -c /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/obstaclerecog.cpp",
+  "file": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/obstaclerecog.cpp"
+},
+
+{
+  "directory": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"mapping_john\\\" -I../include -I../src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -isystem /usr/local/include/opencv4  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/mapping_john_method.dir/src/errorcalc.cpp.o -c /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/errorcalc.cpp",
+  "file": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/errorcalc.cpp"
+},
+
+{
+  "directory": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"mapping_john\\\" -I../include -I../src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -isystem /usr/local/include/opencv4  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/mapping_john_method.dir/src/imageconverter.cpp.o -c /home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/imageconverter.cpp",
+  "file": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/src/imageconverter.cpp"
+},
+
+{
+  "directory": "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build",
   "command": "/usr/bin/c++  -DGTEST_CREATE_SHARED_LIBRARY=1 -Dgmock_main_EXPORTS -isystem /usr/src/googletest/googlemock/include -isystem /usr/src/googletest/googlemock -isystem /usr/src/googletest/googletest/include -isystem /usr/src/googletest/googletest  -g -fPIC   -Wall -Wshadow -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -DGTEST_HAS_PTHREAD=1 -std=c++11 -o gtest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o -c /usr/src/googletest/googlemock/src/gmock_main.cc",
   "file": "/usr/src/googletest/googlemock/src/gmock_main.cc"
 },

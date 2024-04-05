@@ -16,7 +16,7 @@ int main(int argc, char **argv){
    * and thereafter start the thread on the function desired
    */
   std::shared_ptr<Method> method(new Method(nh));
-  std::thread t(&Method::seperateThread, method);
+  std::thread t(&Method::separateThread, method);
 
   // std::thread t(&Sample::control,sample);
 
