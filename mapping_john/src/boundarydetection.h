@@ -2,16 +2,14 @@
 #define BOUNDARYDETECTION_H
 #include "ros/ros.h"
 #include "sensor_msgs/Image.h"
-// #include "opencv2/opencv.hpp"
-// #include "opencv2/core/core.hpp"
-// #include <opencv2/highgui.hpp>
-// #include "opencv2/highgui.hpp"
-// #include <opencv2/highgui.hpp>
-// #include <../highgui.hpp>
-// #include <iostream>
+#include <image_transport/image_transport.h>
+#include <iostream>
+#include <math.h>
+#include <vector>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <cv_bridge/cv_bridge.h>
 
 class BoundaryDetection
 {
@@ -19,12 +17,12 @@ public:
     /**
      * @brief Constructor
      */
-    // BoundaryDetection(ros::NodeHandle nh);
+    BoundaryDetection(ros::NodeHandle nh);
 
     /**
      * @brief Constructor
      */
-    BoundaryDetection();
+    // BoundaryDetection();
 
     /**
      * @brief Destructor
@@ -58,7 +56,12 @@ private:
 
 protected:
     /** Nodehandle for this node. Note, only 1 nodehandle is required (there is only 1 node).*/
-    // ros::NodeHandle nh_;
+    ros::NodeHandle nh_;
+
+    /** Image transport initialisers*/
+    image_transport::ImageTransport it_;
+    image_transport::Subscriber subCam_;
+    image_transport::Publisher pubCam_;
 
     /**
      * Subscriber to image topic to get image from webcam

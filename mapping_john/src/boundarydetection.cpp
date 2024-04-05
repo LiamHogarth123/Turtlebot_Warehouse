@@ -1,19 +1,14 @@
 #include "boundarydetection.h"
-#include <math.h>
-#include <vector>
-#include <iostream>
 
-// #include <opencv2/highgui/highgui.hpp>
-// #include <opencv2/highgui.hpp>
-
-// BoundaryDetection::BoundaryDetection(ros::NodeHandle nh)
-// {
-//     subCam_ = nh_.subscribe("/usb_cam/image_raw", 1000, &BoundaryDetection::webcamCallback, this);
-// }
-
-BoundaryDetection::BoundaryDetection()
+BoundaryDetection::BoundaryDetection(ros::NodeHandle nh) : it_(nh_)
 {
+    subCam_ = it_.subscribe("/usb_cam/image_raw",1000,&BoundaryDetection::webcamCallback,this);
+    pubCam_ = it_.advertise("/cam/output",1000);
 }
+
+// BoundaryDetection::BoundaryDetection()
+// {
+// }
 
 BoundaryDetection::~BoundaryDetection()
 {
@@ -21,6 +16,16 @@ BoundaryDetection::~BoundaryDetection()
 
 void BoundaryDetection::webcamCallback(const sensor_msgs::Image::ConstPtr &msg)
 {
+    cv_bridge::CvImagePtr cam_ptr;
+    try
+    {
+        cam_ptr = cv_bridge::toCvCopy(msg,sensor_msgs::image_encodings::BGR8);
+    }
+    catch(cv_bridge::Exception& e)
+    {
+        return;
+    }
+    
 }
 
 double BoundaryDetection::detectColour(cv::Mat image)
@@ -94,9 +99,15 @@ double BoundaryDetection::detectColour(cv::Mat image)
 double BoundaryDetection::runBoundaryDetection(bool running)
 {
     double boundaryFlag = 0;
-    // while (running == true)
-    // {
-    //     double flag = BoundaryDetection::detectColour()
-    // }
+    unsigned int counter = 0;
+    while (running == true)
+    {
+        counter++;
+        if (counter == 10)
+        {
+            // double flag = BoundaryDetection::detectColour();
+            counter = 0;
+        }
+    }
     return boundaryFlag;
 }
