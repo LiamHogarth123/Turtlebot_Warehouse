@@ -27,8 +27,8 @@ int main(int argc, char **argv){
   /** Detect boundary*/
   BoundaryDetection boundary;
 
-  /** @test = Blue Static #1*/
-  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_blue_static1.jpg");
+  /** @test = Red Static #2*/
+  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_red_static2.jpg");
 
   double flag = boundary.detectColour(input);
 
