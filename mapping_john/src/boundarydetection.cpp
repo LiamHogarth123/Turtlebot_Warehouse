@@ -1,14 +1,9 @@
 #include "boundarydetection.h"
 
-BoundaryDetection::BoundaryDetection(ros::NodeHandle nh) : it_(nh_)
+BoundaryDetection::BoundaryDetection(ros::NodeHandle nh)
 {
-    subCam_ = it_.subscribe("/usb_cam/image_raw",1000,&BoundaryDetection::webcamCallback,this);
-    pubCam_ = it_.advertise("/cam/output",1000);
+    subCam_ = nh_.subscribe("/usb_cam/image_raw", 1000, &BoundaryDetection::webcamCallback, this);
 }
-
-// BoundaryDetection::BoundaryDetection()
-// {
-// }
 
 BoundaryDetection::~BoundaryDetection()
 {
@@ -16,16 +11,7 @@ BoundaryDetection::~BoundaryDetection()
 
 void BoundaryDetection::webcamCallback(const sensor_msgs::Image::ConstPtr &msg)
 {
-    cv_bridge::CvImagePtr cam_ptr;
-    try
-    {
-        cam_ptr = cv_bridge::toCvCopy(msg,sensor_msgs::image_encodings::BGR8);
-    }
-    catch(cv_bridge::Exception& e)
-    {
-        return;
-    }
-    
+    // cam_ = &msg;
 }
 
 double BoundaryDetection::detectColour(cv::Mat image)

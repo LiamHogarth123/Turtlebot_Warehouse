@@ -39,16 +39,22 @@ private:
      * @note This function and the declaration are ROS specific
      * @return void
      */
-    void RGBDConvert(const sensor_msgs::Image::ConstPtr &msg);
+    void rgbdConvert(const sensor_msgs::Image::ConstPtr &msg);
 
 protected:
     /** Nodehandle for this node. Note, only 1 nodehandle is required (there is only 1 node).*/
     ros::NodeHandle nh_;
 
-    /** Image transport initialisers*/
+    /** Image transport initialiser*/
     image_transport::ImageTransport it_;
+
+    /** USB camera subscriber and publisher*/
     image_transport::Subscriber subCam_;
     image_transport::Publisher pubCam_;
+
+    /** RGB-D camera subscriber and publisher*/
+    image_transport::Subscriber subRGBD_;
+    image_transport::Publisher pubRGBD_;
 };
 
 #endif
