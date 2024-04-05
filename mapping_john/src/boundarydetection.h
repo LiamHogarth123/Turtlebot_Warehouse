@@ -2,13 +2,9 @@
 #define BOUNDARYDETECTION_H
 #include "ros/ros.h"
 #include "sensor_msgs/Image.h"
-// #include "opencv2/opencv.hpp"
-// #include "opencv2/core/core.hpp"
-// #include <opencv2/highgui.hpp>
-// #include "opencv2/highgui.hpp"
-// #include <opencv2/highgui.hpp>
-// #include <../highgui.hpp>
-// #include <iostream>
+#include <iostream>
+#include <math.h>
+#include <vector>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -19,12 +15,7 @@ public:
     /**
      * @brief Constructor
      */
-    // BoundaryDetection(ros::NodeHandle nh);
-    
-    /**
-     * @brief Constructor
-     */
-    BoundaryDetection();
+    BoundaryDetection(ros::NodeHandle nh);
 
     /**
      * @brief Destructor
@@ -38,16 +29,15 @@ public:
      */
     double detectColour(cv::Mat image);
 
-    bool openCVtest();
+    /**
+     * @brief Run boundary detection
+     * @param[in] running Boolean to run
+     * @return If boundary is detected
+     */
+    double runBoundaryDetection(bool running);
 
 private:
-    // double red_threshold_ = 205; /** Intensity threshold for detecting red pixel*/
-    // double blue_threshold_ = 210; /** Intensity threshold for detecting blue pixel*/
-    double red_threshold_ = 180; /** Intensity threshold for detecting red pixel*/
-    double blue_threshold_ = 210; /** Intensity threshold for detecting blue pixel*/
-    double colour_id_threshold_ = 1000; /** Number of same coloured pixels to identify a colour*/
-
-    double colour_tolerance_ = 15;
+    double colour_id_threshold_ = 1000; /** Number of -1 pixels to identify a colour*/
 
     /**
      * @brief webcam Callback
@@ -59,14 +49,17 @@ private:
 
 protected:
     /** Nodehandle for this node. Note, only 1 nodehandle is required (there is only 1 node).*/
-    // ros::NodeHandle nh_;
+    ros::NodeHandle nh_;
 
     /**
      * Subscriber to image topic to get image from webcam
      * @typedef sensor_msgs/Image
-     * @topic /usb_cam/image_raw
+     * @topic /cam/output
      */
-    // ros::Subscriber subCam_;
+    ros::Subscriber subCam_;
+
+    /** Image reading*/
+    cv::Mat cam_;
 };
 
 #endif
