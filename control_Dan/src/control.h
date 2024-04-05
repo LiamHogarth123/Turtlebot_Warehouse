@@ -19,6 +19,7 @@ class Control
     void updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom );
 
     geometry_msgs::Twist reachGoal();
+    
     bool collisionDetection();
 
     bool goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom);
@@ -49,7 +50,7 @@ class Control
     double Kp_h;
     double Ki_h;
     double Kd_h;
-    double targetAngle;
+    double toleranceAngle;
     double heading_integral_;
     double prev_heading_error_;
 

@@ -15,7 +15,7 @@ Control::Control(){
     
  
     toleranceDistance = 0.2;
-    targetAngle = 0.05;
+    toleranceAngle = 0.05;
     prev_error_ = 0;
     prev_heading_error_ = 0;
     
@@ -32,6 +32,9 @@ Control::Control(){
 
     maxIntegral = 10;
     maxHeadingIntegral = 15;
+
+    integral_ = 0;
+    heading_integral_ = 0;
 
 }
 
@@ -55,8 +58,8 @@ geometry_msgs::Twist Control::reachGoal(){
     cmd_vel.angular.z = velocityZ;
 
     std::cout << "---------------------------------------------" << std::endl;
-    //std::cout << "distanceToGoal: " << distanceToGoal() << std::endl;
-    //std::cout << "control_command: " << velocityX << std::endl;
+    std::cout << "distanceToGoal: " << distanceToGoal() << std::endl;
+    std::cout << "control_command: " << velocityX << std::endl;
     std::cout << "angleToGoal: " << angleToGoal() << std::endl;
     std::cout << "angular_command: " << velocityZ << std::endl;
     
@@ -116,7 +119,7 @@ double Control::velocityPID(){
 double Control::steeringPID(){
 ///////// Angular control /////////
     double current_heading = angleToGoal();
-    double heading_error = -(targetAngle - current_heading);
+    double heading_error = -(toleranceAngle - current_heading);
 
     // Update integral and derivative terms for heading error
     heading_integral_ += heading_error;
@@ -143,7 +146,7 @@ double Control::steeringPID(){
         }
 
     // Steer smoothing
-    if (fabs(angleToGoal()) < targetAngle){
+    if (fabs(angleToGoal()) < toleranceAngle){
         angular_command = 0;
         heading_integral_ = 0;
     }

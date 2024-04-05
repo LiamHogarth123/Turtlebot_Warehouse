@@ -5,24 +5,16 @@
 #include <chrono>
 #include <time.h>
 #include <nav_msgs/Odometry.h>
-
-// #include <kobuki_msgs/DigitalOutput.h>
 #include "ros/ros.h"
-
 #include <fstream>
 
-
-
-using std::cout;
-using std::endl;
 
 Method::Method(ros::NodeHandle nh) :
   nh_(nh)
 
 {
 
- debuggingMode = false;
- telop_mode = false;
+ teleop_mode = false;
 
  goal_index = 0;
 
@@ -47,14 +39,14 @@ Method::Method(ros::NodeHandle nh) :
   
 }
 
-void Method::seperateThread() {
+void Method::separateThread() {
   //User input
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   std::string userInput;
   std::cout << "Please enter control method"<< std::endl;
   std::cout << "1. use provide goals"<< std::endl;
   std::cout << "2. provide a goal"<< std::endl;
-  std::cout << "3. control the guider robot with user input"<< std::endl;
+  std::cout << "3. control the robot with user input"<< std::endl;
   std::cin >> userInput;
   int input_int = std::stoi(userInput);
 
@@ -85,7 +77,7 @@ void Method::seperateThread() {
       break;
       }
     case 3:{
-      telop_mode = true;
+      teleop_mode = true;
       break;
       }
     default:{
@@ -98,7 +90,7 @@ void Method::seperateThread() {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
 
-  if(telop_mode){
+  if(teleop_mode){
     while (true){
       
       std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -107,7 +99,7 @@ void Method::seperateThread() {
   }
   else{
     while (true){
-      guiderBotMovement();
+      turtleMovement();
       
     }
   }
@@ -116,19 +108,19 @@ void Method::seperateThread() {
 
 
 
-void Method::guiderBotMovement(){
+void Method::turtleMovement(){
 
-    geometry_msgs::Point guiderGoal;
+    geometry_msgs::Point targetGoal;
     
     // std::cout << Leader_goals.size() << std::endl;
     // std::cout << goal_index << std::endl;
-    guiderGoal = Leader_goals.at(goal_index);
+    targetGoal = Leader_goals.at(goal_index);
     
 
-    GuiderGPS.updateGoal(guiderGoal, guider_Odom);
-    geometry_msgs::Twist guiderTraj = GuiderGPS.reachGoal();
+    TurtleGPS.updateGoal(targetGoal, Current_Odom);
+    geometry_msgs::Twist botTraj = TurtleGPS.reachGoal();
     
-    if (GuiderGPS.goal_hit(guiderGoal, guider_Odom)){
+    if (TurtleGPS.goal_hit(targetGoal, Current_Odom)){
         std::cout << "goal hit" << std::endl;
       if (goal_index != Leader_goals.size() - 1){
          
@@ -138,7 +130,7 @@ void Method::guiderBotMovement(){
     }
     
 
-    Send_cmd_tb2(guiderTraj);
+    Send_cmd_tb1(botTraj);
     
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
 }

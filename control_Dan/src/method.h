@@ -9,14 +9,9 @@
 #include <sensor_msgs/LaserScan.h>
 #include <sensor_msgs/Image.h>
 
-//Keep only the headers needed
-
-
 #include "control.h"
 
 #include <ros/package.h>
-
-
 
 
 /**
@@ -40,50 +35,21 @@ public:
   void guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg);
 
 
-
-
   void Send_cmd_tb1(geometry_msgs::Twist intructions);
 
   void Send_cmd_tb2(geometry_msgs::Twist intructions);
 
-  void threadForSensor();
+  void separateThread();
 
-  void seperateThread();
-
-  bool readGoal(bool house);
+  void turtleMovement();
 
 
-
-  geometry_msgs::Point adjustLaserData(geometry_msgs::Point laser_data, nav_msgs::Odometry Position);
-
-  std::vector<geometry_msgs::Point> adjustLaserDataVector(std::vector<geometry_msgs::Point> laser_data, nav_msgs::Odometry Position);
-
-  geometry_msgs::Point global_To_local(geometry_msgs::Point globalPoint, nav_msgs::Odometry robotPose);
-
-  void guiderBotMovement();
-
-  void singleThread();
-
-  void multiThread();
-
-  void telop();
-
-  void telopDrive(void);
-  
-  void followingRobotThread();
-
-  geometry_msgs::Point motion_dection(std::vector<geometry_msgs::Point> old_points, std::vector<geometry_msgs::Point> newPoints);
-
-  double distance (const geometry_msgs::Point& p1, const geometry_msgs::Point& p2);
-
-
-  // Prameters for ROS
+// Prameters for ROS
   ros::NodeHandle nh_;
   ros::Publisher cmd_velocity_tb1;
   ros::Publisher cmd_velocity_tb2;
-  ros::Publisher Led1;
-  ros::Publisher Led2;
- 
+
+
 
 // Subscribers for turtlebot 1 (tb3_0)
   ros::Subscriber sub1_;
@@ -109,8 +75,6 @@ public:
   sensor_msgs::LaserScan updated_Lida;
   sensor_msgs::Image updated_imageDepth;
 
-//SensorData Object
-
 
 //Geometry variable to do with movenment;
   geometry_msgs::Point goal;
@@ -120,29 +84,14 @@ public:
 
   double goal_index;
 
-
-
-
 //Declaration of class objects
-  Control GPS;
-  Control GuiderGPS;
-  
+  Control TurtleGPS;
 
-  bool Threading_switch;
   std::vector<geometry_msgs::Point> Leader_goals;
 
-  bool debuggingMode;
-  bool telop_mode;
-  bool house;
-  bool default_goals;
-
-  //variables for complex motion dection
-  std::vector<geometry_msgs::Point> current_map;
+  bool teleop_mode;
 
 };
 
   
-
-
-
 #endif // SAMPLE_H
