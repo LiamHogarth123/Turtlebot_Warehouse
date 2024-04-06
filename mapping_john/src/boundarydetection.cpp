@@ -1,17 +1,11 @@
 #include "boundarydetection.h"
 
-BoundaryDetection::BoundaryDetection(ros::NodeHandle nh)
+BoundaryDetection::BoundaryDetection()
 {
-    subCam_ = nh_.subscribe("/usb_cam/image_raw", 1000, &BoundaryDetection::webcamCallback, this);
 }
 
 BoundaryDetection::~BoundaryDetection()
 {
-}
-
-void BoundaryDetection::webcamCallback(const sensor_msgs::Image::ConstPtr &msg)
-{
-    // cam_ = &msg;
 }
 
 double BoundaryDetection::detectColour(cv::Mat image)
@@ -86,12 +80,13 @@ double BoundaryDetection::runBoundaryDetection(bool running)
 {
     double boundaryFlag = 0;
     unsigned int counter = 0;
+    ImageConverter ic;
     while (running == true)
     {
         counter++;
         if (counter == 10)
         {
-            // double flag = BoundaryDetection::detectColour();
+            double flag = BoundaryDetection::detectColour(ic.cam_ptr_->image);
             counter = 0;
         }
     }

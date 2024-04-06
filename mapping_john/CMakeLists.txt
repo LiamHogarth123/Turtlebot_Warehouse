@@ -10,7 +10,8 @@ find_package(catkin REQUIRED COMPONENTS
   rosbag
   roslib
   message_generation  # Add this line for message generation
-  # opencv
+  image_transport
+  cv_bridge
 )
 
 find_package(Eigen3 REQUIRED)
