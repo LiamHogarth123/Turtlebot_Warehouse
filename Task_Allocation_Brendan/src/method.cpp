@@ -5,15 +5,8 @@
 #include <chrono>
 #include <time.h>
 #include <nav_msgs/Odometry.h>
-
 #include "ros/ros.h"
-
 #include <fstream>
-
-
-
-using std::cout;
-using std::endl;
 
 Method::Method(ros::NodeHandle nh) :
   nh_(nh)
@@ -26,103 +19,132 @@ Method::Method(ros::NodeHandle nh) :
 void Method::seperateThread() {
   //User input
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- 
-  std::cout << "Hello World" << std::endl;
 
+  // Call the pickupPointAllocation function to initialize itemLocations
+    taskAllocation();
+  
 }
 
-void pickupPointAllocation(){
-  // assign x and y values for the item locations
-    std::vector<geometry_msgs::Point> itemLocations;
-  // item location variables
+std::vector<std::vector<geometry_msgs::Point>> Method::taskAllocation(){
+    // item location variables
     geometry_msgs::Point item1;
     geometry_msgs::Point item2;
     geometry_msgs::Point item3;
     geometry_msgs::Point item4;
     geometry_msgs::Point item5;
     geometry_msgs::Point item6;
+
     geometry_msgs::Point deliveryLocation;
-// can accept as many goals but for demonstration only 6 are required...
-  item1.x = 1.0;
-  item1.y = 1.0;
-  item1.z = 0.0;
 
-  item2.x = 4.5;
-  item2.y = 3.1;
-  item2.z = 0.0;
+    // Define item locations
+    item1.x = 2.75;
+    item1.y = 5.2;
+    item1.z = 0.0;
 
-  item3.x = 6.8;
-  item3.y = 9.3;
-  item3.z = 0.0;
+    item2.x = 12.4;
+    item2.y = 8.0;
+    item2.z = 0.0;
 
-  item4.x = 6.8;
-  item4.y = 9.3;
-  item4.z = 0.0;
+    item3.x = -4.0;
+    item3.y = -8.0;
+    item3.z = 0.0;
 
-  item5.x = 6.8;
-  item5.y = 9.3;
-  item5.z = 0.0;
+    item4.x = 7.1;
+    item4.y = 5.0;
+    item4.z = 0.0;
 
-  item6.x = 6.8;
-  item6.y = 9.3;
-  item6.z = 0.0;
-// location of the hypothetical drop off location to be updated for proper implementation
-  deliveryLocation.x = 20.0;
-  deliveryLocation.y = 20.0;
-  deliveryLocation.z = 0.0;
+    item5.x = 13.1;
+    item5.y = -10.0;
+    item5.z = 0.0;
 
-  // store these items in the vector
-  itemLocations.push_back(item1);
-  itemLocations.push_back(item2);
-  itemLocations.push_back(item3);
-  itemLocations.push_back(item4);
-  itemLocations.push_back(item5);
-  itemLocations.push_back(item6);
+    item6.x = 8.1;
+    item6.y = -3.0;
+    item6.z = 0.0;    
 
-}
+    // Hypothetical drop off location
+    deliveryLocation.x = 20.0;
+    deliveryLocation.y = 20.0;
+    deliveryLocation.z = 0.0;
 
+    // Store item locations in the vector
+    std::vector<geometry_msgs::Point> itemLocations;
+    itemLocations.push_back(item1);
+    itemLocations.push_back(item2);
+    itemLocations.push_back(item3);
+    itemLocations.push_back(item4);
+    itemLocations.push_back(item5);
+    itemLocations.push_back(item6);
 
-std::vector<std::pair<geometry_msgs::Point, std::pair<double, double>>> Method::euclideanDistance(const std::vector<geometry_msgs::Point>& itemLocations, 
-                                                                                                  const geometry_msgs::Pose& robot1Location, 
-                                                                                                  const geometry_msgs::Pose& robot2Location) {
-    std::vector<std::pair<geometry_msgs::Point, std::pair<double, double>>> sortedLocationsAndDistances;
-    std::vector<bool> assigned(itemLocations.size(), false); // Keep track of assigned points
+    // Set number of robots
+    const int numRobots = 2;
 
-    for (const auto& point : itemLocations) {
-        double item_x1 = point.x - robot1Location.position.x;
-        double item_y1 = point.y - robot1Location.position.y;
-        double directDistance1 = sqrt(std::pow(item_x1, 2) + std::pow(item_y1, 2));
+    // initial robot positions
+    std::vector<geometry_msgs::Point> robotPositions;
+    geometry_msgs::Point robot1Pos;
+    robot1Pos.x = 0.0;
+    robot1Pos.y = 0.0;
+    robot1Pos.z = 0.0;
+    robotPositions.push_back(robot1Pos);
 
-        double item_x2 = point.x - robot2Location.position.x;
-        double item_y2 = point.y - robot2Location.position.y;
-        double directDistance2 = sqrt(std::pow(item_x2, 2) + std::pow(item_y2, 2));
+    geometry_msgs::Point robot2Pos;
+    robot2Pos.x = 0.5;
+    robot2Pos.y = 1.25;
+    robot2Pos.z = 0.0;
+    robotPositions.push_back(robot2Pos);
 
-        sortedLocationsAndDistances.push_back(std::make_pair(point, std::make_pair(directDistance1, directDistance2)));
+    // Vector to store points allocated to each robot
+    std::vector<std::vector<geometry_msgs::Point>> allocatedPoints(numRobots);
 
-        // Mark the point as assigned to the closest robot
-        if (directDistance1 < directDistance2) {
-            assigned[&point - &itemLocations[0]] = true; // Calculate index of point in itemLocations
+    while (!itemLocations.empty()) {
+        // Allocate one point to each robot based on distance
+        for (int i = 0; i < numRobots; ++i) {
+            if (itemLocations.empty()) break; // Break if there are no more items to allocate
+            double minDistance = std::numeric_limits<double>::max();
+            int closestItemIndex = -1;
+
+            // Find the closest item to the current robot position
+            for (size_t j = 0; j < itemLocations.size(); ++j) {
+                double distance = calculateDistance(itemLocations[j], robotPositions[i]);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestItemIndex = j;
+                }
+            }
+
+            // Assign the closest item to the robot
+            if (closestItemIndex != -1) {
+                allocatedPoints[i].push_back(itemLocations[closestItemIndex]);
+                itemLocations.erase(itemLocations.begin() + closestItemIndex); // Remove allocated item
+            }
+        }
+
+        // Print allocated points for each robot
+        for (int i = 0; i < numRobots; ++i) {
+            std::cout << "Robot " << i + 1 << " allocated points:" << std::endl;
+            for (const auto& point : allocatedPoints[i]) {
+                std::cout << "Point: (" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl;
+            }
+        }
+
+        // Update robot positions to the first allocated points
+        for (int i = 0; i < numRobots; ++i) {
+            if (!allocatedPoints[i].empty()) {
+                robotPositions[i] = allocatedPoints[i][0];
+                // Clear the allocated points for the robot
+                allocatedPoints[i].clear();
+                std::cout << "Robot " << i + 1 << " position after goal: (" << robotPositions[i].x << ", " << robotPositions[i].y << ", " << robotPositions[i].z << ")" << std::endl;
+            }
         }
     }
 
-    std::sort(sortedLocationsAndDistances.begin(), sortedLocationsAndDistances.end(),
-              [](const std::pair<geometry_msgs::Point, std::pair<double, double>>& a, const std::pair<geometry_msgs::Point, std::pair<double, double>>& b) {
-                  double distance1a = a.second.first;
-                  double distance1b = b.second.first;
-                  double distance2a = a.second.second;
-                  double distance2b = b.second.second;
-                  double totalDistanceA = distance1a + distance2a;
-                  double totalDistanceB = distance1b + distance2b;
-                  return totalDistanceA < totalDistanceB;
-              });
+    // Visit drop-off location after completing item collections
+    for (int i = 0; i < numRobots; ++i) {
+        allocatedPoints[i].push_back(deliveryLocation);
+        std::cout << "Robot " << i + 1 << " visited drop-off location: (" << deliveryLocation.x << ", " << deliveryLocation.y << ", " << deliveryLocation.z << ")" << std::endl;
+    }
 
-    // Remove points that have been assigned to one of the robots
-    sortedLocationsAndDistances.erase(
-        std::remove_if(sortedLocationsAndDistances.begin(), sortedLocationsAndDistances.end(),
-                       [itemLocations, &assigned](const std::pair<geometry_msgs::Point, std::pair<double, double>>& pair) {
-                           return assigned[&pair.first - &itemLocations[0]]; // Calculate index of point in itemLocations
-                       }),
-        sortedLocationsAndDistances.end());
-
-    return sortedLocationsAndDistances;
+    return allocatedPoints;
+}
+double Method::calculateDistance(const geometry_msgs::Point& p1, const geometry_msgs::Point& p2) {
+    return std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
 }

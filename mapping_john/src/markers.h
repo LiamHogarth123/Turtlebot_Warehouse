@@ -1,12 +1,17 @@
 #ifndef MARKERS_H
 #define MARKERS_H
 
+/** Include 'ImageConverter' for webcam stream*/
+#include <imageconverter.h>
+
+/** Include other relevant headers*/
 #include "ros/ros.h"
 #include "sensor_msgs/Image.h"
+#include "geometry_msgs/PoseArray.h"
+#include "std_msgs/UInt16MultiArray.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/aruco/dictionary.hpp>
-// #include <opencv2/objdetect/
 #include <opencv2/aruco.hpp>
 #include <opencv2/aruco/charuco.hpp>
 
@@ -19,7 +24,7 @@ public:
      * @brief Constructor
      * @param[in] nh nodehandle
      */
-    // Markers(ros::NodeHandle nh);
+    Markers(ros::NodeHandle nh);
 
     /**
      * @brief Constructor
@@ -75,6 +80,20 @@ public:
      */
     void markerPose(double value, std::vector<std::vector<cv::Point2f>> markerCorners);
 
+    /**
+     * @brief Run marker detection
+     * @param[in] running Boolean to run
+     * @return void
+     */
+    void runMarkerDetection(bool running);
+
+    /**
+     * @brief Run calibration
+     * @param[in] running Boolean to run
+     * @return void
+     */
+    void runCalibration(bool running);
+
     /** Calibration outputs*/
     std::vector<cv::Mat> rvecs_; // Rotation vectors
     std::vector<cv::Mat> tvecs_; // Translation vectors
@@ -106,7 +125,7 @@ protected:
     float aspectRatio_ = 1; // Aspect ratio between fx and fy
 
     /** Nodehandle for this node. Note, only 1 nodehandle is required (there is only 1 node).*/
-    // ros::NodeHandle nh_;
+    ros::NodeHandle nh_;
 
     /**
      * Subscriber to image topic to get image from RGB-D sensor
@@ -114,6 +133,17 @@ protected:
      * @topic /camera/color/image_raw
      */
     // ros::Subscriber subRGBD_;
+
+    /**
+     * Publisher of marker poses
+     * @typedef geometry_msgs/PoseArray
+     * @topic /markers/marker_poses
+    */
+    ros::Publisher pubPoses_;
+    geometry_msgs::PoseArray marker_poses_;
+
+    ros::Publisher pubIds_;
+    std_msgs::UInt16MultiArray marker_ids_;
 };
 
 #endif

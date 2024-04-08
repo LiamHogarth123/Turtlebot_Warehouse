@@ -333,7 +333,7 @@ GTEST_MAIN_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libgtest_main.a
 GTEST_MAIN_LIBRARY_DEBUG:FILEPATH=GTEST_MAIN_LIBRARY_DEBUG-NOTFOUND
 
 //The directory containing a CMake configuration file for GTest.
-GTest_DIR:PATH=/home/john/miniconda3/lib/cmake/GTest
+GTest_DIR:PATH=GTest_DIR-NOTFOUND
 
 //Enable installation of googletest. (Projects embedding googletest
 // may want to turn this OFF.)
@@ -398,6 +398,9 @@ class_loader_DIR:PATH=/opt/ros/noetic/share/class_loader/cmake
 
 //The directory containing a CMake configuration file for cpp_common.
 cpp_common_DIR:PATH=/opt/ros/noetic/share/cpp_common/cmake
+
+//The directory containing a CMake configuration file for cv_bridge.
+cv_bridge_DIR:PATH=/opt/ros/noetic/share/cv_bridge/cmake
 
 //The directory containing a CMake configuration file for gencpp.
 gencpp_DIR:PATH=/opt/ros/noetic/share/gencpp/cmake
@@ -466,14 +469,20 @@ gtest_hide_internal_symbols:BOOL=OFF
 //Dependencies for the target
 gtest_main_LIB_DEPENDS:STATIC=general;gtest;
 
+//The directory containing a CMake configuration file for image_transport.
+image_transport_DIR:PATH=/opt/ros/noetic/share/image_transport/cmake
+
 //Path to a library.
-lib:FILEPATH=/opt/ros/noetic/lib/libtopic_tools.so
+lib:FILEPATH=/opt/ros/noetic/lib/libcv_bridge.so
 
 //Value Computed by CMake
 mapping_john_BINARY_DIR:STATIC=/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build
 
 //Value Computed by CMake
 mapping_john_SOURCE_DIR:STATIC=/home/john/Desktop/Turtlebot_Warehouse/mapping_john
+
+//The directory containing a CMake configuration file for message_filters.
+message_filters_DIR:PATH=/opt/ros/noetic/share/message_filters/cmake
 
 //The directory containing a CMake configuration file for message_generation.
 message_generation_DIR:PATH=/opt/ros/noetic/share/message_generation/cmake
