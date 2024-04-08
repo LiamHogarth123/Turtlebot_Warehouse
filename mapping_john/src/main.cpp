@@ -24,13 +24,21 @@ int main(int argc, char **argv){
   // std::thread t(&Method::seperateThread, method);
 
   /** Convert images*/
-  ImageConverter ic;
+  // ImageConverter ic;
 
-  cv::imshow("Window", ic.cam_ptr_->image);
-  cv::waitKey(0);
+  std::cout << "yee" << std::endl;
 
-  /** Detect boundary*/
-  // BoundaryDetection boundary;
+  // cv::imshow("Window", ic.cam_ptr_->image);
+  // cv::waitKey(0);
+
+  // /** Detect boundary*/
+  BoundaryDetection boundary;
+
+  std::cout << "haw" << std::endl;
+
+  double flag = boundary.runBoundaryDetection(1);
+
+  std::cout << "naw" << std::endl;
 
   // /** @test = Red Static #2*/
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_red_static2.jpg");

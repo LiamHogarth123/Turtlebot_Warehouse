@@ -11,6 +11,14 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <cv_bridge/cv_bridge.h>
 
+class CvImage
+{
+public:
+std_msgs::Header header;
+std::string encoding;
+cv::Mat image;
+};
+
 class ImageConverter
 {
 public:
@@ -55,6 +63,8 @@ public:
 
     /** USB camera subscriber and output*/
     image_transport::Subscriber subCam_;
+    typedef boost::shared_ptr<CvImage> CvImagePtr;
+    typedef boost::shared_ptr<CvImage const> CvImageConstPtr;
     cv_bridge::CvImagePtr cam_ptr_;
 
     /** RGB-D camera subscriber and output*/
