@@ -16,10 +16,13 @@
 #include <ros/package.h>
 #include "opencv2/opencv.hpp"
 #include "prm.h"
+#include <visualization_msgs/Marker.h>
 
 
 #include "nav_msgs/OccupancyGrid.h"
 #include "nav_msgs/MapMetaData.h"
+#include <geometry_msgs/Point.h>
+
 
 
 
@@ -33,15 +36,20 @@ public:
   void mapMetadataCallback(const nav_msgs::MapMetaData::ConstPtr& msg);
 
   
+  void testPathPlanningControl();  
 
 
   void seperateThread();
+
+
+  void publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub);
 
   // Prameters for ROS
   ros::NodeHandle nh_;
   ros::Subscriber map_sub;
   ros::Subscriber mapSub;
   ros::Subscriber mapMetadataSub;
+  ros::Publisher marker_pub;
   
   readMap mapReader;
 
