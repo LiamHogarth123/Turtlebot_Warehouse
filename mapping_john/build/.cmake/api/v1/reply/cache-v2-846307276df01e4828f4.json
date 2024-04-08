@@ -1959,7 +1959,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "/home/john/miniconda3/lib/cmake/GTest"
+			"value" : "GTest_DIR-NOTFOUND"
 		},
 		{
 			"name" : "INSTALL_GTEST",
