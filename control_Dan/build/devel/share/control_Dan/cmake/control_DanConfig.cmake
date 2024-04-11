@@ -67,8 +67,8 @@ set(control_Dan_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(control_Dan_SOURCE_PREFIX /home/dan/git/Turtlebot_Warehouse/control_Dan)
-  set(control_Dan_DEVEL_PREFIX /home/dan/git/Turtlebot_Warehouse/control_Dan/build/devel)
+  set(control_Dan_SOURCE_PREFIX /home/john/Desktop/Turtlebot_Warehouse/control_Dan)
+  set(control_Dan_DEVEL_PREFIX /home/john/Desktop/Turtlebot_Warehouse/control_Dan/build/devel)
   set(control_Dan_INSTALL_PREFIX "")
   set(control_Dan_PREFIX ${control_Dan_DEVEL_PREFIX})
 else()
@@ -110,7 +110,7 @@ if(NOT " " STREQUAL " ")
         message(FATAL_ERROR "Project 'control_Dan' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'control_Dan' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/dan/git/Turtlebot_Warehouse/control_Dan/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'control_Dan' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/john/Desktop/Turtlebot_Warehouse/control_Dan/${idir}'.  ${_report}")
     endif()
     _list_append_unique(control_Dan_INCLUDE_DIRS ${include})
   endforeach()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/dan/git/Turtlebot_Warehouse/control_Dan/build/devel/lib;/home/dan/catkin_ws/devel/lib;/opt/ros/melodic/lib)
+    foreach(path /home/john/Desktop/Turtlebot_Warehouse/control_Dan/build/devel/lib;/home/john/catkin_ws/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
@@ -211,7 +211,7 @@ foreach(depend ${depends})
   _unpack_libraries_with_build_configuration(control_Dan_LIBRARIES ${control_Dan_LIBRARIES})
 
   _list_append_unique(control_Dan_LIBRARY_DIRS ${${control_Dan_dep}_LIBRARY_DIRS})
-  list(APPEND control_Dan_EXPORTED_TARGETS ${${control_Dan_dep}_EXPORTED_TARGETS})
+  _list_append_deduplicate(control_Dan_EXPORTED_TARGETS ${${control_Dan_dep}_EXPORTED_TARGETS})
 endforeach()
 
 set(pkg_cfg_extras "")
