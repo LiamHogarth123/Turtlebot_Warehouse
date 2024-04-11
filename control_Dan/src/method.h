@@ -90,6 +90,7 @@ public:
   std::vector<geometry_msgs::Point> Leader_goals;
 
   bool teleop_mode;
+  bool missionComplete;
 
 };
 

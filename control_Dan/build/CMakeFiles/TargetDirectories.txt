@@ -32,6 +32,7 @@
 /home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles/roscpp_generate_messages_lisp.dir
 /home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles/edit_cache.dir
 /home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles/nav_msgs_generate_messages_lisp.dir
+/home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles/control_Dan_sensorprocessing.dir
 /home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles/tests.dir
 /home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles/actionlib_msgs_generate_messages_nodejs.dir
 /home/dan/git/Turtlebot_Warehouse/control_Dan/build/CMakeFiles/run_tests.dir

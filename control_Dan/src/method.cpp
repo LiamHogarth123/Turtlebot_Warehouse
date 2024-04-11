@@ -18,6 +18,8 @@ Method::Method(ros::NodeHandle nh) :
 
  goal_index = 0;
 
+ missionComplete = false;
+
 // Robot 1 -----------------------------------------------------
   sub1_ = nh_.subscribe("tb3_0/odom", 1000, &Method::odomCallback,this);
 
@@ -98,7 +100,7 @@ void Method::separateThread() {
 
   }
   else{
-    while (true){
+    while (!missionComplete){
       turtleMovement();
       
     }
@@ -126,6 +128,9 @@ void Method::turtleMovement(){
          
          goal_index++;
          
+      }
+      else{
+        missionComplete = true;
       }
     }
     

@@ -545,6 +545,19 @@ nav_msgs_generate_messages_lisp/fast:
 .PHONY : nav_msgs_generate_messages_lisp/fast
 
 #=============================================================================
+# Target rules for targets named control_Dan_sensorprocessing
+
+# Build rule for target.
+control_Dan_sensorprocessing: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 control_Dan_sensorprocessing
+.PHONY : control_Dan_sensorprocessing
+
+# fast build rule for target.
+control_Dan_sensorprocessing/fast:
+	$(MAKE) -f CMakeFiles/control_Dan_sensorprocessing.dir/build.make CMakeFiles/control_Dan_sensorprocessing.dir/build
+.PHONY : control_Dan_sensorprocessing/fast
+
+#=============================================================================
 # Target rules for targets named tests
 
 # Build rule for target.
@@ -976,6 +989,33 @@ src/method.cpp.s:
 	$(MAKE) -f CMakeFiles/control_Dan_method.dir/build.make CMakeFiles/control_Dan_method.dir/src/method.cpp.s
 .PHONY : src/method.cpp.s
 
+src/sensorprocessing.o: src/sensorprocessing.cpp.o
+
+.PHONY : src/sensorprocessing.o
+
+# target to build an object file
+src/sensorprocessing.cpp.o:
+	$(MAKE) -f CMakeFiles/control_Dan_sensorprocessing.dir/build.make CMakeFiles/control_Dan_sensorprocessing.dir/src/sensorprocessing.cpp.o
+.PHONY : src/sensorprocessing.cpp.o
+
+src/sensorprocessing.i: src/sensorprocessing.cpp.i
+
+.PHONY : src/sensorprocessing.i
+
+# target to preprocess a source file
+src/sensorprocessing.cpp.i:
+	$(MAKE) -f CMakeFiles/control_Dan_sensorprocessing.dir/build.make CMakeFiles/control_Dan_sensorprocessing.dir/src/sensorprocessing.cpp.i
+.PHONY : src/sensorprocessing.cpp.i
+
+src/sensorprocessing.s: src/sensorprocessing.cpp.s
+
+.PHONY : src/sensorprocessing.s
+
+# target to generate assembly for a file
+src/sensorprocessing.cpp.s:
+	$(MAKE) -f CMakeFiles/control_Dan_sensorprocessing.dir/build.make CMakeFiles/control_Dan_sensorprocessing.dir/src/sensorprocessing.cpp.s
+.PHONY : src/sensorprocessing.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -1016,6 +1056,7 @@ help:
 	@echo "... roscpp_generate_messages_lisp"
 	@echo "... edit_cache"
 	@echo "... nav_msgs_generate_messages_lisp"
+	@echo "... control_Dan_sensorprocessing"
 	@echo "... tests"
 	@echo "... actionlib_msgs_generate_messages_nodejs"
 	@echo "... run_tests"
@@ -1054,6 +1095,9 @@ help:
 	@echo "... src/method.o"
 	@echo "... src/method.i"
 	@echo "... src/method.s"
+	@echo "... src/sensorprocessing.o"
+	@echo "... src/sensorprocessing.i"
+	@echo "... src/sensorprocessing.s"
 .PHONY : help
 
 
