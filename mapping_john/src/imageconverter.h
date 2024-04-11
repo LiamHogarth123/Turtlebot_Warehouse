@@ -11,6 +11,14 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <cv_bridge/cv_bridge.h>
 
+class CvImage
+{
+public:
+std_msgs::Header header;
+std::string encoding;
+cv::Mat image;
+};
+
 class ImageConverter
 {
 public:
@@ -20,11 +28,16 @@ public:
     ImageConverter(ros::NodeHandle nh);
 
     /**
+     * @brief Constructor
+     */
+    ImageConverter();
+
+    /**
      * @brief Destructor
      */
     ~ImageConverter();
 
-private:
+// private:
     /**
      * @brief webcam conversion callback
      * @param sensor_msgs::Image::ConstPtr - The scan message
@@ -41,20 +54,22 @@ private:
      */
     void rgbdConvert(const sensor_msgs::Image::ConstPtr &msg);
 
-protected:
+// protected:
     /** Nodehandle for this node. Note, only 1 nodehandle is required (there is only 1 node).*/
     ros::NodeHandle nh_;
 
     /** Image transport initialiser*/
     image_transport::ImageTransport it_;
 
-    /** USB camera subscriber and publisher*/
+    /** USB camera subscriber and output*/
     image_transport::Subscriber subCam_;
-    image_transport::Publisher pubCam_;
+    typedef boost::shared_ptr<CvImage> CvImagePtr;
+    typedef boost::shared_ptr<CvImage const> CvImageConstPtr;
+    cv_bridge::CvImagePtr cam_ptr_;
 
-    /** RGB-D camera subscriber and publisher*/
+    /** RGB-D camera subscriber and output*/
     image_transport::Subscriber subRGBD_;
-    image_transport::Publisher pubRGBD_;
+    cv_bridge::CvImagePtr rgbd_ptr_;
 };
 
 #endif

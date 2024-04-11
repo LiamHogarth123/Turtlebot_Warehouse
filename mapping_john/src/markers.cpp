@@ -3,12 +3,12 @@
 #include <vector>
 #include <iostream>
 
-// Markers::Markers(ros::NodeHandle nh)
-// {
-//     subRGBD_ = nh_.subscribe("/camera/color/image_raw", 1000, &Markers::RGBDCallback, this);
-//     dictionary_ = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
-//     parameters_ = cv::aruco::DetectorParameters::create();
-// }
+Markers::Markers(ros::NodeHandle nh)
+{
+    // subRGBD_ = nh_.subscribe("/camera/color/image_raw", 1000, &Markers::RGBDCallback, this);
+    dictionary_ = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
+    parameters_ = cv::aruco::DetectorParameters::create();
+}
 
 Markers::Markers()
 {
@@ -136,4 +136,52 @@ std::vector<int> Markers::detectMarker(cv::Mat image)
 void Markers::markerPose(double value, std::vector<std::vector<cv::Point2f>> markerCorners)
 {
     // Code
+}
+
+void Markers::runMarkerDetection(bool running)
+{
+    unsigned int counter = 0;
+    ImageConverter ic;
+    while (running == true)
+    {
+        counter++;
+        if (counter == 10)
+        {
+            /** Detect marker IDs*/
+            std::vector<int> detected_ids = Markers::detectMarker(ic.rgbd_ptr_->image);
+            std_msgs::UInt16MultiArray msgIds;
+
+            // Initialise dimensions
+            msgIds.layout.dim.push_back(std_msgs::MultiArrayDimension());
+            msgIds.layout.dim[0].size = detected_ids.size();
+            msgIds.layout.dim[0].stride = 1;
+            msgIds.layout.dim[0].label = "id";
+
+            // Populate data
+            msgIds.data.clear();
+            msgIds.data.insert(msgIds.data.end(), detected_ids.begin(), detected_ids.end());
+
+            // Publish the marker IDs
+            // pubIds.advertise()
+
+            /** Detect marker poses*/
+            /** @todo*/
+            counter = 0;
+        }
+    }
+}
+
+void Markers::runCalibration(bool running)
+{
+    unsigned int counter = 0;
+    ImageConverter ic;
+    while (running == true)
+    {
+        counter++;
+        if (counter == 1)
+        {
+            double repError = Markers::calibrate(ic.rgbd_ptr_->image);
+            counter = 0;
+        }
+    }
 }

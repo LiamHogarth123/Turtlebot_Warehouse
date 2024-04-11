@@ -1959,7 +1959,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "/home/john/miniconda3/lib/cmake/GTest"
+			"value" : "GTest_DIR-NOTFOUND"
 		},
 		{
 			"name" : "INSTALL_GTEST",
@@ -2240,6 +2240,18 @@
 			],
 			"type" : "PATH",
 			"value" : "/opt/ros/noetic/share/cpp_common/cmake"
+		},
+		{
+			"name" : "cv_bridge_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for cv_bridge."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/ros/noetic/share/cv_bridge/cmake"
 		},
 		{
 			"name" : "gencpp_DIR",
@@ -2530,6 +2542,18 @@
 			"value" : "general;gtest;"
 		},
 		{
+			"name" : "image_transport_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for image_transport."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/ros/noetic/share/image_transport/cmake"
+		},
+		{
 			"name" : "lib",
 			"properties" : 
 			[
@@ -2539,7 +2563,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/opt/ros/noetic/lib/libtopic_tools.so"
+			"value" : "/opt/ros/noetic/lib/libcv_bridge.so"
 		},
 		{
 			"name" : "mapping_john_BINARY_DIR",
@@ -2564,6 +2588,18 @@
 			],
 			"type" : "STATIC",
 			"value" : "/home/john/Desktop/Turtlebot_Warehouse/mapping_john"
+		},
+		{
+			"name" : "message_filters_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for message_filters."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/ros/noetic/share/message_filters/cmake"
 		},
 		{
 			"name" : "message_generation_DIR",

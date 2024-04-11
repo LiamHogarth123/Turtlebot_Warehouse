@@ -10,7 +10,8 @@ find_package(catkin REQUIRED COMPONENTS
   rosbag
   roslib
   message_generation  # Add this line for message generation
-  # opencv
+  image_transport
+  cv_bridge
 )
 
 find_package(Eigen3 REQUIRED)
@@ -32,7 +33,7 @@ include_directories(
   ${OpenCV_INCLUDE_DIR}
 )
 
-add_executable(${PROJECT_NAME}_method src/main.cpp src/method.cpp src/boundarydetection.h src/boundarydetection.cpp src/markers.h src/markers.cpp src/obstaclerecog.h src/obstaclerecog.cpp src/errorcalc.h src/errorcalc.cpp src/imageconverter.h src/imageconverter.cpp)
+add_executable(${PROJECT_NAME}_method src/main.cpp src/method.cpp src/boundarydetection.h src/boundarydetection.cpp src/markers.h src/markers.cpp src/obstaclerecog.h src/obstaclerecog.cpp src/errorcalc.h src/errorcalc.cpp src/imageconverter.h src/imageconverter.cpp src/imagetest.cpp)
 
 add_dependencies(${PROJECT_NAME}_method ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 

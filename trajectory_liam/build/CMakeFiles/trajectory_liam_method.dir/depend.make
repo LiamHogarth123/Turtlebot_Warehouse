@@ -74,7 +74,9 @@ CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o: /opt/ros/melodic/include/r
 CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o: /opt/ros/melodic/include/rosconsole/macros_generated.h
 CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o: /opt/ros/melodic/include/sensor_msgs/Image.h
 CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o: /opt/ros/melodic/include/sensor_msgs/LaserScan.h
+CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o: /opt/ros/melodic/include/std_msgs/ColorRGBA.h
 CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o: /opt/ros/melodic/include/std_msgs/Header.h
+CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o: /opt/ros/melodic/include/visualization_msgs/Marker.h
 CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o: /opt/ros/melodic/include/xmlrpcpp/XmlRpcDecl.h
 CMakeFiles/trajectory_liam_method.dir/src/main.cpp.o: /opt/ros/melodic/include/xmlrpcpp/XmlRpcValue.h
 
@@ -151,7 +153,10 @@ CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: /opt/ros/melodic/include
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: /opt/ros/melodic/include/rosconsole/macros_generated.h
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: /opt/ros/melodic/include/sensor_msgs/Image.h
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: /opt/ros/melodic/include/sensor_msgs/LaserScan.h
+CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: /opt/ros/melodic/include/std_msgs/ColorRGBA.h
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: /opt/ros/melodic/include/std_msgs/Header.h
+CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: /opt/ros/melodic/include/visualization_msgs/Marker.h
+CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: /opt/ros/melodic/include/visualization_msgs/MarkerArray.h
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: /opt/ros/melodic/include/xmlrpcpp/XmlRpcDecl.h
 CMakeFiles/trajectory_liam_method.dir/src/method.cpp.o: /opt/ros/melodic/include/xmlrpcpp/XmlRpcValue.h
 

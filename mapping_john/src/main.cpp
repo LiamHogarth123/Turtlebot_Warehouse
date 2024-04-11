@@ -4,6 +4,7 @@
 #include "boundarydetection.h"
 #include "errorcalc.h"
 #include "markers.h"
+#include "imageconverter.h"
 #include <iostream>
 #include <thread>
 
@@ -11,11 +12,9 @@
 int main(int argc, char **argv){
 
 
-  // ros::init(argc, argv, "mapping_john");
+  ros::init(argc, argv, "mapping_john");
 
-  // ros::NodeHandle nh;
-
-  // Markers::subRGBD_;
+  ros::NodeHandle nh;
 
   /**
    * Let's start seperate thread first, to do that we need to create object
@@ -24,15 +23,29 @@ int main(int argc, char **argv){
   // std::shared_ptr<Method> method(new Method(nh));
   // std::thread t(&Method::seperateThread, method);
 
-  /** Detect boundary*/
+  /** Convert images*/
+  // ImageConverter ic;
+
+  std::cout << "yee" << std::endl;
+
+  // cv::imshow("Window", ic.cam_ptr_->image);
+  // cv::waitKey(0);
+
+  // /** Detect boundary*/
   BoundaryDetection boundary;
 
-  /** @test = Red Static #2*/
-  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_red_static2.jpg");
+  std::cout << "haw" << std::endl;
 
-  double flag = boundary.detectColour(input);
+  double flag = boundary.runBoundaryDetection(1);
 
-  std::cout << "flag = " << flag << std::endl;
+  std::cout << "naw" << std::endl;
+
+  // /** @test = Red Static #2*/
+  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_red_static2.jpg");
+
+  // double flag = boundary.detectColour(input);
+
+  // std::cout << "flag = " << flag << std::endl;
 
   // Markers markers;
 
@@ -53,9 +66,9 @@ int main(int argc, char **argv){
 
   // std::thread t(&Sample::control,sample);
 
-  // ros::spin();
+  ros::spin();
 
-  // ros::shutdown();
+  ros::shutdown();
 
   // t.join();
 
