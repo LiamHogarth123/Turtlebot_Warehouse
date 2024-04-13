@@ -21,15 +21,15 @@ Method::Method(ros::NodeHandle nh) :
  missionComplete = false;
 
 // Robot 1 -----------------------------------------------------
-  sub1_ = nh_.subscribe("tb3_0/odom", 1000, &Method::odomCallback,this);
+  sub1_ = nh_.subscribe("/odom", 1000, &Method::odomCallback,this);
 
-  sub2_ = nh_.subscribe("tb3_0/scan", 10, &Method::LidaCallback,this);
+  sub2_ = nh_.subscribe("/scan", 10, &Method::LidaCallback,this);
 
-  sub3_ = nh_.subscribe("tb3_0/camera/rgb/image_raw", 1000, &Method::RGBCallback, this);
+  sub3_ = nh_.subscribe("/camera/rgb/image_raw", 1000, &Method::RGBCallback, this);
 
-  sub4_ = nh_.subscribe("tb3_0/camera/depth/image_raw", 1000, &Method::ImageDepthCallback, this);
+  sub4_ = nh_.subscribe("/camera/depth/image_raw", 1000, &Method::ImageDepthCallback, this);
 
-  cmd_velocity_tb1 = nh_.advertise<geometry_msgs::Twist>("tb3_0/cmd_vel",10);
+  cmd_velocity_tb1 = nh_.advertise<geometry_msgs::Twist>("/cmd_vel",10);
 
   // Robot 2 guider ---------------------
 
@@ -102,6 +102,7 @@ void Method::separateThread() {
   else{
     while (!missionComplete){
       turtleMovement();
+
       
     }
   }
@@ -121,6 +122,9 @@ void Method::turtleMovement(){
 
     TurtleGPS.updateGoal(targetGoal, Current_Odom);
     geometry_msgs::Twist botTraj = TurtleGPS.reachGoal();
+
+    // Lidar.Newdata(updated_Lida);
+    // double x = Lidar.findTurtlebot();
     
     if (TurtleGPS.goal_hit(targetGoal, Current_Odom)){
         std::cout << "goal hit" << std::endl;

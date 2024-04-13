@@ -10,6 +10,7 @@
 #include <sensor_msgs/Image.h>
 
 #include "control.h"
+#include "sensorprocessing.h"
 
 #include <ros/package.h>
 
@@ -51,7 +52,7 @@ public:
 
 
 
-// Subscribers for turtlebot 1 (tb3_0)
+// Subscribers for turtlebot 1
   ros::Subscriber sub1_;
   ros::Subscriber sub2_;
   ros::Subscriber sub3_;
@@ -86,6 +87,7 @@ public:
 
 //Declaration of class objects
   Control TurtleGPS;
+  Sensorprocessing Lidar;
 
   std::vector<geometry_msgs::Point> Leader_goals;
 

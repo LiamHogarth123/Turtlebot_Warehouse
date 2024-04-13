@@ -7,7 +7,7 @@
 #include <math.h>
 #include "tf/transform_datatypes.h"
 #include <geometry_msgs/PoseArray.h>
-#include <image_data_struct.h>
+
 
 class Sensorprocessing
 {
@@ -18,21 +18,19 @@ public:
    */
   Sensorprocessing();
 
-  void Newdata(RobotData temp_data);
+  void Newdata(sensor_msgs::LaserScan temp_data);
 
   geometry_msgs::Point polarToCart(unsigned int index);
 
-  geometry_msgs::Point findTurtlebot();
-
-  geometry_msgs::Point findTurtlebotworld();
+  double findTurtlebot();
 
   std::vector<geometry_msgs::Point> findAllLaserPoints();
-  void findsegments();
+
 
   void PrintLaserSpec();
 
   private:
-  RobotData Image_data;
+  sensor_msgs::LaserScan laserScan;
   double Turtlebot_min;
   double Turtlebot_max;
 

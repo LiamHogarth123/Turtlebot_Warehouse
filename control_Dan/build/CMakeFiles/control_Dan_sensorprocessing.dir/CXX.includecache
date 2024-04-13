@@ -6,12 +6,6 @@
 
 #IncludeRegexTransform: 
 
-../src/image_data_struct.h
-sensor_msgs/Image.h
--
-sensor_msgs/LaserScan.h
--
-
 /home/dan/git/Turtlebot_Warehouse/control_Dan/src/sensorprocessing.cpp
 sensorprocessing.h
 /home/dan/git/Turtlebot_Warehouse/control_Dan/src/sensorprocessing.h
@@ -26,8 +20,6 @@ math.h
 tf/transform_datatypes.h
 /home/dan/git/Turtlebot_Warehouse/control_Dan/src/tf/transform_datatypes.h
 geometry_msgs/PoseArray.h
--
-image_data_struct.h
 -
 
 /opt/ros/melodic/include/geometry_msgs/Point.h
@@ -411,24 +403,6 @@ stdint.h
 -
 
 /opt/ros/melodic/include/rosconsole/macros_generated.h
-
-/opt/ros/melodic/include/sensor_msgs/Image.h
-string
--
-vector
--
-memory
--
-ros/types.h
--
-ros/serialization.h
--
-ros/builtin_message_traits.h
--
-ros/message_operations.h
--
-std_msgs/Header.h
--
 
 /opt/ros/melodic/include/sensor_msgs/LaserScan.h
 string

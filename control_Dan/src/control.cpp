@@ -62,10 +62,6 @@ geometry_msgs::Twist Control::reachGoal(){
     std::cout << "control_command: " << velocityX << std::endl;
     std::cout << "angleToGoal: " << angleToGoal() << std::endl;
     std::cout << "angular_command: " << velocityZ << std::endl;
-    
-    
-    // std::cout << "headingError: " << heading_error << std::endl;
-    // std::cout << "angularCommand: " << angular_command << std::endl;
 
     return cmd_vel;
     
