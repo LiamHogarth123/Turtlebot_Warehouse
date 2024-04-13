@@ -20,7 +20,7 @@ Method::Method(ros::NodeHandle nh) :
 
   missionComplete = false;
 
-  pub_ = nh_.advertise<visualization_msgs::MarkerArray>("visualization_marker",3,false);
+  pub_ = nh_.advertise<visualization_msgs::MarkerArray>("/visualization_marker_array",3,false);
 
 // Robot 1 -----------------------------------------------------
   sub1_ = nh_.subscribe("/odom", 1000, &Method::odomCallback,this);
@@ -104,12 +104,11 @@ void Method::separateThread() {
   else{
     visualization_msgs::MarkerArray markers;
     visualiseCones(Leader_goals, markers);
-     pub_.publish(markers);
+    pub_.publish(markers);
+    std::cout << "Size of markers vector: " << markers.markers.size() << std::endl;
 
     while (!missionComplete){
       turtleMovement();
-
-      
     }
   }
 }
@@ -202,12 +201,11 @@ visualization_msgs::MarkerArray Method::visualiseCones(std::vector<geometry_msgs
 
         //We need to set the frame
         // Set the frame ID and time stamp.
-        marker.header.frame_id = "world";
+        marker.header.frame_id = "odom";
         //single_marker_person.header.stamp = ros::Time();
-        marker.header.stamp = ros::Time::now();
-
+        marker.header.stamp = ros::Time();
         //We set lifetime (it will dissapear in this many seconds)
-        marker.lifetime = ros::Duration(1000.0); //zero is forever
+        marker.lifetime = ros::Duration(10000); //zero is forever
 
         // Set the namespace and id for this marker.  This serves to create a unique ID
         // Any marker sent with the same namespace and id will overwrite the old one
@@ -222,7 +220,7 @@ visualization_msgs::MarkerArray Method::visualiseCones(std::vector<geometry_msgs
 
         marker.pose.position.x = pt.x;
         marker.pose.position.y = pt.y;
-        marker.pose.position.z = pt.z;
+        marker.pose.position.z = pt.z + 0.1; //0.1 z-offset given 0.2 z-scale
 
 
         //Orientation, we are not going to orientate it, for a quaternion it needs 0,0,0,1
@@ -233,16 +231,16 @@ visualization_msgs::MarkerArray Method::visualiseCones(std::vector<geometry_msgs
 
 
         // Set the scale of the marker -- 1m side
-        marker.scale.x = 0.2;
-        marker.scale.y = 0.2;
-        marker.scale.z = 0.5;
+        marker.scale.x = 0.1;
+        marker.scale.y = 0.1;
+        marker.scale.z = 0.2;
 
         //Let's send a marker with color (green for reachable, red for now)
         std_msgs::ColorRGBA color;
-        color.a=0.5;//a is alpha - transparency 0.5 is 50%;
-        color.r=0;
+        color.a=0.7;//a is alpha - transparency 0.5 is 50%;
+        color.r=1.0;
         color.g=0;
-        color.b=1.0;
+        color.b=0;
 
         marker.color = color;
 
