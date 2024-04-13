@@ -79,6 +79,7 @@ CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/ros/w
 CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/rosconsole/macros_generated.h
 CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/sensor_msgs/Image.h
 CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/sensor_msgs/LaserScan.h
+CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/std_msgs/ColorRGBA.h
 CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/std_msgs/Header.h
 CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/tf/LinearMath/Matrix3x3.h
 CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/tf/LinearMath/MinMax.h
@@ -88,6 +89,8 @@ CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/tf/Li
 CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/tf/LinearMath/Transform.h
 CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/tf/LinearMath/Vector3.h
 CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/tf/transform_datatypes.h
+CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/visualization_msgs/Marker.h
+CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/visualization_msgs/MarkerArray.h
 CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/xmlrpcpp/XmlRpcDecl.h
 CMakeFiles/control_Dan_method.dir/src/main.cpp.o: /opt/ros/melodic/include/xmlrpcpp/XmlRpcValue.h
 
@@ -169,6 +172,7 @@ CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/ros
 CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/rosconsole/macros_generated.h
 CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/sensor_msgs/Image.h
 CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/sensor_msgs/LaserScan.h
+CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/std_msgs/ColorRGBA.h
 CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/std_msgs/Header.h
 CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/tf/LinearMath/Matrix3x3.h
 CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/tf/LinearMath/MinMax.h
@@ -178,6 +182,8 @@ CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/tf/
 CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/tf/LinearMath/Transform.h
 CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/tf/LinearMath/Vector3.h
 CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/tf/transform_datatypes.h
+CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/visualization_msgs/Marker.h
+CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/visualization_msgs/MarkerArray.h
 CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/xmlrpcpp/XmlRpcDecl.h
 CMakeFiles/control_Dan_method.dir/src/method.cpp.o: /opt/ros/melodic/include/xmlrpcpp/XmlRpcValue.h
 

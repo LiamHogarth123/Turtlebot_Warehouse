@@ -1,4 +1,4 @@
-prefix=/home/john/Desktop/Turtlebot_Warehouse/control_Dan/build/devel
+prefix=/home/dan/git/Turtlebot_Warehouse/control_Dan/build/devel
 
 Name: control_Dan
 Description: Description of control_Dan

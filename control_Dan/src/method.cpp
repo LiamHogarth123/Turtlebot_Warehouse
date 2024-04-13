@@ -14,11 +14,13 @@ Method::Method(ros::NodeHandle nh) :
 
 {
 
- teleop_mode = false;
+  teleop_mode = false;
 
- goal_index = 0;
+  goal_index = 0;
 
- missionComplete = false;
+  missionComplete = false;
+
+  pub_ = nh_.advertise<visualization_msgs::MarkerArray>("visualization_marker",3,false);
 
 // Robot 1 -----------------------------------------------------
   sub1_ = nh_.subscribe("/odom", 1000, &Method::odomCallback,this);
@@ -100,6 +102,10 @@ void Method::separateThread() {
 
   }
   else{
+    visualization_msgs::MarkerArray markers;
+    visualiseCones(Leader_goals, markers);
+     pub_.publish(markers);
+
     while (!missionComplete){
       turtleMovement();
 
@@ -187,5 +193,61 @@ void Method::guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg){
 }
 
 
+visualization_msgs::MarkerArray Method::visualiseCones(std::vector<geometry_msgs::Point> cones, visualization_msgs::MarkerArray& markerArray) {
 
+    unsigned int ct=0;
+
+    for (auto pt:cones){
+        visualization_msgs::Marker marker;
+
+        //We need to set the frame
+        // Set the frame ID and time stamp.
+        marker.header.frame_id = "world";
+        //single_marker_person.header.stamp = ros::Time();
+        marker.header.stamp = ros::Time::now();
+
+        //We set lifetime (it will dissapear in this many seconds)
+        marker.lifetime = ros::Duration(1000.0); //zero is forever
+
+        // Set the namespace and id for this marker.  This serves to create a unique ID
+        // Any marker sent with the same namespace and id will overwrite the old one
+        marker.ns = "cones"; //This is namespace, markers can be in diofferent namespace  --------- cones , road
+        marker.id = ct++; // We need to keep incrementing markers to send others ... so THINK, where do you store a vaiable if you need to keep incrementing it
+
+        // The marker type
+        marker.type = visualization_msgs::Marker::CYLINDER;
+
+        // Set the marker action.  Options are ADD and DELETE (we ADD it to the screen)
+        marker.action = visualization_msgs::Marker::ADD;
+
+        marker.pose.position.x = pt.x;
+        marker.pose.position.y = pt.y;
+        marker.pose.position.z = pt.z;
+
+
+        //Orientation, we are not going to orientate it, for a quaternion it needs 0,0,0,1
+        marker.pose.orientation.x = 0.0;
+        marker.pose.orientation.y = 0.0;
+        marker.pose.orientation.z = 0.0;
+        marker.pose.orientation.w = 1.0;
+
+
+        // Set the scale of the marker -- 1m side
+        marker.scale.x = 0.2;
+        marker.scale.y = 0.2;
+        marker.scale.z = 0.5;
+
+        //Let's send a marker with color (green for reachable, red for now)
+        std_msgs::ColorRGBA color;
+        color.a=0.5;//a is alpha - transparency 0.5 is 50%;
+        color.r=0;
+        color.g=0;
+        color.b=1.0;
+
+        marker.color = color;
+
+        markerArray.markers.push_back(marker);
+    }
+    return markerArray;
+}
 

@@ -14,6 +14,8 @@
 
 #include <ros/package.h>
 
+#include "visualization_msgs/MarkerArray.h"
+
 
 /**
  @class Sample
@@ -44,12 +46,14 @@ public:
 
   void turtleMovement();
 
+  visualization_msgs::MarkerArray visualiseCones(std::vector<geometry_msgs::Point> cones, visualization_msgs::MarkerArray& markerArray);
+
 
 // Prameters for ROS
   ros::NodeHandle nh_;
   ros::Publisher cmd_velocity_tb1;
   ros::Publisher cmd_velocity_tb2;
-
+  ros::Publisher pub_;
 
 
 // Subscribers for turtlebot 1
@@ -95,6 +99,9 @@ public:
   bool missionComplete;
 
 };
+
+
+
 
   
 #endif // SAMPLE_H
