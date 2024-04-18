@@ -26,7 +26,7 @@ int main(int argc, char **argv){
   /** Convert images*/
   // ImageConverter ic;
 
-  std::cout << "yee" << std::endl;
+  // std::cout << "yee" << std::endl;
 
   // cv::imshow("Window", ic.cam_ptr_->image);
   // cv::waitKey(0);
@@ -34,11 +34,11 @@ int main(int argc, char **argv){
   // /** Detect boundary*/
   BoundaryDetection boundary;
 
-  std::cout << "haw" << std::endl;
+  // std::cout << "haw" << std::endl;
 
-  double flag = boundary.runBoundaryDetection(1);
+  // double flag = boundary.runBoundaryDetection(1);
 
-  std::cout << "naw" << std::endl;
+  // std::cout << "naw" << std::endl;
 
   // /** @test = Red Static #2*/
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_red_static2.jpg");
@@ -47,14 +47,19 @@ int main(int argc, char **argv){
 
   // std::cout << "flag = " << flag << std::endl;
 
-  // Markers markers;
+  ImageConverter ic;
+
+  Markers markers;
 
   /** Draw marker*/
   // markers.drawMarker(17);
 
   /** Detect marker*/
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_marker_17.jpg");
+  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/calibration_front.jpg");
   // std::vector<int> marker_ids = markers.detectMarker(input);
+
+  markers.runMarkerDetection(1, ic);
 
   /** Calibrate*/
   // cv::Mat calibImage = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_charuco_online.jpg");

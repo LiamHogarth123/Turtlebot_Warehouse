@@ -2,8 +2,8 @@
 
 ImageConverter::ImageConverter(ros::NodeHandle nh) : it_(nh_)
 {
-    subCam_ = it_.subscribe("/usb_cam/image_raw",1,&ImageConverter::webcamConvert,this);
-    subRGBD_ = it_.subscribe("/camera/color/image_raw",1,&ImageConverter::rgbdConvert,this);
+    subCam_ = it_.subscribe("/usb_cam/image_raw",1000,&ImageConverter::webcamConvert,this);
+    subRGBD_ = it_.subscribe("/camera/color/image_raw",1000,&ImageConverter::rgbdConvert,this);
 }
 
 ImageConverter::ImageConverter() : it_(nh_)
@@ -17,7 +17,7 @@ ImageConverter::~ImageConverter()
 void ImageConverter::webcamConvert(const sensor_msgs::ImageConstPtr &msg)
 {
     std::cout << "1" << std::endl;
-    cv_bridge::CvImagePtr cam_ptr;
+    cv_bridge::CvImagePtr cam_ptr(new cv_bridge::CvImage);
     try
     {
         cam_ptr = cv_bridge::toCvCopy(msg,sensor_msgs::image_encodings::BGR8);
@@ -40,7 +40,8 @@ void ImageConverter::webcamConvert(const sensor_msgs::ImageConstPtr &msg)
 
 void ImageConverter::rgbdConvert(const sensor_msgs::Image::ConstPtr &msg)
 {
-    cv_bridge::CvImagePtr rgbd_ptr;
+    cv_bridge::CvImagePtr rgbd_ptr(new cv_bridge::CvImage);
+    // cv_bridge::CvImagePtr rgbd_ptr;
     try
     {
         rgbd_ptr = cv_bridge::toCvCopy(msg,sensor_msgs::image_encodings::BGR8);

@@ -85,7 +85,7 @@ public:
      * @param[in] running Boolean to run
      * @return void
      */
-    void runMarkerDetection(bool running);
+    void runMarkerDetection(bool running, ImageConverter ic);
 
     /**
      * @brief Run calibration

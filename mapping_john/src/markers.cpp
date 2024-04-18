@@ -138,10 +138,10 @@ void Markers::markerPose(double value, std::vector<std::vector<cv::Point2f>> mar
     // Code
 }
 
-void Markers::runMarkerDetection(bool running)
+void Markers::runMarkerDetection(bool running, ImageConverter ic)
 {
     unsigned int counter = 0;
-    ImageConverter ic;
+    // ImageConverter ic;
     while (running == true)
     {
         counter++;
