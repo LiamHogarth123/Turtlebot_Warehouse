@@ -57,9 +57,10 @@ int main(int argc, char **argv){
   /** Detect marker*/
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_marker_17.jpg");
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/calibration_front.jpg");
-  // std::vector<int> marker_ids = markers.detectMarker(input);
+  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_tags_long_alley.jpg");
+  std::vector<int> marker_ids = markers.detectMarker(input);
 
-  markers.runMarkerDetection(1, ic);
+  // markers.runMarkerDetection(1, ic);
 
   /** Calibrate*/
   // cv::Mat calibImage = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_charuco_online.jpg");
