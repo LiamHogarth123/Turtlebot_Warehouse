@@ -70,6 +70,11 @@ double BoundaryDetection::detectColour(cv::Mat image)
                     return boundaryFlag = 2;
                 }
             }
+
+            else{
+                boundaryFlag = 0;
+                break;
+            }
         }
     }
     

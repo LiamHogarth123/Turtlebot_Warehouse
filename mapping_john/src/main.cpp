@@ -40,16 +40,16 @@ int main(int argc, char **argv){
 
   // std::cout << "naw" << std::endl;
 
-  // /** @test = Red Static #2*/
-  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_red_static2.jpg");
+  /** @test = Neutral Static #3*/
+  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_neutral_static3.jpg");
 
-  // double flag = boundary.detectColour(input);
+  double flag = boundary.detectColour(input);
 
-  // std::cout << "flag = " << flag << std::endl;
+  std::cout << "flag = " << flag << std::endl;
 
-  ImageConverter ic;
+  // ImageConverter ic;
 
-  Markers markers;
+  // Markers markers;
 
   /** Draw marker*/
   // markers.drawMarker(17);
@@ -57,8 +57,8 @@ int main(int argc, char **argv){
   /** Detect marker*/
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_marker_17.jpg");
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/calibration_front.jpg");
-  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_tags_long_alley.jpg");
-  std::vector<int> marker_ids = markers.detectMarker(input);
+  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_tags_long_alley.jpg");
+  // std::vector<int> marker_ids = markers.detectMarker(input);
 
   // markers.runMarkerDetection(1, ic);
 
