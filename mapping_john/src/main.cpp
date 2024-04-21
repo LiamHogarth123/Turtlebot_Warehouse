@@ -23,67 +23,44 @@ int main(int argc, char **argv){
   // std::shared_ptr<Method> method(new Method(nh));
   // std::thread t(&Method::seperateThread, method);
 
-  /** Convert images*/
-  // ImageConverter ic;
-
-  // std::cout << "yee" << std::endl;
-
-  // cv::imshow("Window", ic.cam_ptr_->image);
-  // cv::waitKey(0);
-
-  // /** Detect boundary*/
-  // BoundaryDetection boundary;
-
+  /** Initialise image converter*/
   ImageConverter ic(nh);
 
-  // cv::Mat input = ic.getImage();
+  /** Initialise boundary detector*/
+  BoundaryDetection boundary;
 
-  // if (!input.empty())
-  // {
-  //   cv::imshow("Window",input);
-  //   cv::waitKey(0);
-  // }
-
+  /** Window for showing input*/
   cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
 
-    // Main loop
-    ros::Rate loop_rate(10);  // Adjust the loop rate as needed
-    while (ros::ok()) {
-        // Retrieve image from ImageConverter
-        cv::Mat image = ic.getImage();
+  /** @test = Red Dynamic #2*/
+  ros::Rate loop_rate(10);
+  while (ros::ok()) {
+    cv::Mat input = ic.getCam();
+    if (!input.empty()) {
+      double flag = boundary.runBoundaryDetection(1,input);
+      std::cout << "flag = " << flag << std::endl;
+      if (!input.empty()) {
+        // Display the image
+        cv::imshow("Image", input);
+      }
 
-        // Check if image is not empty
-        if (!image.empty()) {
-            // Display the image
-            cv::imshow("Image", image);
-        }
-
-        // Check for key press or ROS events
-        char key = cv::waitKey(1);
+      // Check for key press or ROS events
+      char key = cv::waitKey(1);
         if (key == 27 || !ros::ok()) {  // Exit on ESC key press or ROS shutdown
-            break;
-        }
-
-        // Process any ROS callbacks
-        ros::spinOnce();
-
-        // Maintain loop rate
-        loop_rate.sleep();
+        break;
+      }
+    cv::destroyAllWindows();
+    }
+    else{
+      std::cout << "no image" << std::endl;
     }
 
-    // Clean up
-    cv::destroyAllWindows();
+    // Process any ROS callbacks
+    ros::spinOnce();
 
-  // if (ic.current_image_.size() != 0)
-  // {
-  //   cv::imshow("Window",ic.current_image_);
-  //   cv::waitKey(0);
-  // }
-  
-
-  // std::cout << "haw" << std::endl;
-
-  // double flag = boundary.runBoundaryDetection(1);
+    // Maintain loop rate
+    loop_rate.sleep();
+  }
 
   // std::cout << "naw" << std::endl;
 
