@@ -32,7 +32,54 @@ int main(int argc, char **argv){
   // cv::waitKey(0);
 
   // /** Detect boundary*/
-  BoundaryDetection boundary;
+  // BoundaryDetection boundary;
+
+  ImageConverter ic(nh);
+
+  // cv::Mat input = ic.getImage();
+
+  // if (!input.empty())
+  // {
+  //   cv::imshow("Window",input);
+  //   cv::waitKey(0);
+  // }
+
+  cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
+
+    // Main loop
+    ros::Rate loop_rate(10);  // Adjust the loop rate as needed
+    while (ros::ok()) {
+        // Retrieve image from ImageConverter
+        cv::Mat image = ic.getImage();
+
+        // Check if image is not empty
+        if (!image.empty()) {
+            // Display the image
+            cv::imshow("Image", image);
+        }
+
+        // Check for key press or ROS events
+        char key = cv::waitKey(1);
+        if (key == 27 || !ros::ok()) {  // Exit on ESC key press or ROS shutdown
+            break;
+        }
+
+        // Process any ROS callbacks
+        ros::spinOnce();
+
+        // Maintain loop rate
+        loop_rate.sleep();
+    }
+
+    // Clean up
+    cv::destroyAllWindows();
+
+  // if (ic.current_image_.size() != 0)
+  // {
+  //   cv::imshow("Window",ic.current_image_);
+  //   cv::waitKey(0);
+  // }
+  
 
   // std::cout << "haw" << std::endl;
 
@@ -41,11 +88,11 @@ int main(int argc, char **argv){
   // std::cout << "naw" << std::endl;
 
   /** @test = Neutral Static #3*/
-  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_neutral_static3.jpg");
+  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_neutral_static3.jpg");
 
-  double flag = boundary.detectColour(input);
+  // double flag = boundary.detectColour(input);
 
-  std::cout << "flag = " << flag << std::endl;
+  // std::cout << "flag = " << flag << std::endl;
 
   // ImageConverter ic;
 

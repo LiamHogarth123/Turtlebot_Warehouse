@@ -42,6 +42,8 @@ public:
      */
     ~ImageConverter();
 
+    cv::Mat getImage();
+
 // private:
     /**
      * @brief webcam conversion callback
@@ -49,7 +51,7 @@ public:
      * @note This function and the declaration are ROS specific
      * @return void
      */
-    void webcamConvert(const sensor_msgs::Image::ConstPtr &msg);
+    // void webcamConvert(const sensor_msgs::Image::ConstPtr &msg);
 
     /**
      * @brief RGBD conversion callback
@@ -57,26 +59,34 @@ public:
      * @note This function and the declaration are ROS specific
      * @return void
      */
-    void rgbdConvert(const sensor_msgs::Image::ConstPtr &msg);
+    // void rgbdConvert(const sensor_msgs::Image::ConstPtr &msg);
 
 // protected:
     /** Nodehandle for this node. Note, only 1 nodehandle is required (there is only 1 node).*/
     ros::NodeHandle nh_;
 
-    /** Image transport initialiser*/
-    image_transport::ImageTransport it_;
+    /** Subscriber*/
+    ros::Subscriber image_sub_;
 
-    /** USB camera subscriber and output*/
-    image_transport::Subscriber subCam_;
-    // typedef boost::shared_ptr<CvImage> CvImagePtr(new CvImage);
-    // typedef boost::shared_ptr<CvImage const> CvImageConstPtr(new CvImage);
-    // boost::shared_ptr<CvImage> CvImagePtr(new CvImage);
-    // boost::shared_ptr<CvImage const> CvImageConstPtr(new CvImage);
-    cv_bridge::CvImagePtr cam_ptr_;
+    /** Store image*/
+    cv::Mat current_image_;
 
-    /** RGB-D camera subscriber and output*/
-    image_transport::Subscriber subRGBD_;
-    cv_bridge::CvImagePtr rgbd_ptr_;
+    void imageCallback(const sensor_msgs::ImageConstPtr& msg);
+
+    // /** Image transport initialiser*/
+    // image_transport::ImageTransport it_;
+
+    // /** USB camera subscriber and output*/
+    // image_transport::Subscriber subCam_;
+    // // typedef boost::shared_ptr<CvImage> CvImagePtr(new CvImage);
+    // // typedef boost::shared_ptr<CvImage const> CvImageConstPtr(new CvImage);
+    // // boost::shared_ptr<CvImage> CvImagePtr(new CvImage);
+    // // boost::shared_ptr<CvImage const> CvImageConstPtr(new CvImage);
+    // cv_bridge::CvImagePtr cam_ptr_;
+
+    // /** RGB-D camera subscriber and output*/
+    // image_transport::Subscriber subRGBD_;
+    // cv_bridge::CvImagePtr rgbd_ptr_;
 };
 
 #endif
