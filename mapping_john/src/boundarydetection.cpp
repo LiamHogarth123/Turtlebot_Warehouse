@@ -70,38 +70,29 @@ double BoundaryDetection::detectColour(cv::Mat image)
                     return boundaryFlag = 2;
                 }
             }
+
+            else{
+                boundaryFlag = 0;
+                break;
+            }
         }
     }
     
     return boundaryFlag;
 }
 
-double BoundaryDetection::runBoundaryDetection(bool running)
+double BoundaryDetection::runBoundaryDetection(bool running, cv::Mat input)
 {
     double boundaryFlag = 0;
     unsigned int counter = 0;
-    std::cout << "1a" << std::endl;
-    ImageConverter ic;
-    std::cout << "1b" << std::endl;
     while (running == true)
     {
         counter++;
         if (counter == 1)
         {
-            std::cout << "1c" << std::endl;
-            double flag = BoundaryDetection::detectColour(ic.cam_ptr_->image);
-            if (flag = 1)
-            {
-                boundaryFlag = flag;
-                return boundaryFlag;
-            }
-
-            if (flag = 2)
-            {
-                boundaryFlag = flag;
-                return boundaryFlag;
-            }
+            double flag = BoundaryDetection::detectColour(input);
             counter = 0;
+            return boundaryFlag = flag;
         }
     }
     return boundaryFlag;

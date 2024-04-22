@@ -10,8 +10,11 @@
 #include <sensor_msgs/Image.h>
 
 #include "control.h"
+#include "sensorprocessing.h"
 
 #include <ros/package.h>
+
+#include "visualization_msgs/MarkerArray.h"
 
 
 /**
@@ -43,15 +46,17 @@ public:
 
   void turtleMovement();
 
+  visualization_msgs::MarkerArray visualiseCones(std::vector<geometry_msgs::Point> cones, visualization_msgs::MarkerArray& markerArray);
+
 
 // Prameters for ROS
   ros::NodeHandle nh_;
   ros::Publisher cmd_velocity_tb1;
   ros::Publisher cmd_velocity_tb2;
+  ros::Publisher pub_;
 
 
-
-// Subscribers for turtlebot 1 (tb3_0)
+// Subscribers for turtlebot 1
   ros::Subscriber sub1_;
   ros::Subscriber sub2_;
   ros::Subscriber sub3_;
@@ -86,12 +91,17 @@ public:
 
 //Declaration of class objects
   Control TurtleGPS;
+  Sensorprocessing Lidar;
 
   std::vector<geometry_msgs::Point> Leader_goals;
 
   bool teleop_mode;
+  bool missionComplete;
 
 };
+
+
+
 
   
 #endif // SAMPLE_H

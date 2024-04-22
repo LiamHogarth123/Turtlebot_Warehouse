@@ -2,13 +2,13 @@
 <package>
   <name>control_Dan</name>
   <version>0.0.1</version>
-  <description>TurtleBot code for sensors and control</description>
+  <description>TurtleBot Warehouse</description>
 
-  <maintainer email="liam.hogarth@student.uts.edu.au">Liam Hogarth</maintainer>
+  <maintainer email="daniel.s.chen-1@student.uts.edu.au">Daniel Chen</maintainer>
 
   <license>MIT</license>
 
-  <author email="liam.hogarth@student.uts.edu.au">Liam hogarth</author>
+  <author email="daniel.s.chen-1@student.uts.edu.au">Daniel Chen</author>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roscpp</build_depend>

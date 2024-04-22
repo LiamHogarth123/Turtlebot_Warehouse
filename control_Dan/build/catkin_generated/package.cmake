@@ -1,6 +1,6 @@
 set(_CATKIN_CURRENT_PACKAGE "control_Dan")
 set(control_Dan_VERSION "0.0.1")
-set(control_Dan_MAINTAINER "Liam Hogarth <liam.hogarth@student.uts.edu.au>")
+set(control_Dan_MAINTAINER "Daniel Chen <daniel.s.chen-1@student.uts.edu.au>")
 set(control_Dan_PACKAGE_FORMAT "1")
 set(control_Dan_BUILD_DEPENDS "roscpp" "sensor_msgs" "std_msgs" "nav_msgs" "rosbag" "roslib")
 set(control_Dan_BUILD_EXPORT_DEPENDS "roscpp" "sensor_msgs" "std_msgs" "nav_msgs" "rosbag" "roslib" "message_runtime")

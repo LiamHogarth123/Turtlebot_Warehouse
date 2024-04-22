@@ -23,29 +23,55 @@ int main(int argc, char **argv){
   // std::shared_ptr<Method> method(new Method(nh));
   // std::thread t(&Method::seperateThread, method);
 
-  /** Convert images*/
-  // ImageConverter ic;
+  /** Initialise image converter*/
+  ImageConverter ic(nh);
 
-  std::cout << "yee" << std::endl;
-
-  // cv::imshow("Window", ic.cam_ptr_->image);
-  // cv::waitKey(0);
-
-  // /** Detect boundary*/
+  /** Initialise boundary detector*/
   BoundaryDetection boundary;
 
-  std::cout << "haw" << std::endl;
+  /** Window for showing input*/
+  cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
 
-  double flag = boundary.runBoundaryDetection(1);
+  /** @test = Red Dynamic #2*/
+  ros::Rate loop_rate(10);
+  while (ros::ok()) {
+    cv::Mat input = ic.getCam();
+    if (!input.empty()) {
+      double flag = boundary.runBoundaryDetection(1,input);
+      std::cout << "flag = " << flag << std::endl;
+      if (!input.empty()) {
+        // Display the image
+        cv::imshow("Image", input);
+      }
 
-  std::cout << "naw" << std::endl;
+      // Check for key press or ROS events
+      char key = cv::waitKey(1);
+        if (key == 27 || !ros::ok()) {  // Exit on ESC key press or ROS shutdown
+        break;
+      }
+    cv::destroyAllWindows();
+    }
+    else{
+      std::cout << "no image" << std::endl;
+    }
 
-  // /** @test = Red Static #2*/
-  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_red_static2.jpg");
+    // Process any ROS callbacks
+    ros::spinOnce();
+
+    // Maintain loop rate
+    loop_rate.sleep();
+  }
+
+  // std::cout << "naw" << std::endl;
+
+  /** @test = Neutral Static #3*/
+  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_neutral_static3.jpg");
 
   // double flag = boundary.detectColour(input);
 
   // std::cout << "flag = " << flag << std::endl;
+
+  // ImageConverter ic;
 
   // Markers markers;
 
@@ -54,7 +80,11 @@ int main(int argc, char **argv){
 
   /** Detect marker*/
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_marker_17.jpg");
+  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/calibration_front.jpg");
+  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_tags_long_alley.jpg");
   // std::vector<int> marker_ids = markers.detectMarker(input);
+
+  // markers.runMarkerDetection(1, ic);
 
   /** Calibrate*/
   // cv::Mat calibImage = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_charuco_online.jpg");

@@ -39,10 +39,10 @@ public:
      * @param[in] running Boolean to run
      * @return If boundary is detected
      */
-    double runBoundaryDetection(bool running);
+    double runBoundaryDetection(bool running, cv::Mat input);
 
 private:
-    double colour_id_threshold_ = 1000; /** Number of -1 pixels to identify a colour*/
+    double colour_id_threshold_ = 3000; /** Number of -1 pixels to identify a colour*/
 };
 
 #endif
