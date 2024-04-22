@@ -71,7 +71,9 @@ sensor_msgs/LaserScan.h
 -
 geometry_msgs/Pose.h
 -
-math.h
+cmath
+-
+vector
 -
 tf/transform_datatypes.h
 /home/dan/git/Turtlebot_Warehouse/control_Dan/src/tf/transform_datatypes.h

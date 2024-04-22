@@ -4,7 +4,8 @@
 #include <sensor_msgs/LaserScan.h>
 #include <geometry_msgs/Pose.h>
 
-#include <math.h>
+#include <cmath>
+#include <vector>
 #include "tf/transform_datatypes.h"
 #include <geometry_msgs/PoseArray.h>
 
@@ -24,7 +25,7 @@ public:
 
   double findTurtlebot();
 
-  std::vector<geometry_msgs::Point> findAllLaserPoints();
+  std::vector<float> scanningRange(float scanRange);
 
 
   void PrintLaserSpec();

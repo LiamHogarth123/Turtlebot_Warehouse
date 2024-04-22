@@ -22,18 +22,18 @@ Method::Method(ros::NodeHandle nh) :
 
   pub_ = nh_.advertise<visualization_msgs::MarkerArray>("/visualization_marker_array",3,false);
 
-// Robot 1 -----------------------------------------------------
+// Robot 1 ---------------------------- tb3_0
   sub1_ = nh_.subscribe("/odom", 1000, &Method::odomCallback,this);
 
   sub2_ = nh_.subscribe("/scan", 10, &Method::LidaCallback,this);
 
-  sub3_ = nh_.subscribe("/camera/rgb/image_raw", 1000, &Method::RGBCallback, this);
+  // sub3_ = nh_.subscribe("tb3_0/camera/rgb/image_raw", 1000, &Method::RGBCallback, this);
 
-  sub4_ = nh_.subscribe("/camera/depth/image_raw", 1000, &Method::ImageDepthCallback, this);
+  // sub4_ = nh_.subscribe("tb3_0/camera/depth/image_raw", 1000, &Method::ImageDepthCallback, this);
 
   cmd_velocity_tb1 = nh_.advertise<geometry_msgs::Twist>("/cmd_vel",10);
 
-  // Robot 2 guider ---------------------
+// Robot 2 guider --------------------- tb3_1
 
   sub5_ = nh_.subscribe("tb3_1/odom", 1000, &Method::guiderOdomCallback,this);
 
@@ -82,6 +82,8 @@ void Method::separateThread() {
       }
     case 3:{
       teleop_mode = true;
+      Lidar.Newdata(updated_Lida);
+      Lidar.scanningRange(20);
       break;
       }
     default:{
@@ -105,11 +107,28 @@ void Method::separateThread() {
     visualization_msgs::MarkerArray markers;
     visualiseCones(Leader_goals, markers);
     pub_.publish(markers);
-    std::cout << "Size of markers vector: " << markers.markers.size() << std::endl;
+    //std::cout << "Size of markers vector: " << markers.markers.size() << std::endl;
 
     while (!missionComplete){
       turtleMovement();
     }
+
+
+
+    // std::vector<std::vector<double>> plots = TurtleGPS.getPlots();
+    
+    // // Print xPlot
+    // std::cout << "xPlot:" << std::endl;
+    // for (double value : plots[0]) {
+    //     std::cout << value << std::endl;
+    // }
+
+    // // Print zPlot
+    // std::cout << "zPlot:" << std::endl;
+    // for (double value : plots[1]) {
+    //     std::cout << value << std::endl;
+    // }
+
   }
 }
 
@@ -127,9 +146,6 @@ void Method::turtleMovement(){
 
     TurtleGPS.updateGoal(targetGoal, Current_Odom);
     geometry_msgs::Twist botTraj = TurtleGPS.reachGoal();
-
-    // Lidar.Newdata(updated_Lida);
-    // double x = Lidar.findTurtlebot();
     
     if (TurtleGPS.goal_hit(targetGoal, Current_Odom)){
         std::cout << "goal hit" << std::endl;
@@ -140,6 +156,8 @@ void Method::turtleMovement(){
       }
       else{
         missionComplete = true;
+        botTraj.linear.x = 0;
+        botTraj.linear.z = 0;
       }
     }
     

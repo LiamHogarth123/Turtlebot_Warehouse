@@ -28,22 +28,15 @@ void Sensorprocessing::PrintLaserSpec(){
 
 double Sensorprocessing::findTurtlebot(){
 
-    float scanAngle = 20;
-    float scanSize = laserScan.ranges.size();
-    //given the scan angle is 180 degrees in the sim
-    float scanAngleStart = ((180 - scanAngle) / 2) * (scanSize / 180); // starts scan for truck 
-    float scanAngleEnd = (((180 - scanAngle) / 2) + scanAngle) * (scanSize / 180); // starts scan for truck 
-    int startIndex = scanAngleStart;
-    int endIndex = scanAngleEnd;
-
+    std::vector<float> scannedRange = scanningRange(20);
     double distance;
     double midpoint;
 
-    for (int i = startIndex; i < endIndex; i++) {
+    for (int i = 0; i < scannedRange.at(i); i++) {
     
         int startingPt = i;
 
-        while (i < endIndex && laserScan.ranges.at(i) < 4.5 ) {
+        while (laserScan.ranges.at(i) < 0.5 ) {
             if (i == laserScan.ranges.size() - 1) {
                 break;
             }
@@ -81,14 +74,30 @@ geometry_msgs::Point Sensorprocessing::polarToCart(unsigned int index)
 
 
 
-std::vector<geometry_msgs::Point> Sensorprocessing::findAllLaserPoints(){
-    std::vector<geometry_msgs::Point> pointVector;
+std::vector<float> Sensorprocessing::scanningRange(float scanRange){
 
-    for (int i = 1; i < laserScan.ranges.size(); i++) { // for all readings
-        if(!std::isinf(laserScan.ranges.at(i))){ // if the number isn't infinity
-            geometry_msgs::Point pt1 =polarToCart(i);
-            pointVector.push_back(pt1);
-        }
+    float scanSize = laserScan.ranges.size();
+    float degreeIndex = scanSize / 360;
+    float scanIndex = round((scanRange/2) * degreeIndex); // The index of the scan at scanRange (degrees), scanRange/2 as there is left and right of 0 degrees
+    
+    std::vector<float> scanPosDirection(laserScan.ranges.begin(), laserScan.ranges.begin() + scanIndex);
+    std::vector<float> scanNegDirection(laserScan.ranges.end() - scanIndex, laserScan.ranges.end());
+
+    // Combine the two vectors
+    std::vector<float> combinedVector;
+    for (const auto& element : scanPosDirection) {
+        scanNegDirection.push_back(element);
     }
-    return pointVector;
+    std::cout << "scanindex: " << scanIndex << std::endl;//////////////////////////////////////////////////////////////////////////// continue progress here DC13/4
+std::cout << "size: " << laserScan.ranges.size() << std::endl;
+
+    // Display the combined vector
+    std::cout << "Combined Vector: ";
+    for (const auto& element : combinedVector) {
+        std::cout << element << " ";
+    }
+    std::cout << std::endl;
+
+    return combinedVector;
+
 }

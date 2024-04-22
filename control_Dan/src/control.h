@@ -32,6 +32,7 @@ class Control
 
     double velocityPID();
 
+    std::vector<std::vector<double>> getPlots();
     
 
     //parameters
@@ -59,6 +60,9 @@ class Control
 
     double maxIntegral;
     double maxHeadingIntegral;
+
+    std::vector<double> xPlot;
+    std::vector<double> zPlot;
 
  
 };

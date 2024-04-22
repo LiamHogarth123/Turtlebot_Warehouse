@@ -24,7 +24,7 @@ Control::Control(){
     Kd_ = 1.5;
 
     Kp_h = 0.5;
-    Ki_h = 0.10;
+    Ki_h = 0.1;
     Kd_h = 2;
 
     maxVelx = 0.26; // m/s
@@ -59,9 +59,12 @@ geometry_msgs::Twist Control::reachGoal(){
 
     std::cout << "---------------------------------------------" << std::endl;
     std::cout << "distanceToGoal: " << distanceToGoal() << std::endl;
-    std::cout << "control_command: " << velocityX << std::endl;
+    std::cout << "forward velocity command: " << velocityX << std::endl;
     std::cout << "angleToGoal: " << angleToGoal() << std::endl;
-    std::cout << "angular_command: " << velocityZ << std::endl;
+    std::cout << "angular velocity command: " << velocityZ << std::endl;
+
+    // xPlot.push_back(velocityX);
+    // zPlot.push_back(velocityZ);
 
     return cmd_vel;
     
@@ -101,7 +104,7 @@ double Control::velocityPID(){
 
     // Goal hit reset
     if (fabs(distanceToGoal()) < toleranceDistance){
-        control_command = 0;
+        // control_command = 0;
         integral_ = 0;
     }
 
@@ -127,7 +130,7 @@ double Control::steeringPID(){
             heading_integral_ = -maxHeadingIntegral;
         }
 
-    std::cout << "heading integral: " << heading_integral_ << std::endl;
+    // std::cout << "heading integral: " << heading_integral_ << std::endl;
 
     double heading_derivative = heading_error - prev_heading_error_;
 
@@ -223,4 +226,11 @@ double Control::angleToGoal() {
     double angle = atan2(heading_vector.cross(goal_vector).z(), heading_vector.dot(goal_vector));
 
     return angle;
+}
+
+std::vector<std::vector<double>> Control::getPlots(){
+
+    std::vector<std::vector<double>> temp = {xPlot, zPlot};
+    
+    return temp;
 }
