@@ -119,9 +119,9 @@ protected:
     /** Calibration input parameters*/
     int markersX_ = 5; // Number of markers on x-axis
     int markersY_ = 7; // Number of markers on y-axis
-    float markerLength_ = 0.011; // Length on board in metres
+    float markerLength_ = 0.025; // Length on board in metres
     float markerSeparation_ = 0.01; // Distance between markers on board in metres
-    float squareLength_ = 0.015; // Length of sides of square
+    float squareLength_ = 0.034; // Length of sides of square
     float aspectRatio_ = 1; // Aspect ratio between fx and fy
 
     /** Nodehandle for this node. Note, only 1 nodehandle is required (there is only 1 node).*/

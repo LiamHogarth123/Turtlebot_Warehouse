@@ -72,8 +72,8 @@ double Markers::calibrate(cv::Mat calibImage)
     // DEBUG ONLY
     std::cout << "Corners size = " << markerCorners.size() << "\n";
     std::cout << "Ids size = " << markerIds.size() << "\n";
-    std::cout << "Corners size = " << allCorners.size() << "\n";
-    std::cout << "Ids size = " << allIds.size() << "\n";
+    // std::cout << "Corners size = " << allCorners.size() << "\n";
+    // std::cout << "Ids size = " << allIds.size() << "\n";
 
     /** Define calibration output*/
     double repError;
@@ -81,9 +81,13 @@ double Markers::calibrate(cv::Mat calibImage)
     /** Calibrate the camera*/
     // repError = cv::aruco::calibrateCameraAruco(allCornersConcatenated, allIdsConcatenated, markerCounterPerFrame, chBoard, imgSize, cameraMatrix_,
     //                                            distCoeffs_, rvecs_, tvecs_);
-    repError = cv::aruco::calibrateCameraAruco(markerCorners, markerIds, markerCounterPerFrame, chBoard, imgSize, cameraMatrix_,
-                                               distCoeffs_, rvecs_, tvecs_);
+    // repError = cv::aruco::calibrateCameraAruco(markerCorners, markerIds, markerCounterPerFrame, chBoard, imgSize, cameraMatrix_,
+    //                                            distCoeffs_, rvecs_, tvecs_);
 
+    // double repError = calibrateCamera(allObjectPoints, allImagePoints, imageSize, cameraMatrix, distCoeffs,noArray(), noArray(), noArray(), noArray(), noArray(), calibrationFlags);
+
+    // cv::solvePnP();
+    // https://docs.opencv.org/4.x/d5/dae/tutorial_aruco_detection.html
     return repError;
 }
 

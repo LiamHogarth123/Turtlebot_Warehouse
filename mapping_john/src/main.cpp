@@ -29,38 +29,48 @@ int main(int argc, char **argv){
   /** Initialise boundary detector*/
   BoundaryDetection boundary;
 
+  /** Initialise marker functionality*/
+  Markers markers;
+
+  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/calibration_front.jpg");
+
+  if(!input.empty())
+  {
+    double calibration = markers.calibrate(input);
+  }
+
   /** Window for showing input*/
-  cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
+  // cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
 
   /** @test = Red Dynamic #2*/
-  ros::Rate loop_rate(10);
-  while (ros::ok()) {
-    cv::Mat input = ic.getCam();
-    if (!input.empty()) {
-      double flag = boundary.runBoundaryDetection(1,input);
-      std::cout << "flag = " << flag << std::endl;
-      if (!input.empty()) {
-        // Display the image
-        cv::imshow("Image", input);
-      }
+  // ros::Rate loop_rate(10);
+  // while (ros::ok()) {
+  //   cv::Mat input = ic.getCam();
+  //   if (!input.empty()) {
+  //     double flag = boundary.runBoundaryDetection(1,input);
+  //     std::cout << "flag = " << flag << std::endl;
+  //     if (!input.empty()) {
+  //       // Display the image
+  //       cv::imshow("Image", input);
+  //     }
 
-      // Check for key press or ROS events
-      char key = cv::waitKey(1);
-        if (key == 27 || !ros::ok()) {  // Exit on ESC key press or ROS shutdown
-        break;
-      }
-    cv::destroyAllWindows();
-    }
-    else{
-      std::cout << "no image" << std::endl;
-    }
+  //     // Check for key press or ROS events
+  //     char key = cv::waitKey(1);
+  //       if (key == 27 || !ros::ok()) {  // Exit on ESC key press or ROS shutdown
+  //       break;
+  //     }
+  //   cv::destroyAllWindows();
+  //   }
+  //   else{
+  //     std::cout << "no image" << std::endl;
+  //   }
 
-    // Process any ROS callbacks
-    ros::spinOnce();
+  //   // Process any ROS callbacks
+  //   ros::spinOnce();
 
-    // Maintain loop rate
-    loop_rate.sleep();
-  }
+  //   // Maintain loop rate
+  //   loop_rate.sleep();
+  // }
 
   // std::cout << "naw" << std::endl;
 
