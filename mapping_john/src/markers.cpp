@@ -72,8 +72,8 @@ double Markers::calibrate(cv::Mat calibImage)
     // DEBUG ONLY
     std::cout << "Corners size = " << markerCorners.size() << "\n";
     std::cout << "Ids size = " << markerIds.size() << "\n";
-    std::cout << "Corners size = " << allCorners.size() << "\n";
-    std::cout << "Ids size = " << allIds.size() << "\n";
+    // std::cout << "Corners size = " << allCorners.size() << "\n";
+    // std::cout << "Ids size = " << allIds.size() << "\n";
 
     /** Define calibration output*/
     double repError;
@@ -81,9 +81,13 @@ double Markers::calibrate(cv::Mat calibImage)
     /** Calibrate the camera*/
     // repError = cv::aruco::calibrateCameraAruco(allCornersConcatenated, allIdsConcatenated, markerCounterPerFrame, chBoard, imgSize, cameraMatrix_,
     //                                            distCoeffs_, rvecs_, tvecs_);
-    repError = cv::aruco::calibrateCameraAruco(markerCorners, markerIds, markerCounterPerFrame, chBoard, imgSize, cameraMatrix_,
-                                               distCoeffs_, rvecs_, tvecs_);
+    // repError = cv::aruco::calibrateCameraAruco(markerCorners, markerIds, markerCounterPerFrame, chBoard, imgSize, cameraMatrix_,
+    //                                            distCoeffs_, rvecs_, tvecs_);
 
+    // double repError = calibrateCamera(allObjectPoints, allImagePoints, imageSize, cameraMatrix, distCoeffs,noArray(), noArray(), noArray(), noArray(), noArray(), calibrationFlags);
+
+    // cv::solvePnP();
+    // https://docs.opencv.org/4.x/d5/dae/tutorial_aruco_detection.html
     return repError;
 }
 
@@ -138,50 +142,50 @@ void Markers::markerPose(double value, std::vector<std::vector<cv::Point2f>> mar
     // Code
 }
 
-void Markers::runMarkerDetection(bool running)
+void Markers::runMarkerDetection(bool running, ImageConverter ic)
 {
-    unsigned int counter = 0;
-    ImageConverter ic;
-    while (running == true)
-    {
-        counter++;
-        if (counter == 10)
-        {
-            /** Detect marker IDs*/
-            std::vector<int> detected_ids = Markers::detectMarker(ic.rgbd_ptr_->image);
-            std_msgs::UInt16MultiArray msgIds;
+    // unsigned int counter = 0;
+    // // ImageConverter ic;
+    // while (running == true)
+    // {
+    //     counter++;
+    //     if (counter == 10)
+    //     {
+    //         /** Detect marker IDs*/
+    //         std::vector<int> detected_ids = Markers::detectMarker(ic.rgbd_ptr_->image);
+    //         std_msgs::UInt16MultiArray msgIds;
 
-            // Initialise dimensions
-            msgIds.layout.dim.push_back(std_msgs::MultiArrayDimension());
-            msgIds.layout.dim[0].size = detected_ids.size();
-            msgIds.layout.dim[0].stride = 1;
-            msgIds.layout.dim[0].label = "id";
+    //         // Initialise dimensions
+    //         msgIds.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    //         msgIds.layout.dim[0].size = detected_ids.size();
+    //         msgIds.layout.dim[0].stride = 1;
+    //         msgIds.layout.dim[0].label = "id";
 
-            // Populate data
-            msgIds.data.clear();
-            msgIds.data.insert(msgIds.data.end(), detected_ids.begin(), detected_ids.end());
+    //         // Populate data
+    //         msgIds.data.clear();
+    //         msgIds.data.insert(msgIds.data.end(), detected_ids.begin(), detected_ids.end());
 
-            // Publish the marker IDs
-            // pubIds.advertise()
+    //         // Publish the marker IDs
+    //         // pubIds.advertise()
 
-            /** Detect marker poses*/
-            /** @todo*/
-            counter = 0;
-        }
-    }
+    //         /** Detect marker poses*/
+    //         /** @todo*/
+    //         counter = 0;
+    //     }
+    // }
 }
 
 void Markers::runCalibration(bool running)
 {
-    unsigned int counter = 0;
-    ImageConverter ic;
-    while (running == true)
-    {
-        counter++;
-        if (counter == 1)
-        {
-            double repError = Markers::calibrate(ic.rgbd_ptr_->image);
-            counter = 0;
-        }
-    }
+    // unsigned int counter = 0;
+    // ImageConverter ic;
+    // while (running == true)
+    // {
+    //     counter++;
+    //     if (counter == 1)
+    //     {
+    //         double repError = Markers::calibrate(ic.rgbd_ptr_->image);
+    //         counter = 0;
+    //     }
+    // }
 }
