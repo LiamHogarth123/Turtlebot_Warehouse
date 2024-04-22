@@ -460,7 +460,7 @@ void PRM::visualise_PRM(std::vector<Node> Graph_, std::vector<int> path) {
             prev.x = Graph_.at(path.at(x-1)).x;
             prev.y = Graph_.at(path.at(x-1)).y;
 
-            cv::line(mapImage, temp, prev, cv::Scalar(0, 0, 255) /*blue*/, 1  /*thickness*/);
+            cv::line(mapImage, temp, prev, cv::Scalar(0, 0, 255) /*blue*/, 2  /*thickness*/);
         }
         cv::circle(mapImage, temp, 0, cv::Scalar(255, 0, 0), -1);
     }
@@ -511,9 +511,18 @@ std::vector<geometry_msgs::Point> PRM::test(){
     // ProbablityRoadMap_ = rotateNodes(ProbablityRoadMap_, latestMapMetaData_.origin.orientation);
     std::cout << "path size" << path.size() << std::endl; 
 
+
+    
    
 
     visualise_PRM(ProbablityRoadMap_, path);
+
+
+
+
+    std::cout << "start Node -> x = " << ProbablityRoadMap_.at(2).x << " -> Y=" << ProbablityRoadMap_.at(2).y << std::endl;
+    std::cout << "end Node -> x = " << ProbablityRoadMap_.at(10).x << " -> Y=" << ProbablityRoadMap_.at(10).y << std::endl;
+    std::cout << "Distance between nodes -> " << nodeDistance(ProbablityRoadMap_.at(2), ProbablityRoadMap_.at(10)) << std::endl;
 
     std::vector<geometry_msgs::Point> trajectory; 
     
