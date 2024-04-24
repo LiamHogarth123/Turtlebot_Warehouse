@@ -19,6 +19,8 @@ find_package(Eigen3 REQUIRED)
 
 find_package(OpenCV REQUIRED)
 
+find_package(marker_msgs REQUIRED)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wdeprecated-declarations")
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 message(STATUS "CMake C++ FLAGS ${CMAKE_CXX_FLAGS}")

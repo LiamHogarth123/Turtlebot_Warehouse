@@ -12,7 +12,7 @@
                 "/usr/include/**",
                 "/usr/local/**",
                 "/home/john/opencv/**",
-                "${workspaceFolder}"
+                "~/catkin_ws/src/Turtlebot_Warehouse/**"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",

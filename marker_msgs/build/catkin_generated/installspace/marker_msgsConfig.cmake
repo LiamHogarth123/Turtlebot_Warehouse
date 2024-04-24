@@ -67,8 +67,8 @@ set(marker_msgs_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(marker_msgs_SOURCE_PREFIX /home/john/Desktop/Turtlebot_Warehouse/marker_msgs)
-  set(marker_msgs_DEVEL_PREFIX /home/john/Desktop/Turtlebot_Warehouse/marker_msgs/build/devel)
+  set(marker_msgs_SOURCE_PREFIX /home/john/catkin_ws/src/Turtlebot_Warehouse/marker_msgs)
+  set(marker_msgs_DEVEL_PREFIX /home/john/catkin_ws/src/Turtlebot_Warehouse/marker_msgs/build/devel)
   set(marker_msgs_INSTALL_PREFIX "")
   set(marker_msgs_PREFIX ${marker_msgs_DEVEL_PREFIX})
 else()

@@ -14,6 +14,9 @@
 #include <opencv2/aruco/dictionary.hpp>
 #include <opencv2/aruco.hpp>
 #include <opencv2/aruco/charuco.hpp>
+// #include "marker_msgs/msg/marker.msg"
+// #include "marker_msgs"
+#include "marker_msgs/marker.h"
 
 // USEFUL LINK: https://learnopencv.com/augmented-reality-using-aruco-markers-in-opencv-c-python/
 
@@ -107,6 +110,9 @@ public:
     std::vector<cv::Mat> rvecs_; // Rotation vectors
     std::vector<cv::Mat> tvecs_; // Translation vectors
 
+    /** Horizontal (x) position errors*/
+    std::vector<float> xErrors_;
+
     /** Define the aruco dictionary to be used*/
     cv::Ptr<cv::aruco::Dictionary> dictionary_;
 
@@ -151,6 +157,9 @@ protected:
 
     ros::Publisher pubIds_;
     std_msgs::UInt16MultiArray marker_ids_;
+
+    ros::Publisher pubMarker_;
+    // marker_msgs::marker marker_info_;
 };
 
 #endif

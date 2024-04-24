@@ -10,6 +10,7 @@ Markers::Markers(ros::NodeHandle nh)
     parameters_ = cv::aruco::DetectorParameters::create();
     // cameraMatrix_ = (cv::Mat_<double>(3,3) << 912.5086,0.0,651.25220,0.0,912.21368,348.58951,0.0,0.0,1.0);
     // distCoeffs_ = (cv::Mat_<double>(1,5) << 0.0,0.0,0.0,0.0,0.0);
+    pubMarker_ = nh_.advertise<marker_msgs::marker>("/markers/info",100);
 }
 
 Markers::Markers()
@@ -172,7 +173,11 @@ void Markers::markerPose(bool publish)
         // Publish data
         for (unsigned int i = 0; i < markerIds_.size(); i++)
         {
-            // std::vector
+            marker_msgs::marker marker_info;
+            // marker_info.ids.data = markerIds_;
+            // marker_info_.ids = markerIds_.at(0);
+            // marker_info_.xErrors = xErrors_;
+            // pubMarker_.publish();
         }
     }
 }

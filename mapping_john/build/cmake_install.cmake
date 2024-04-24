@@ -1,4 +1,4 @@
-# Install script for directory: /home/john/Desktop/Turtlebot_Warehouse/mapping_john
+# Install script for directory: /home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -56,7 +56,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/local" TYPE PROGRAM FILES "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/_setup_util.py")
+file(INSTALL DESTINATION "/usr/local" TYPE PROGRAM FILES "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/_setup_util.py")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -68,7 +68,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/local" TYPE PROGRAM FILES "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/env.sh")
+file(INSTALL DESTINATION "/usr/local" TYPE PROGRAM FILES "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/env.sh")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -81,8 +81,8 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
 file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES
-    "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/setup.bash"
-    "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/local_setup.bash"
+    "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/setup.bash"
+    "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/local_setup.bash"
     )
 endif()
 
@@ -96,8 +96,8 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
 file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES
-    "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/setup.sh"
-    "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/local_setup.sh"
+    "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/setup.sh"
+    "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/local_setup.sh"
     )
 endif()
 
@@ -111,8 +111,8 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
 file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES
-    "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/setup.zsh"
-    "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/local_setup.zsh"
+    "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/setup.zsh"
+    "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/local_setup.zsh"
     )
 endif()
 
@@ -125,27 +125,27 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/.rosinstall")
+file(INSTALL DESTINATION "/usr/local" TYPE FILE FILES "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/.rosinstall")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/mapping_john.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/mapping_john.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/mapping_john/cmake" TYPE FILE FILES
-    "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/mapping_johnConfig.cmake"
-    "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/mapping_johnConfig-version.cmake"
+    "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/mapping_johnConfig.cmake"
+    "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/catkin_generated/installspace/mapping_johnConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/mapping_john" TYPE FILE FILES "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/mapping_john" TYPE FILE FILES "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/package.xml")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/gtest/cmake_install.cmake")
+  include("/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/gtest/cmake_install.cmake")
 
 endif()
 
@@ -157,5 +157,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

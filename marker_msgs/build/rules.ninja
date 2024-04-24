@@ -99,7 +99,7 @@ rule CXX_SHARED_LIBRARY_LINKER__gtest
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /usr/bin/cmake -S/home/john/Desktop/Turtlebot_Warehouse/marker_msgs -B/home/john/Desktop/Turtlebot_Warehouse/marker_msgs/build
+  command = /usr/bin/cmake -S/home/john/catkin_ws/src/Turtlebot_Warehouse/marker_msgs -B/home/john/catkin_ws/src/Turtlebot_Warehouse/marker_msgs/build
   description = Re-running CMake...
   generator = 1
 

@@ -1,11 +1,11 @@
 Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
-Change Dir: /home/john/Desktop/Turtlebot_Warehouse/marker_msgs/build/CMakeFiles/CMakeTmp
+Change Dir: /home/john/catkin_ws/src/Turtlebot_Warehouse/marker_msgs/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/ninja cmTC_ae0cd && [1/2] Building C object CMakeFiles/cmTC_ae0cd.dir/src.c.o
-[2/2] Linking C executable cmTC_ae0cd
-FAILED: cmTC_ae0cd 
-: && /usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD  -rdynamic CMakeFiles/cmTC_ae0cd.dir/src.c.o  -o cmTC_ae0cd   && :
-/usr/bin/ld: CMakeFiles/cmTC_ae0cd.dir/src.c.o: in function `main':
+Run Build Command(s):/usr/bin/ninja cmTC_3c171 && [1/2] Building C object CMakeFiles/cmTC_3c171.dir/src.c.o
+[2/2] Linking C executable cmTC_3c171
+FAILED: cmTC_3c171 
+: && /usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD  -rdynamic CMakeFiles/cmTC_3c171.dir/src.c.o  -o cmTC_3c171   && :
+/usr/bin/ld: CMakeFiles/cmTC_3c171.dir/src.c.o: in function `main':
 src.c:(.text+0x46): undefined reference to `pthread_create'
 /usr/bin/ld: src.c:(.text+0x52): undefined reference to `pthread_detach'
 /usr/bin/ld: src.c:(.text+0x63): undefined reference to `pthread_join'
@@ -34,12 +34,12 @@ int main(void)
 }
 
 Determining if the function pthread_create exists in the pthreads failed with the following output:
-Change Dir: /home/john/Desktop/Turtlebot_Warehouse/marker_msgs/build/CMakeFiles/CMakeTmp
+Change Dir: /home/john/catkin_ws/src/Turtlebot_Warehouse/marker_msgs/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/ninja cmTC_da9a3 && [1/2] Building C object CMakeFiles/cmTC_da9a3.dir/CheckFunctionExists.c.o
-[2/2] Linking C executable cmTC_da9a3
-FAILED: cmTC_da9a3 
-: && /usr/bin/cc -DCHECK_FUNCTION_EXISTS=pthread_create  -rdynamic CMakeFiles/cmTC_da9a3.dir/CheckFunctionExists.c.o  -o cmTC_da9a3  -lpthreads && :
+Run Build Command(s):/usr/bin/ninja cmTC_6739e && [1/2] Building C object CMakeFiles/cmTC_6739e.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_6739e
+FAILED: cmTC_6739e 
+: && /usr/bin/cc -DCHECK_FUNCTION_EXISTS=pthread_create  -rdynamic CMakeFiles/cmTC_6739e.dir/CheckFunctionExists.c.o  -o cmTC_6739e  -lpthreads && :
 /usr/bin/ld: cannot find -lpthreads
 collect2: error: ld returned 1 exit status
 ninja: build stopped: subcommand failed.

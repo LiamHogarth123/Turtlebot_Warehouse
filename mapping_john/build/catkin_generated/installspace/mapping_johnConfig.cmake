@@ -67,8 +67,8 @@ set(mapping_john_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(mapping_john_SOURCE_PREFIX /home/john/Desktop/Turtlebot_Warehouse/mapping_john)
-  set(mapping_john_DEVEL_PREFIX /home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/devel)
+  set(mapping_john_SOURCE_PREFIX /home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john)
+  set(mapping_john_DEVEL_PREFIX /home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/devel)
   set(mapping_john_INSTALL_PREFIX "")
   set(mapping_john_PREFIX ${mapping_john_DEVEL_PREFIX})
 else()

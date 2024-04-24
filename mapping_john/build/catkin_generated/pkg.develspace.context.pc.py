@@ -4,5 +4,5 @@ PROJECT_PKG_CONFIG_INCLUDE_DIRS = "".split(';') if "" != "" else []
 PROJECT_CATKIN_DEPENDS = "".replace(';', ' ')
 PKG_CONFIG_LIBRARIES_WITH_PREFIX = "".split(';') if "" != "" else []
 PROJECT_NAME = "mapping_john"
-PROJECT_SPACE_DIR = "/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/devel"
+PROJECT_SPACE_DIR = "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/devel"
 PROJECT_VERSION = "0.0.1"
