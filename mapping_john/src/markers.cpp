@@ -8,6 +8,8 @@ Markers::Markers(ros::NodeHandle nh)
     // subRGBD_ = nh_.subscribe("/camera/color/image_raw", 1000, &Markers::RGBDCallback, this);
     dictionary_ = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
     parameters_ = cv::aruco::DetectorParameters::create();
+    // cameraMatrix_ = (cv::Mat_<double>(3,3) << 912.5086,0.0,651.25220,0.0,912.21368,348.58951,0.0,0.0,1.0);
+    // distCoeffs_ = (cv::Mat_<double>(1,5) << 0.0,0.0,0.0,0.0,0.0);
 }
 
 Markers::Markers()
@@ -107,39 +109,72 @@ std::vector<int> Markers::detectMarker(cv::Mat image)
 // std::pair<std::vector<int>,std::vector<std::vector<cv::Point2f>>> Markers::detectMarker(cv::Mat image)
 {
     // std::vector<int, std::allocator<int>> markerIds;
-    std::vector<int> markerIds;
 
     // Load the relevant dictionary
     // cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
     // const cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
     // cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
 
-    std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
+    // std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
 
     // cv::aruco::ArucoDetector detector(dictionary,detectorParams);
 
     // cv::aruco::detectMarkers(image,dictionary,markerCorners,markerIds);
-    cv::aruco::detectMarkers(image, dictionary_, markerCorners, markerIds, parameters_, rejectedCandidates);
-
-    if (markerIds.size() >= 1)
+    cv::aruco::detectMarkers(image, dictionary_, markerCorners_, markerIds_, parameters_, rejectedCandidates_);
+    if (markerIds_.size() >= 1)
     {
-        for (unsigned int i = 0; i < markerIds.size(); i++)
+        for (unsigned int i = 0; i < markerIds_.size(); i++)
         {
-            std::cout << "ID = " << markerIds.at(i) << "\n";
+            std::cout << "ID = " << markerIds_.at(i) << std::endl;
         }
     }
     else
     {
-        markerIds.push_back(-1);
-        std::cout << "ID = " << markerIds.at(0) << "\n";
+        markerIds_.push_back(-1);
+        std::cout << "ID = " << markerIds_.at(0) << std::endl;
     }
 
-    return markerIds;
+    return markerIds_;
 }
 
-void Markers::markerPose(double value, std::vector<std::vector<cv::Point2f>> markerCorners)
+void Markers::markerPose(bool publish)
 {
-    // Code
+    cv::Mat objPoints(4, 1, CV_32FC3);
+    objPoints.ptr<cv::Vec3f>(0)[0] = cv::Vec3f(-markerLength_/2.f, markerLength_/2.f, 0);
+    objPoints.ptr<cv::Vec3f>(0)[1] = cv::Vec3f(markerLength_/2.f, markerLength_/2.f, 0);
+    objPoints.ptr<cv::Vec3f>(0)[2] = cv::Vec3f(markerLength_/2.f, -markerLength_/2.f, 0);
+    objPoints.ptr<cv::Vec3f>(0)[3] = cv::Vec3f(-markerLength_/2.f, -markerLength_/2.f, 0);
+
+    if (!markerIds_.empty())
+    {
+        /** Allocate size of rotation and translation vectors*/
+        cv::Mat emptyMat = (cv::Mat_<double>(3,3) << 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+        for (unsigned int i = 0; i < markerIds_.size(); i++)
+        {
+            rvecs_.push_back(emptyMat);
+            tvecs_.push_back(emptyMat);
+            cv::solvePnP(objPoints,markerCorners_.at(i),cameraMatrix_,distCoeffs_,rvecs_.at(i),tvecs_.at(i));
+        }
+    }
+    else
+    {
+        cv::Mat negativeMat = (cv::Mat_<double>(3,3) << -1,-1,-1,-1,-1,-1,-1,-1,-1);
+        rvecs_.push_back(negativeMat);
+        tvecs_.push_back(negativeMat);
+    }
+
+    cv::Mat x1 = tvecs_.at(0);
+    double x1x = x1.at<double>(0);
+    std::cout << "tvec 1x = " << x1x << std::endl;
+
+    if (publish)
+    {
+        // Publish data
+        for (unsigned int i = 0; i < markerIds_.size(); i++)
+        {
+            // std::vector
+        }
+    }
 }
 
 void Markers::runMarkerDetection(bool running, ImageConverter ic)

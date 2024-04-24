@@ -68,17 +68,17 @@ public:
 
     /**
      * @brief Detect pose of AR tag marker
-     * @param[in] value Value of marker to be assessed
-     * @param[in] markerCorners Corners of marker coordinates
-     * @param[in] markerLength Size of marker in pixels
-     * @param[in] cameraMatrix Camera calibration matrix
-     * @param[in] distCoeffs Distortion coefficients based on calibration
-     * @param[out] rvecs Rotation vectors
-     * @param[out] tvecs Translation vectors
+     * @param[in] publish Boolean if publishing info to ROS topics is required
+     * @param[in] markerCorners_ Coordinates of marker corners
+     * @param[in] markerLength_ Size of marker in metres (m)
+     * @param[in] cameraMatrix_ Camera calibration matrix
+     * @param[in] distCoeffs_ Distortion coefficients based on calibration
+     * @param[out] rvecs_ Rotation vectors
+     * @param[out] tvecs_ Translation vectors
      * @param[out] objPoints
      * @return Pose of marker
      */
-    void markerPose(double value, std::vector<std::vector<cv::Point2f>> markerCorners);
+    void markerPose(bool publish);
 
     /**
      * @brief Run marker detection
@@ -94,11 +94,18 @@ public:
      */
     void runCalibration(bool running);
 
-    /** Calibration outputs*/
+    /** Calibration information*/
+    cv::Mat cameraMatrix_ = (cv::Mat_<double>(3,3) << 912.5086,0.0,651.25220,0.0,912.21368,348.58951,0.0,0.0,1.0); // Calibration matrix
+    cv::Mat distCoeffs_ = (cv::Mat_<double>(1,5) << 0.0,0.0,0.0,0.0,0.0); // Distortion coefficients
+
+    /** Detected marker information*/
+    std::vector<int> markerIds_; // IDs of detected markers
+    std::vector<std::vector<cv::Point2f>> markerCorners_; // Coordinates of corners of detected markers
+    std::vector<std::vector<cv::Point2f>> rejectedCandidates_; // Rejected potential markers
+    
+    /** Vectors of each marker detected*/
     std::vector<cv::Mat> rvecs_; // Rotation vectors
     std::vector<cv::Mat> tvecs_; // Translation vectors
-    cv::Mat cameraMatrix_; // Calibration matrix
-    cv::Mat distCoeffs_; // Distortion coefficients
 
     /** Define the aruco dictionary to be used*/
     cv::Ptr<cv::aruco::Dictionary> dictionary_;
@@ -135,7 +142,7 @@ protected:
     // ros::Subscriber subRGBD_;
 
     /**
-     * Publisher of marker poses
+     * Publisher of marker horizontal error (in metres)
      * @typedef geometry_msgs/PoseArray
      * @topic /markers/marker_poses
     */

@@ -25,6 +25,20 @@ message(STATUS "CMake C++ FLAGS ${CMAKE_CXX_FLAGS}")
 
 catkin_package()
 
+# add_message_files(
+#   FILES
+#   marker.msg
+# )
+
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs
+# )
+
+# catkin_package(
+#   CATKIN_DEPENDS message_runtime
+# )
+
 include_directories(
   include
   src

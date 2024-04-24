@@ -1,6 +1,6 @@
 set(_CATKIN_CURRENT_PACKAGE "mapping_john")
 set(mapping_john_VERSION "0.0.1")
-set(mapping_john_MAINTAINER "Liam Hogarth <liam.hogarth@student.uts.edu.au>")
+set(mapping_john_MAINTAINER "John Hunter <john.e.hunter-1@student.uts.edu.au>")
 set(mapping_john_PACKAGE_FORMAT "1")
 set(mapping_john_BUILD_DEPENDS "roscpp" "sensor_msgs" "std_msgs" "nav_msgs" "rosbag" "roslib")
 set(mapping_john_BUILD_EXPORT_DEPENDS "roscpp" "sensor_msgs" "std_msgs" "nav_msgs" "rosbag" "roslib" "message_runtime")

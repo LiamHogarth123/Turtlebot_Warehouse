@@ -32,12 +32,12 @@ int main(int argc, char **argv){
   /** Initialise marker functionality*/
   Markers markers;
 
-  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/calibration_front.jpg");
+  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/calibration_front.jpg");
 
-  if(!input.empty())
-  {
-    double calibration = markers.calibrate(input);
-  }
+  // if(!input.empty())
+  // {
+  //   double calibration = markers.calibrate(input);
+  // }
 
   /** Window for showing input*/
   // cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
@@ -91,8 +91,9 @@ int main(int argc, char **argv){
   /** Detect marker*/
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_marker_17.jpg");
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/calibration_front.jpg");
-  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_tags_long_alley.jpg");
-  // std::vector<int> marker_ids = markers.detectMarker(input);
+  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_tags_alley.jpg");
+  std::vector<int> marker_ids = markers.detectMarker(input);
+  markers.markerPose(0);
 
   // markers.runMarkerDetection(1, ic);
 
