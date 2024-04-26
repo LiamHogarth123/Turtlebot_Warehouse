@@ -164,10 +164,7 @@ void Markers::markerPose(bool publish)
                 tvecs_.push_back(emptyMat);
             }
             cv::solvePnP(objPoints,markerCorners_.at(i),cameraMatrix_,distCoeffs_,rvecs_.at(i),tvecs_.at(i));
-            // cv::Mat xMat = tvecs_.at(i);
-            // float x = xMat.at<double>(0);
             xErrors_.push_back(tvecs_.at(i).at<double>(0));
-            // xErrors_.push_back(x);
         }
     }
     else
@@ -176,10 +173,6 @@ void Markers::markerPose(bool publish)
         rvecs_.push_back(negativeMat);
         tvecs_.push_back(negativeMat);
     }
-
-    // cv::Mat x1 = tvecs_.at(0);
-    // double x1x = x1.at<double>(0);
-    // std::cout << "tvec 1x = " << x1x << std::endl;
 
     if (publish)
     {

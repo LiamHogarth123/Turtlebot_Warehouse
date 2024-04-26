@@ -92,10 +92,10 @@ int main(int argc, char **argv){
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_marker_17.jpg");
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/calibration_front.jpg");
 
-  cv::Mat input = cv::imread("/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/test/test_tags_alley.jpg");
+  // cv::Mat input = cv::imread("/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/test/test_tags_alley.jpg");
   ros::Rate loop_rate(10);
   while (ros::ok()) {
-    // cv::Mat input = ic.getRGBD();
+    cv::Mat input = ic.getRGBD();
     std::cout << "running" << std::endl;
     if (!input.empty()) {
       std::vector<int> marker_ids = markers.detectMarker(input);
