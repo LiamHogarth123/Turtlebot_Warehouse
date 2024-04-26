@@ -83,23 +83,9 @@ public:
      */
     void markerPose(bool publish);
 
-    /**
-     * @brief Run marker detection
-     * @param[in] running Boolean to run
-     * @return void
-     */
-    void runMarkerDetection(bool running, ImageConverter ic);
-
-    /**
-     * @brief Run calibration
-     * @param[in] running Boolean to run
-     * @return void
-     */
-    void runCalibration(bool running);
-
     /** Calibration information*/
-    cv::Mat cameraMatrix_ = (cv::Mat_<double>(3,3) << 912.5086,0.0,651.25220,0.0,912.21368,348.58951,0.0,0.0,1.0); // Calibration matrix
-    cv::Mat distCoeffs_ = (cv::Mat_<double>(1,5) << 0.0,0.0,0.0,0.0,0.0); // Distortion coefficients
+    cv::Mat cameraMatrix_; // Calibration matrix
+    cv::Mat distCoeffs_; // Distortion coefficients
 
     /** Detected marker information*/
     std::vector<int> markerIds_; // IDs of detected markers
@@ -119,15 +105,6 @@ public:
     /** Define the parameters to be used*/
     cv::Ptr<cv::aruco::DetectorParameters> parameters_;
 
-private:
-    /**
-     * @brief RGBD Callback
-     * @param sensor_msgs::Image::ConstPtr - The scan message
-     * @note This function and the declaration are ROS specific
-     * @return void
-     */
-    void RGBDCallback(const sensor_msgs::Image::ConstPtr &msg);
-
 protected:
     /** Calibration input parameters*/
     int markersX_ = 5; // Number of markers on x-axis
@@ -141,25 +118,18 @@ protected:
     ros::NodeHandle nh_;
 
     /**
-     * Subscriber to image topic to get image from RGB-D sensor
-     * @typedef sensor_msgs/Image
-     * @topic /camera/color/image_raw
-     */
-    // ros::Subscriber subRGBD_;
+     * Publisher of marker IDs only
+     * @typedef std_msgs/Int16MultiArray
+     * @topic /markers/ids
+    */ 
+    ros::Publisher pubIds_;
 
     /**
-     * Publisher of marker horizontal error (in metres)
-     * @typedef geometry_msgs/PoseArray
-     * @topic /markers/marker_poses
-    */
-    ros::Publisher pubPoses_;
-    geometry_msgs::PoseArray marker_poses_;
-
-    ros::Publisher pubIds_;
-    std_msgs::UInt16MultiArray marker_ids_;
-
+     * Publisher of marker IDs AND horizontal error (in metres)
+     * @typedef marker_msgs/marker
+     * @topic /markers/info
+    */   
     ros::Publisher pubMarker_;
-    // marker_msgs::marker marker_info_;
 };
 
 #endif
