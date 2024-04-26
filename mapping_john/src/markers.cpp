@@ -146,27 +146,40 @@ void Markers::markerPose(bool publish)
     objPoints.ptr<cv::Vec3f>(0)[2] = cv::Vec3f(markerLength_/2.f, -markerLength_/2.f, 0);
     objPoints.ptr<cv::Vec3f>(0)[3] = cv::Vec3f(-markerLength_/2.f, -markerLength_/2.f, 0);
 
+    /** Empty the vector*/
+    if (!xErrors_.empty())
+    {
+        xErrors_.clear();
+    }
+
     if (!markerIds_.empty())
     {
         /** Allocate size of rotation and translation vectors*/
-        cv::Mat emptyMat = (cv::Mat_<double>(3,3) << 0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+        cv::Mat emptyMat = (cv::Mat_<double>(1,3) << 0.0,0.0,0.0);
         for (unsigned int i = 0; i < markerIds_.size(); i++)
         {
-            rvecs_.push_back(emptyMat);
-            tvecs_.push_back(emptyMat);
+            if (rvecs_.size() != markerIds_.size())
+            {
+                rvecs_.push_back(emptyMat);
+                tvecs_.push_back(emptyMat);
+            }
             cv::solvePnP(objPoints,markerCorners_.at(i),cameraMatrix_,distCoeffs_,rvecs_.at(i),tvecs_.at(i));
+            // cv::Mat xMat = tvecs_.at(i);
+            // float x = xMat.at<double>(0);
+            xErrors_.push_back(tvecs_.at(i).at<double>(0));
+            // xErrors_.push_back(x);
         }
     }
     else
     {
-        cv::Mat negativeMat = (cv::Mat_<double>(3,3) << -1,-1,-1,-1,-1,-1,-1,-1,-1);
+        cv::Mat negativeMat = (cv::Mat_<double>(1,3) << -1,-1,-1);
         rvecs_.push_back(negativeMat);
         tvecs_.push_back(negativeMat);
     }
 
-    cv::Mat x1 = tvecs_.at(0);
-    double x1x = x1.at<double>(0);
-    std::cout << "tvec 1x = " << x1x << std::endl;
+    // cv::Mat x1 = tvecs_.at(0);
+    // double x1x = x1.at<double>(0);
+    // std::cout << "tvec 1x = " << x1x << std::endl;
 
     if (publish)
     {
@@ -174,10 +187,21 @@ void Markers::markerPose(bool publish)
         for (unsigned int i = 0; i < markerIds_.size(); i++)
         {
             marker_msgs::marker marker_info;
-            // marker_info.ids.data = markerIds_;
-            // marker_info_.ids = markerIds_.at(0);
-            // marker_info_.xErrors = xErrors_;
-            // pubMarker_.publish();
+            marker_info.ids.layout.dim.clear();
+            marker_info.ids.layout.dim.resize(1);
+            marker_info.ids.layout.dim[0].size = markerIds_.size();
+            marker_info.ids.layout.dim[0].stride = 1;
+            marker_info.ids.layout.dim[0].label = "ids";
+            marker_info.ids.data.clear();
+            marker_info.ids.data.insert(marker_info.ids.data.end(),markerIds_.begin(),markerIds_.end());
+
+            marker_info.xErrors.layout.dim.clear();
+            marker_info.xErrors.layout.dim.resize(1);
+            marker_info.xErrors.layout.dim[0].size = xErrors_.size();
+            marker_info.xErrors.layout.dim[0].stride = 1;
+            marker_info.xErrors.layout.dim[0].label = "horizontal errors";
+            marker_info.xErrors.data = xErrors_;
+            pubMarker_.publish(marker_info);
         }
     }
 }
