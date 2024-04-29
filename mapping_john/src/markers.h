@@ -14,11 +14,7 @@
 #include <opencv2/aruco/dictionary.hpp>
 #include <opencv2/aruco.hpp>
 #include <opencv2/aruco/charuco.hpp>
-// #include "marker_msgs/msg/marker.msg"
-// #include "marker_msgs"
 #include "marker_msgs/marker.h"
-
-// USEFUL LINK: https://learnopencv.com/augmented-reality-using-aruco-markers-in-opencv-c-python/
 
 class Markers
 {
