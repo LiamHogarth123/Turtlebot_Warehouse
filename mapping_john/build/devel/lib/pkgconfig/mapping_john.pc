@@ -1,4 +1,4 @@
-prefix=/home/john/Desktop/Turtlebot_Warehouse/mapping_john/build/devel
+prefix=/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/devel
 
 Name: mapping_john
 Description: Description of mapping_john

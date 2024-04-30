@@ -30,14 +30,14 @@ int main(int argc, char **argv){
   BoundaryDetection boundary;
 
   /** Initialise marker functionality*/
-  Markers markers;
+  Markers markers(nh);
 
-  cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/calibration_front.jpg");
+  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/calibration_front.jpg");
 
-  if(!input.empty())
-  {
-    double calibration = markers.calibrate(input);
-  }
+  // if(!input.empty())
+  // {
+  //   double calibration = markers.calibrate(input);
+  // }
 
   /** Window for showing input*/
   // cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
@@ -91,8 +91,34 @@ int main(int argc, char **argv){
   /** Detect marker*/
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_marker_17.jpg");
   // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/calibration_front.jpg");
-  // cv::Mat input = cv::imread("/home/john/Desktop/Turtlebot_Warehouse/mapping_john/test/test_tags_long_alley.jpg");
+
+  // cv::Mat input = cv::imread("/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/test/test_tags_alley.jpg");
+  ros::Rate loop_rate(10);
+  while (ros::ok()) {
+    cv::Mat input = ic.getRGBD();
+    std::cout << "running" << std::endl;
+    if (!input.empty()) {
+      std::vector<int> marker_ids = markers.detectMarker(input);
+      markers.markerPose(1);
+
+      // Check for key press or ROS events
+      char key = cv::waitKey(1);
+        if (key == 27 || !ros::ok()) {  // Exit on ESC key press or ROS shutdown
+        break;
+      }
+    }
+    else{
+      std::cout << "no image" << std::endl;
+    }
+
+    // Process any ROS callbacks
+    ros::spinOnce();
+
+    // Maintain loop rate
+    loop_rate.sleep();
+  }
   // std::vector<int> marker_ids = markers.detectMarker(input);
+  // markers.markerPose(0);
 
   // markers.runMarkerDetection(1, ic);
 
