@@ -3,9 +3,11 @@
 
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: ../src/control.cpp
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: ../src/control.h
+CMakeFiles/control_Dan_control.dir/src/control.cpp.o: ../src/sensorprocessing.h
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/geometry_msgs/Point.h
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/geometry_msgs/PointStamped.h
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/geometry_msgs/Pose.h
+CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/geometry_msgs/PoseArray.h
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/geometry_msgs/PoseStamped.h
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/geometry_msgs/PoseWithCovariance.h
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/geometry_msgs/Quaternion.h
@@ -35,6 +37,7 @@ CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/r
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/ros/time.h
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/ros/types.h
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/rosconsole/macros_generated.h
+CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/sensor_msgs/LaserScan.h
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/std_msgs/Header.h
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/tf/LinearMath/Matrix3x3.h
 CMakeFiles/control_Dan_control.dir/src/control.cpp.o: /opt/ros/melodic/include/tf/LinearMath/MinMax.h

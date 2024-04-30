@@ -36,6 +36,10 @@ Control::Control(){
     integral_ = 0;
     heading_integral_ = 0;
 
+    prevOdom.pose.pose.position.x = 0;
+    prevOdom.pose.pose.position.y = 0;
+    
+
 }
 
 
@@ -65,6 +69,7 @@ geometry_msgs::Twist Control::reachGoal(){
 
     // xPlot.push_back(velocityX);
     // zPlot.push_back(velocityZ);
+    // fillVelPlot();
 
     return cmd_vel;
     
@@ -228,9 +233,19 @@ double Control::angleToGoal() {
     return angle;
 }
 
+void Control::fillVelPlot(){
+    double dx = odom.pose.pose.position.x - prevOdom.pose.pose.position.x;
+    double dy = odom.pose.pose.position.y - prevOdom.pose.pose.position.y;
+    double linear_velocity = sqrt(dx * dx + dy * dy);
+    
+    velPlot.push_back(linear_velocity);
+
+    prevOdom = odom;
+}
+
 std::vector<std::vector<double>> Control::getPlots(){
 
-    std::vector<std::vector<double>> temp = {xPlot, zPlot};
+    std::vector<std::vector<double>> temp = {xPlot, zPlot, velPlot};
     
     return temp;
 }

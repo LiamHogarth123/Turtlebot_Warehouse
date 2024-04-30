@@ -23,15 +23,15 @@ Method::Method(ros::NodeHandle nh) :
   pub_ = nh_.advertise<visualization_msgs::MarkerArray>("/visualization_marker_array",3,false);
 
 // Robot 1 ---------------------------- tb3_0
-  sub1_ = nh_.subscribe("/odom", 1000, &Method::odomCallback,this);
+  sub1_ = nh_.subscribe("tb3_0/odom", 1000, &Method::odomCallback,this);
 
-  sub2_ = nh_.subscribe("/scan", 10, &Method::LidaCallback,this);
+  sub2_ = nh_.subscribe("tb3_0/scan", 10, &Method::LidaCallback,this);
 
   // sub3_ = nh_.subscribe("tb3_0/camera/rgb/image_raw", 1000, &Method::RGBCallback, this);
 
   // sub4_ = nh_.subscribe("tb3_0/camera/depth/image_raw", 1000, &Method::ImageDepthCallback, this);
 
-  cmd_velocity_tb1 = nh_.advertise<geometry_msgs::Twist>("/cmd_vel",10);
+  cmd_velocity_tb1 = nh_.advertise<geometry_msgs::Twist>("tb3_0/cmd_vel",10);
 
 // Robot 2 guider --------------------- tb3_1
 
@@ -58,13 +58,23 @@ void Method::separateThread() {
     case 1: {
       geometry_msgs::Point point1;
       point1.x = 1.0;
-      point1.y = -0.5;
+      point1.y = 0;
       Leader_goals.push_back(point1);
 
       geometry_msgs::Point point2;
       point2.x = 3.0;
       point2.y = 0.0;
       Leader_goals.push_back(point2);
+
+      geometry_msgs::Point point3;
+      point3.x = 5.0;
+      point3.y = 0.0;
+      Leader_goals.push_back(point3);
+
+      geometry_msgs::Point point4;
+      point4.x = 7.0;
+      point4.y = 0.0;
+      Leader_goals.push_back(point4);
       break;
       }
     case 2:{
@@ -126,6 +136,12 @@ void Method::separateThread() {
     // // Print zPlot
     // std::cout << "zPlot:" << std::endl;
     // for (double value : plots[1]) {
+    //     std::cout << value << std::endl;
+    // }
+
+    // // Print velPlot
+    // std::cout << "velPlot:" << std::endl;
+    // for (double value : plots[2]) {
     //     std::cout << value << std::endl;
     // }
 

@@ -23,9 +23,9 @@ public:
 
   geometry_msgs::Point polarToCart(unsigned int index);
 
-  double findTurtlebot();
+  double findObstacle();
 
-  std::vector<float> scanningRange(float scanRange);
+  std::vector<std::pair<float, int>> scanningRange(float scanRange);
 
 
   void PrintLaserSpec();

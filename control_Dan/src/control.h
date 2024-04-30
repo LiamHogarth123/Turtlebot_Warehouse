@@ -6,6 +6,7 @@
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/Twist.h>
 #include <nav_msgs/Odometry.h>
+#include "sensorprocessing.h"
 
 class Control
 {
@@ -33,6 +34,8 @@ class Control
     double velocityPID();
 
     std::vector<std::vector<double>> getPlots();
+
+    void fillVelPlot();
     
 
     //parameters
@@ -63,6 +66,8 @@ class Control
 
     std::vector<double> xPlot;
     std::vector<double> zPlot;
+    std::vector<double> velPlot;
+    nav_msgs::Odometry prevOdom;
 
  
 };
