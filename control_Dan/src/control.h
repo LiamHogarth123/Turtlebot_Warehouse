@@ -17,11 +17,11 @@ class Control
     */
     Control();
 
-    void updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom );
+    void updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom, sensor_msgs::LaserScan temp_lidar);
 
     geometry_msgs::Twist reachGoal();
     
-    bool collisionDetection();
+    double collisionDetection();
 
     bool goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom);
 
@@ -42,6 +42,7 @@ class Control
     private:
     geometry_msgs::Point goal;
     nav_msgs::Odometry odom;
+    sensor_msgs::LaserScan lidar;
 
     //Calculation variable declaration
     double Kp_;
@@ -68,6 +69,8 @@ class Control
     std::vector<double> zPlot;
     std::vector<double> velPlot;
     nav_msgs::Odometry prevOdom;
+
+    Sensorprocessing ObjectDetection;
 
  
 };

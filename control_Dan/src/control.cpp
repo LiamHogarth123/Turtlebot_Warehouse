@@ -43,9 +43,10 @@ Control::Control(){
 }
 
 
-void Control::updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom){
+void Control::updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom, sensor_msgs::LaserScan temp_lidar){
     goal = temp_goal;
     odom = temp_odom;
+    lidar = temp_lidar;
 }
 
 
@@ -55,17 +56,36 @@ geometry_msgs::Twist Control::reachGoal(){
     //// Create and publish Twist message for velocity control
     geometry_msgs::Twist cmd_vel;
 
+    // calculating velocity commands to reach goal
     double velocityX = velocityPID();
     double velocityZ = steeringPID();
-    
+
+    // Object avoidence
+    double obstacleMidpoint = collisionDetection();
+    double avoidanceFactor = -0.1; // the value determining the rate of avoidance (lower is faster rate of change)
+    if (obstacleMidpoint > 0) {
+        std::cout << "avoiding object on left" << std::endl;
+        velocityZ = avoidanceFactor/obstacleMidpoint; 
+        if (velocityZ < -maxVelz) {
+            velocityZ = -maxVelz;
+        }
+    } else if (obstacleMidpoint < 0) {
+        std::cout << "avoiding object on right" << std::endl;
+        velocityZ = avoidanceFactor/obstacleMidpoint;
+        if (velocityZ > maxVelz) {
+            velocityZ = maxVelz;
+        }
+    }
+
+    // setting final velocity commands
     cmd_vel.linear.x = velocityX;
     cmd_vel.angular.z = velocityZ;
 
-    std::cout << "---------------------------------------------" << std::endl;
-    std::cout << "distanceToGoal: " << distanceToGoal() << std::endl;
-    std::cout << "forward velocity command: " << velocityX << std::endl;
-    std::cout << "angleToGoal: " << angleToGoal() << std::endl;
-    std::cout << "angular velocity command: " << velocityZ << std::endl;
+    // std::cout << "---------------------------------------------" << std::endl;
+    // std::cout << "distanceToGoal: " << distanceToGoal() << std::endl;
+    // std::cout << "forward velocity command: " << velocityX << std::endl;
+    // std::cout << "angleToGoal: " << angleToGoal() << std::endl;
+    // std::cout << "angular velocity command: " << velocityZ << std::endl;
 
     // xPlot.push_back(velocityX);
     // zPlot.push_back(velocityZ);
@@ -174,11 +194,20 @@ double Control::steeringPID(){
 
 
 
-bool Control::collisionDetection() {
+double Control::collisionDetection() {
+
+    ObjectDetection.Newdata(lidar);
+    double obstacleMidpoint = ObjectDetection.findObstacle();
+
+    // if obstacle == 0 then does nothing
+
+    if (obstacleMidpoint != 0) {
+        integral_ = 0;
+        heading_integral_ = 0;
+    }
 
 
-
-    return true;
+    return obstacleMidpoint;
 }
 
 

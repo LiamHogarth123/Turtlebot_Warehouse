@@ -38,48 +38,46 @@ geometry_msgs::Point Sensorprocessing::polarToCart(unsigned int index)
 
 double Sensorprocessing::findObstacle(){
 
-    std::vector<std::pair<float, int>> scannedRange = scanningRange(20);
-    double distance;
-    double midpoint;
+    std::vector<std::pair<float, int>> scannedRange = scanningRange(90);
+    double distance = 0;
+    double midpoint = 0;
     int objectCount = 0; // counts how many objects in the scan
-    int startingPoint;
+    geometry_msgs::Point obstacleStart;
+
 
     for (int i = 0; i < scannedRange.size(); i++) {
-    
-        int ObjStartingPt = i;
 
         if (scannedRange[i].first < 0.5) {
             objectCount++;
+            int ObjStartingPt = i;
         
-            while (scannedRange[i].first < 0.5 ) {
-                if (i == scannedRange.size() - 1) {
-                    break;
-                }
-                i++;
+            while (i < scannedRange.size() && scannedRange[i].first < 0.5) {
+
+                i++; // move to the end of the object
             }
 
+            if (objectCount == 1) {
+                obstacleStart = polarToCart(scannedRange[ObjStartingPt].second);
+            }
+
+            if (objectCount > 0) {
+                geometry_msgs::Point obstacleEnd = polarToCart(scannedRange[i - 1].second);
+
+                distance = sqrt(pow((obstacleStart.x - obstacleEnd.x), 2) + pow((obstacleStart.y - obstacleEnd.y), 2));
+
+                midpoint = (obstacleStart.y + obstacleEnd.y) / 2.0;
+            }
         }
-
-        if (objectCount == 1) {
-            
-        }
-
-            geometry_msgs::Point obstacleStart = polarToCart(scannedRange[ObjStartingPt].second);
-            geometry_msgs::Point obstacleEnd = polarToCart(scannedRange[i].second);
-
-            distance = pow(pow((obstacleStart.x - obstacleEnd.x), 2) + pow((obstacleStart.y - obstacleEnd.y), 2), 0.5);
-
-            midpoint = obstacleEnd.y - obstacleStart.y;
-        
 
     }
 
-    std::cout << "---------------------------------------------" << std::endl;
-    std::cout << "distance: " << distance << std::endl;
-    std::cout << "midpoint: " << midpoint << std::endl;
-    std::cout << "---------------------------------------------" << std::endl;
+    // std::cout << "---------------------------------------------" << std::endl;
+    // std::cout << "distance: " << distance << std::endl;
+    // std::cout << "midpoint: " << midpoint << std::endl;
+    // std::cout << "polarToCart: " << polarToCart(1) << std::endl;
+    // std::cout << "---------------------------------------------" << std::endl;
     
-return midpoint;
+    return midpoint;
 
 }
 
@@ -127,12 +125,12 @@ std::vector<std::pair<float, int>> Sensorprocessing::scanningRange(float scanRan
         combinedVector.push_back(element);
     }
 
-    // Display the combined vector
-    std::cout << "Combined Vector: ";
-    for (const auto& element : combinedVector) {
-        std::cout << "(" << element.first << ", " << element.second << ") ";
-    }
-    std::cout << std::endl;
+    // // Display the combined vector
+    // std::cout << "Combined Vector: ";
+    // for (const auto& element : combinedVector) {
+    //     std::cout << "(" << element.first << ", " << element.second << ") ";
+    // }
+    // std::cout << std::endl;
 
     return combinedVector;
 

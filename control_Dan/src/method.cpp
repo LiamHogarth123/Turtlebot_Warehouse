@@ -92,8 +92,9 @@ void Method::separateThread() {
       }
     case 3:{
       teleop_mode = true;
-      Lidar.Newdata(updated_Lida);
-      Lidar.scanningRange(20);
+      Lidar.Newdata(updated_Lidar);
+      // Lidar.scanningRange(20);
+      Lidar.findObstacle();
       break;
       }
     default:{
@@ -160,7 +161,7 @@ void Method::turtleMovement(){
     targetGoal = Leader_goals.at(goal_index);
     
 
-    TurtleGPS.updateGoal(targetGoal, Current_Odom);
+    TurtleGPS.updateGoal(targetGoal, Current_Odom, updated_Lidar);
     geometry_msgs::Twist botTraj = TurtleGPS.reachGoal();
     
     if (TurtleGPS.goal_hit(targetGoal, Current_Odom)){
@@ -211,8 +212,8 @@ void  Method::RGBCallback(const sensor_msgs::Image::ConstPtr& Msg){
 }
 
 void Method::LidaCallback(const sensor_msgs::LaserScan::ConstPtr& Msg){
-  std::unique_lock<std::mutex> lck3 (Lida_locker);
-  updated_Lida = *Msg;
+  std::unique_lock<std::mutex> lck3 (Lidar_locker);
+  updated_Lidar = *Msg;
 }
 
 void Method::ImageDepthCallback(const sensor_msgs::Image::ConstPtr& Msg){
