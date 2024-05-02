@@ -7,6 +7,7 @@
 /** Include other relevant headers*/
 #include "ros/ros.h"
 #include "sensor_msgs/Image.h"
+#include "std_msgs/Int16.h"
 #include <iostream>
 #include <math.h>
 #include <vector>
@@ -17,6 +18,12 @@
 class BoundaryDetection
 {
 public:
+    /**
+     * @brief Constructor
+     * @param[in] nh nodehandle
+     */
+    BoundaryDetection(ros::NodeHandle nh);
+
     /**
      * @brief Constructor
      */
@@ -32,17 +39,28 @@ public:
      * @param[in] image Image from webcam
      * @return Double boundary detected and colour
      */
-    double detectColour(cv::Mat image);
+    int detectColour(cv::Mat image);
 
     /**
      * @brief Run boundary detection
-     * @param[in] running Boolean to run
+     * @param[in] input Image for processing
      * @return If boundary is detected
      */
-    double runBoundaryDetection(bool running, cv::Mat input);
+    void runBoundaryDetection(cv::Mat input);
+
+    /** Nodehandle for this node. Note, only 1 nodehandle is required (there is only 1 node).*/
+    ros::NodeHandle nh_;
+
+    /**
+     * Publisher of boundary detection
+     * @typedef std_msgs/Int16
+     * @topic /boundary/detection
+    */ 
+    ros::Publisher pubDetection_;
 
 private:
-    double colour_id_threshold_ = 3000; /** Number of -1 pixels to identify a colour*/
+    double blue_id_threshold_ = 1000; /** Number of -1 pixels to identify a colour*/
+    double red_id_threshold_ = 3000; /** Number of -1 pixels to identify a colour*/
 };
 
 #endif
