@@ -52,7 +52,18 @@ void Method::testPathPlanningControl() {
 
   //SEND TO CONTROL
 
+
+
 }
+
+
+// // Ideal system
+
+// generate PRM
+// initilise brendan system 
+
+// Using function setgoal()
+// using funfction djsktra to goal
 
 
 
@@ -103,34 +114,34 @@ void Method::mapMetadataCallback(const nav_msgs::MapMetaData::ConstPtr& msg) {
 
 
 void Method::publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub) {
-    visualization_msgs::MarkerArray markerArray;
-    int id = 0; // Unique ID for each marker
+  visualization_msgs::MarkerArray markerArray;
+  int id = 0; // Unique ID for each marker
 
-    for (const auto& node : nodes) {
-        visualization_msgs::Marker marker;
-        marker.header.frame_id = "map"; // or your relevant frame
-        marker.header.stamp = ros::Time::now();
-        marker.ns = "nodes";
-        marker.id = id++; // Assign and increment the unique ID
-        marker.type = visualization_msgs::Marker::SPHERE; // Use SPHERE, CUBE, etc., as preferred
-        marker.action = visualization_msgs::Marker::ADD;
-        
-        marker.pose.position.x = node.x;
-        marker.pose.position.y = node.y;
-        marker.pose.position.z = 0; // Assuming a flat map, set z to 0
-        marker.pose.orientation.w = 1.0;
+  for (const auto& node : nodes) {
+      visualization_msgs::Marker marker;
+      marker.header.frame_id = "map"; // or your relevant frame
+      marker.header.stamp = ros::Time::now();
+      marker.ns = "nodes";
+      marker.id = id++; // Assign and increment the unique ID
+      marker.type = visualization_msgs::Marker::SPHERE; // Use SPHERE, CUBE, etc., as preferred
+      marker.action = visualization_msgs::Marker::ADD;
+      
+      marker.pose.position.x = node.x;
+      marker.pose.position.y = node.y;
+      marker.pose.position.z = 0; // Assuming a flat map, set z to 0
+      marker.pose.orientation.w = 1.0;
 
-        marker.scale.x = 0.2; // Specify the size of the individual markers
-        marker.scale.y = 0.2;
-        marker.scale.z = 0.2; // Add z dimension for SPHERE, CUBE, etc.
+      marker.scale.x = 0.2; // Specify the size of the individual markers
+      marker.scale.y = 0.2;
+      marker.scale.z = 0.2; // Add z dimension for SPHERE, CUBE, etc.
 
-        marker.color.r = 1.0; // Color: Red
-        marker.color.g = 0.0;
-        marker.color.b = 0.0;
-        marker.color.a = 1.0; // Alpha (transparency)
+      marker.color.r = 1.0; // Color: Red
+      marker.color.g = 0.0;
+      marker.color.b = 0.0;
+      marker.color.a = 1.0; // Alpha (transparency)
 
-        markerArray.markers.push_back(marker); // Add the marker to the array
-    }
+      markerArray.markers.push_back(marker); // Add the marker to the array
+  }
 
-    marker_pub.publish(markerArray); // Publish the entire array
+  marker_pub.publish(markerArray); // Publish the entire array
 }

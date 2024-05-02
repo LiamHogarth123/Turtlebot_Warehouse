@@ -68,8 +68,7 @@ void Method::separateThread() {
 
   geometry_msgs::Point start;
 
-  start.x = Current_Odom.pose.pose.position.x;
-  start.y = Current_Odom.pose.pose.position.y;  
+   
   std::cout << "Odom  x" << start.x << "y   " << start.y << std::endl;
 
   //Liam Map generation
@@ -93,7 +92,8 @@ void Method::separateThread() {
 
   std::cout << "Enter y-coordinate: ";
   std::cin >> goal.y;
-
+  start.x = Current_Odom.pose.pose.position.x;
+  start.y = Current_Odom.pose.pose.position.y; 
 
   
   trajectory = prmMap.DijkstraToGoal(start, goal);
@@ -112,7 +112,7 @@ void Method::separateThread() {
     while (!missionComplete){
       turtleMovement();
     }
-
+  missionComplete = false;
   // GET TO FINAL GOAL
   //////////////////////////////////////////////////////////
   }
