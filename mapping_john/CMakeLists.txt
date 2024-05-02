@@ -12,11 +12,14 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation  # Add this line for message generation
   image_transport
   cv_bridge
+  marker_msgs
 )
 
 find_package(Eigen3 REQUIRED)
 
 find_package(OpenCV REQUIRED)
+
+find_package(marker_msgs REQUIRED)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wdeprecated-declarations")
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -24,6 +27,20 @@ message(STATUS "CMake C++ FLAGS ${CMAKE_CXX_FLAGS}")
 
 
 catkin_package()
+
+# add_message_files(
+#   FILES
+#   marker.msg
+# )
+
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs
+# )
+
+# catkin_package(
+#   CATKIN_DEPENDS message_runtime
+# )
 
 include_directories(
   include

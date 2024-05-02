@@ -24,7 +24,7 @@ Control::Control(){
     Kd_ = 1.5;
 
     Kp_h = 0.5;
-    Ki_h = 0.10;
+    Ki_h = 0.1;
     Kd_h = 2;
 
     maxVelx = 0.26; // m/s
@@ -36,12 +36,17 @@ Control::Control(){
     integral_ = 0;
     heading_integral_ = 0;
 
+    prevOdom.pose.pose.position.x = 0;
+    prevOdom.pose.pose.position.y = 0;
+    
+
 }
 
 
-void Control::updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom){
+void Control::updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom, sensor_msgs::LaserScan temp_lidar){
     goal = temp_goal;
     odom = temp_odom;
+    lidar = temp_lidar;
 }
 
 
@@ -51,17 +56,40 @@ geometry_msgs::Twist Control::reachGoal(){
     //// Create and publish Twist message for velocity control
     geometry_msgs::Twist cmd_vel;
 
+    // calculating velocity commands to reach goal
     double velocityX = velocityPID();
     double velocityZ = steeringPID();
-    
+
+    // Object avoidence
+    double obstacleMidpoint = collisionDetection();
+    double avoidanceFactor = -0.1; // the value determining the rate of avoidance (lower is faster rate of change)
+    if (obstacleMidpoint > 0) {
+        std::cout << "avoiding object on left" << std::endl;
+        velocityZ = avoidanceFactor/obstacleMidpoint; 
+        if (velocityZ < -maxVelz) {
+            velocityZ = -maxVelz;
+        }
+    } else if (obstacleMidpoint < 0) {
+        std::cout << "avoiding object on right" << std::endl;
+        velocityZ = avoidanceFactor/obstacleMidpoint;
+        if (velocityZ > maxVelz) {
+            velocityZ = maxVelz;
+        }
+    }
+
+    // setting final velocity commands
     cmd_vel.linear.x = velocityX;
     cmd_vel.angular.z = velocityZ;
 
-    std::cout << "---------------------------------------------" << std::endl;
-    std::cout << "distanceToGoal: " << distanceToGoal() << std::endl;
-    std::cout << "control_command: " << velocityX << std::endl;
-    std::cout << "angleToGoal: " << angleToGoal() << std::endl;
-    std::cout << "angular_command: " << velocityZ << std::endl;
+    // std::cout << "---------------------------------------------" << std::endl;
+    // std::cout << "distanceToGoal: " << distanceToGoal() << std::endl;
+    // std::cout << "forward velocity command: " << velocityX << std::endl;
+    // std::cout << "angleToGoal: " << angleToGoal() << std::endl;
+    // std::cout << "angular velocity command: " << velocityZ << std::endl;
+
+    // xPlot.push_back(velocityX);
+    // zPlot.push_back(velocityZ);
+    // fillVelPlot();
 
     return cmd_vel;
     
@@ -101,7 +129,7 @@ double Control::velocityPID(){
 
     // Goal hit reset
     if (fabs(distanceToGoal()) < toleranceDistance){
-        control_command = 0;
+        // control_command = 0;
         integral_ = 0;
     }
 
@@ -127,7 +155,7 @@ double Control::steeringPID(){
             heading_integral_ = -maxHeadingIntegral;
         }
 
-    std::cout << "heading integral: " << heading_integral_ << std::endl;
+    // std::cout << "heading integral: " << heading_integral_ << std::endl;
 
     double heading_derivative = heading_error - prev_heading_error_;
 
@@ -166,11 +194,20 @@ double Control::steeringPID(){
 
 
 
-bool Control::collisionDetection() {
+double Control::collisionDetection() {
+
+    ObjectDetection.Newdata(lidar);
+    double obstacleMidpoint = ObjectDetection.findObstacle();
+
+    // if obstacle == 0 then does nothing
+
+    if (obstacleMidpoint != 0) {
+        integral_ = 0;
+        heading_integral_ = 0;
+    }
 
 
-
-    return true;
+    return obstacleMidpoint;
 }
 
 
@@ -223,4 +260,21 @@ double Control::angleToGoal() {
     double angle = atan2(heading_vector.cross(goal_vector).z(), heading_vector.dot(goal_vector));
 
     return angle;
+}
+
+void Control::fillVelPlot(){
+    double dx = odom.pose.pose.position.x - prevOdom.pose.pose.position.x;
+    double dy = odom.pose.pose.position.y - prevOdom.pose.pose.position.y;
+    double linear_velocity = sqrt(dx * dx + dy * dy);
+    
+    velPlot.push_back(linear_velocity);
+
+    prevOdom = odom;
+}
+
+std::vector<std::vector<double>> Control::getPlots(){
+
+    std::vector<std::vector<double>> temp = {xPlot, zPlot, velPlot};
+    
+    return temp;
 }

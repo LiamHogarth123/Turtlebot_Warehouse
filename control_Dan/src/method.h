@@ -69,7 +69,7 @@ public:
   std::mutex odom_locker;
   std::mutex odom_locker2;
   std::mutex RGB_locker;
-  std::mutex Lida_locker;
+  std::mutex Lidar_locker;
   std::mutex ImageDepth_locker;
   std::mutex goal_lock;
 
@@ -77,7 +77,7 @@ public:
   nav_msgs::Odometry Current_Odom;
   nav_msgs::Odometry guider_Odom;
   sensor_msgs::Image updated_RGB;
-  sensor_msgs::LaserScan updated_Lida;
+  sensor_msgs::LaserScan updated_Lidar;
   sensor_msgs::Image updated_imageDepth;
 
 

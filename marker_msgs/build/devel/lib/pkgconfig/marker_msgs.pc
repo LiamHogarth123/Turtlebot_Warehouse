@@ -1,0 +1,8 @@
+prefix=/home/john/catkin_ws/src/Turtlebot_Warehouse/marker_msgs/build/devel
+
+Name: marker_msgs
+Description: Description of marker_msgs
+Version: 2.1.4
+Cflags: -I/home/john/catkin_ws/src/Turtlebot_Warehouse/marker_msgs/build/devel/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime std_msgs

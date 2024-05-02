@@ -15,6 +15,8 @@ geometry_msgs/Twist.h
 -
 nav_msgs/Odometry.h
 -
+sensorprocessing.h
+/home/dan/git/Turtlebot_Warehouse/control_Dan/src/sensorprocessing.h
 
 /home/dan/git/Turtlebot_Warehouse/control_Dan/src/main.cpp
 ros/ros.h
@@ -71,7 +73,9 @@ sensor_msgs/LaserScan.h
 -
 geometry_msgs/Pose.h
 -
-math.h
+cmath
+-
+vector
 -
 tf/transform_datatypes.h
 /home/dan/git/Turtlebot_Warehouse/control_Dan/src/tf/transform_datatypes.h

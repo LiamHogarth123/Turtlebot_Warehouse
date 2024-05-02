@@ -24,54 +24,10 @@ void Sensorprocessing::PrintLaserSpec(){
     std::cout << laserScan.angle_increment << std::endl;
 }
 
-
-
-double Sensorprocessing::findTurtlebot(){
-
-    float scanAngle = 20;
-    float scanSize = laserScan.ranges.size();
-    //given the scan angle is 180 degrees in the sim
-    float scanAngleStart = ((180 - scanAngle) / 2) * (scanSize / 180); // starts scan for truck 
-    float scanAngleEnd = (((180 - scanAngle) / 2) + scanAngle) * (scanSize / 180); // starts scan for truck 
-    int startIndex = scanAngleStart;
-    int endIndex = scanAngleEnd;
-
-    double distance;
-    double midpoint;
-
-    for (int i = startIndex; i < endIndex; i++) {
-    
-        int startingPt = i;
-
-        while (i < endIndex && laserScan.ranges.at(i) < 4.5 ) {
-            if (i == laserScan.ranges.size() - 1) {
-                break;
-            }
-            i++;
-        }
-
-        geometry_msgs::Point obstacleStart = polarToCart(startingPt);
-        geometry_msgs::Point obstacleEnd = polarToCart(i - 1);
-
-        distance = pow(pow((obstacleStart.x - obstacleEnd.x), 2) + pow((obstacleStart.y - obstacleEnd.y), 2), 0.5);
-
-        midpoint = obstacleEnd.y - obstacleStart.y;
-
-    }
-
-    std::cout << "---------------------------------------------" << std::endl;
-    std::cout << "distance: " << distance << std::endl;
-    std::cout << "midpoint: " << midpoint << std::endl;
-    std::cout << "---------------------------------------------" << std::endl;
-    
-return midpoint;
-
-}
-
 geometry_msgs::Point Sensorprocessing::polarToCart(unsigned int index)
 {
     
-    float angle = laserScan.angle_min + laserScan.angle_increment*index;// + angle_range/2;
+    float angle = laserScan.angle_min + laserScan.angle_increment*index;
     float range = laserScan.ranges.at(index);
     geometry_msgs::Point cart;
     cart.x = static_cast<double>(range*cos(angle));
@@ -80,15 +36,102 @@ geometry_msgs::Point Sensorprocessing::polarToCart(unsigned int index)
 }
 
 
+double Sensorprocessing::findObstacle(){
 
-std::vector<geometry_msgs::Point> Sensorprocessing::findAllLaserPoints(){
-    std::vector<geometry_msgs::Point> pointVector;
+    std::vector<std::pair<float, int>> scannedRange = scanningRange(90);
+    double distance = 0;
+    double midpoint = 0;
+    int objectCount = 0; // counts how many objects in the scan
+    geometry_msgs::Point obstacleStart;
 
-    for (int i = 1; i < laserScan.ranges.size(); i++) { // for all readings
-        if(!std::isinf(laserScan.ranges.at(i))){ // if the number isn't infinity
-            geometry_msgs::Point pt1 =polarToCart(i);
-            pointVector.push_back(pt1);
+
+    for (int i = 0; i < scannedRange.size(); i++) {
+
+        if (scannedRange[i].first < 0.5) {
+            objectCount++;
+            int ObjStartingPt = i;
+        
+            while (i < scannedRange.size() && scannedRange[i].first < 0.5) {
+
+                i++; // move to the end of the object
+            }
+
+            if (objectCount == 1) {
+                obstacleStart = polarToCart(scannedRange[ObjStartingPt].second);
+            }
+
+            if (objectCount > 0) {
+                geometry_msgs::Point obstacleEnd = polarToCart(scannedRange[i - 1].second);
+
+                distance = sqrt(pow((obstacleStart.x - obstacleEnd.x), 2) + pow((obstacleStart.y - obstacleEnd.y), 2));
+
+                midpoint = (obstacleStart.y + obstacleEnd.y) / 2.0;
+            }
         }
+
     }
-    return pointVector;
+
+    // std::cout << "---------------------------------------------" << std::endl;
+    // std::cout << "distance: " << distance << std::endl;
+    // std::cout << "midpoint: " << midpoint << std::endl;
+    // std::cout << "polarToCart: " << polarToCart(1) << std::endl;
+    // std::cout << "---------------------------------------------" << std::endl;
+    
+    return midpoint;
+
+}
+
+
+
+
+
+std::vector<std::pair<float, int>> Sensorprocessing::scanningRange(float scanRange){ //scans from right to left
+
+    float scanSize = laserScan.ranges.size();
+    float degreeIndex = scanSize / 360;
+    float scanIndex = round((scanRange/2) * degreeIndex); // The index of the scan at scanRange (degrees), scanRange/2 as there is left and right of 0 degrees
+    
+
+    // std::cout << "LaserScan.ranges: ";
+    //     for (const auto& element : laserScan.ranges) {
+    //         std::cout << element << " ";
+    //     }
+    //     std::cout << std::endl;
+
+    // std::cout << "/////////////////////////////////////////////////////////////" << std::endl;
+
+    // std::vector<float> scanPosDirection(laserScan.ranges.begin(), laserScan.ranges.begin() + scanIndex);
+    // std::vector<float> scanNegDirection(laserScan.ranges.end() - scanIndex, laserScan.ranges.end());
+
+
+    std::vector<std::pair<float, int>> scanPosDirection;
+    std::vector<std::pair<float, int>> scanNegDirection;
+
+    // Populate scanPosDirection with range data and indices
+    for (int i = 0; i < scanIndex; ++i) {
+        scanPosDirection.push_back(std::make_pair(laserScan.ranges[i], i));
+    }
+
+    // Populate scanNegDirection with range data and indices
+    for (int i = laserScan.ranges.size() - scanIndex; i < laserScan.ranges.size(); ++i) {
+        scanNegDirection.push_back(std::make_pair(laserScan.ranges[i], i));
+    }
+
+
+
+    // Combine the two vectors
+    std::vector<std::pair<float, int>> combinedVector = scanNegDirection;
+    for (const auto& element : scanPosDirection) {
+        combinedVector.push_back(element);
+    }
+
+    // // Display the combined vector
+    // std::cout << "Combined Vector: ";
+    // for (const auto& element : combinedVector) {
+    //     std::cout << "(" << element.first << ", " << element.second << ") ";
+    // }
+    // std::cout << std::endl;
+
+    return combinedVector;
+
 }

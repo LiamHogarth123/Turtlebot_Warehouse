@@ -4,7 +4,8 @@
 #include <sensor_msgs/LaserScan.h>
 #include <geometry_msgs/Pose.h>
 
-#include <math.h>
+#include <cmath>
+#include <vector>
 #include "tf/transform_datatypes.h"
 #include <geometry_msgs/PoseArray.h>
 
@@ -22,9 +23,9 @@ public:
 
   geometry_msgs::Point polarToCart(unsigned int index);
 
-  double findTurtlebot();
+  double findObstacle();
 
-  std::vector<geometry_msgs::Point> findAllLaserPoints();
+  std::vector<std::pair<float, int>> scanningRange(float scanRange);
 
 
   void PrintLaserSpec();
