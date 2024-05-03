@@ -158,7 +158,6 @@ bool PRM::ValidPoint(geometry_msgs::Point point){
 
 }
 
-
 bool PRM::pathIsClear(Node Node_A, Node Node_B){
     //Generate line between points
     ////////////////////////////////////////////////////////////
@@ -296,7 +295,6 @@ std::vector<std::pair<int, int>> PRM::bresenhamLinePoints(int startX, int startY
     }
     return outputArray;
 }
-
 
 
 std::vector<Node> PRM::createNodesAndEdges(std::vector<Node> Graph_){
@@ -485,7 +483,6 @@ void PRM::visualise_PRM(std::vector<Node> Graph_, std::vector<int> path) {
 
 
 
-
 std::vector<geometry_msgs::Point> PRM::test(){
     
     samplePoints();
@@ -540,13 +537,9 @@ void PRM::findPath(int startNodeId, int goalNodeId){
 }
 
 std::vector<int> PRM::findPathDijkstra(const std::vector<Node>& graph, int startId, int targetId) {
-
     std::priority_queue<std::pair<float, int>, std::vector<std::pair<float, int>>, ComparePair> pq;
-
     std::unordered_map<int, float> dist; // Distance from start node to each node
-    
     std::unordered_map<int, int> prev; // Previous node in optimal path from source
-    
     std::vector<int> path; // Store the final path
 
     // Initialize distances as infinity
@@ -558,15 +551,14 @@ std::vector<int> PRM::findPathDijkstra(const std::vector<Node>& graph, int start
     pq.push({0.0, startId});
 
     while (!pq.empty()) {
-        // std::cout << "OUTERstuck!!!" << std::endl;
         int currentNodeId = pq.top().second;
         pq.pop();
 
         if (currentNodeId == targetId) { // If target node is reached
+            std::cout << "Total distance from start to target: " << dist[targetId] << std::endl; // Print the total distance to target
             while (currentNodeId != startId) { // Reconstruct the path
                 path.push_back(currentNodeId);
                 currentNodeId = prev[currentNodeId];
-                        // std::cout << "WHILE_stuck!!!" << std::endl;
             }
             path.push_back(startId); // Add start node at the end
             std::reverse(path.begin(), path.end()); // Reverse to get the correct order from start to target
@@ -576,7 +568,6 @@ std::vector<int> PRM::findPathDijkstra(const std::vector<Node>& graph, int start
         // Explore the neighbors of the current node
         for (const auto& edgeId : graph[currentNodeId].edges) {
             float alt = dist[currentNodeId] + nodeDistance(graph[currentNodeId], graph[edgeId]);
-                    // std::cout << "FOR_stuck!!!" << std::endl;
             if (alt < dist[edgeId]) {
                 dist[edgeId] = alt;
                 prev[edgeId] = currentNodeId;
@@ -589,11 +580,11 @@ std::vector<int> PRM::findPathDijkstra(const std::vector<Node>& graph, int start
 }
 
 
+
 float PRM::nodeDistance(const Node& a, const Node& b) {
     // Simple Euclidean distance for now
     return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
 }
-
 
 
 int PRM::setGoalNode(geometry_msgs::Point goal){

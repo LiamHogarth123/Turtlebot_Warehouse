@@ -7,7 +7,6 @@
 /** Include other relevant headers*/
 #include "ros/ros.h"
 #include "sensor_msgs/Image.h"
-#include "geometry_msgs/PoseArray.h"
 #include "std_msgs/UInt16MultiArray.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
@@ -41,7 +40,7 @@ public:
      *  The main processing thread that will run continously and utilise the data
      *  When data needs to be combined then running a thread seperate to callback will guarantee data is processed
      */
-    void markersThread();
+    // void markersThread();
 
     /**
      * @brief Calibrate AR tag detector
