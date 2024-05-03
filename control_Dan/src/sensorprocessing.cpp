@@ -47,11 +47,11 @@ double Sensorprocessing::findObstacle(){
 
     for (int i = 0; i < scannedRange.size(); i++) {
 
-        if (scannedRange[i].first < 0.5) {
+        if (scannedRange[i].first < 0.6) {
             objectCount++;
             int ObjStartingPt = i;
         
-            while (i < scannedRange.size() && scannedRange[i].first < 0.5) {
+            while (i < scannedRange.size() && scannedRange[i].first < 0.6) {
 
                 i++; // move to the end of the object
             }

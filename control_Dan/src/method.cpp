@@ -150,38 +150,58 @@ void Method::separateThread() {
 }
 
 
-
-
 void Method::turtleMovement(){
-
-    geometry_msgs::Point targetGoal;
     
     // std::cout << Leader_goals.size() << std::endl;
     // std::cout << goal_index << std::endl;
-    targetGoal = Leader_goals.at(goal_index);
+    geometry_msgs::Point targetGoal = Leader_goals.at(goal_index);
     
 
-    TurtleGPS.updateGoal(targetGoal, Current_Odom, updated_Lidar);
+    TurtleGPS.updateControlParam(targetGoal, Current_Odom, updated_Lidar);
     geometry_msgs::Twist botTraj = TurtleGPS.reachGoal();
     
-    if (TurtleGPS.goal_hit(targetGoal, Current_Odom)){
+    if (TurtleGPS.goal_hit(targetGoal, Current_Odom) || goalInObstacleCheck()){ 
         std::cout << "goal hit" << std::endl;
       if (goal_index != Leader_goals.size() - 1){
          
          goal_index++;
          
-      }
-      else{
+      } else {
         missionComplete = true;
         botTraj.linear.x = 0;
         botTraj.linear.z = 0;
       }
-    }
-    
+    } 
 
     Send_cmd_tb1(botTraj);
     
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
+}
+
+bool Method::goalInObstacleCheck() { // doesnt work if there is only 1 goal and it is inside an object
+
+  geometry_msgs::Point currentGoal = Leader_goals.at(goal_index);
+  geometry_msgs::Point currentPos = Current_Odom.pose.pose.position;
+  geometry_msgs::Point referenceGoal;
+
+  if (goal_index != Leader_goals.size() - 1) {                              // for cases when there is a next goal
+    geometry_msgs::Point referenceGoal = Leader_goals.at(goal_index + 1);
+  } else if (Leader_goals.size() != 1) {                                    // for cases when it is the last goal and there is a previous goal
+    geometry_msgs::Point referenceGoal = Leader_goals.at(goal_index - 1);
+  }
+
+  // cosine rule
+  double a = hypot(referenceGoal.x - currentPos.x, referenceGoal.y - currentPos.y); // distance between next goal and bot
+  double b = hypot(currentGoal.x - currentPos.x, currentGoal.y - currentPos.y); // distance between current goal and bot
+  double c = hypot(referenceGoal.x - currentGoal.x, referenceGoal.y - currentGoal.y); // distance between goals
+
+  double A = (acos((b*b + c*c - a*a) / (2 * b * c))) * 180.0 / M_PI; // cosine rule for angle in degrees
+
+  if (A < 95 && A > 85) {   // checks if the bot is directly next to the current goal with reference to the next goal
+    return true;
+  }
+
+  return false;
 }
 
 

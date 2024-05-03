@@ -48,6 +48,8 @@ public:
 
   visualization_msgs::MarkerArray visualiseCones(std::vector<geometry_msgs::Point> cones, visualization_msgs::MarkerArray& markerArray);
 
+  bool goalInObstacleCheck();
+
 
 // Prameters for ROS
   ros::NodeHandle nh_;
