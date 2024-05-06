@@ -16,17 +16,19 @@
 
 (defclass marker_msgs::marker
   :super ros::object
-  :slots (_ids _xErrors ))
+  :slots (_ids _xErrors _yaws ))
 
 (defmethod marker_msgs::marker
   (:init
    (&key
     ((:ids __ids) (instance std_msgs::Int16MultiArray :init))
     ((:xErrors __xErrors) (instance std_msgs::Float32MultiArray :init))
+    ((:yaws __yaws) (instance std_msgs::Float32MultiArray :init))
     )
    (send-super :init)
    (setq _ids __ids)
    (setq _xErrors __xErrors)
+   (setq _yaws __yaws)
    self)
   (:ids
    (&rest __ids)
@@ -42,6 +44,13 @@
      (progn
        (if __xErrors (setq _xErrors (car __xErrors)))
        _xErrors)))
+  (:yaws
+   (&rest __yaws)
+   (if (keywordp (car __yaws))
+       (send* _yaws __yaws)
+     (progn
+       (if __yaws (setq _yaws (car __yaws)))
+       _yaws)))
   (:serialization-length
    ()
    (+
@@ -49,6 +58,8 @@
     (send _ids :serialization-length)
     ;; std_msgs/Float32MultiArray _xErrors
     (send _xErrors :serialization-length)
+    ;; std_msgs/Float32MultiArray _yaws
+    (send _yaws :serialization-length)
     ))
   (:serialize
    (&optional strm)
@@ -58,6 +69,8 @@
        (send _ids :serialize s)
      ;; std_msgs/Float32MultiArray _xErrors
        (send _xErrors :serialize s)
+     ;; std_msgs/Float32MultiArray _yaws
+       (send _yaws :serialize s)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
@@ -66,15 +79,18 @@
      (send _ids :deserialize buf ptr-) (incf ptr- (send _ids :serialization-length))
    ;; std_msgs/Float32MultiArray _xErrors
      (send _xErrors :deserialize buf ptr-) (incf ptr- (send _xErrors :serialization-length))
+   ;; std_msgs/Float32MultiArray _yaws
+     (send _yaws :deserialize buf ptr-) (incf ptr- (send _yaws :serialization-length))
    ;;
    self)
   )
 
-(setf (get marker_msgs::marker :md5sum-) "4a29dc35e14078fe013cf3949883c4e9")
+(setf (get marker_msgs::marker :md5sum-) "29b5307f7b0077b567c8b87adcaca5dd")
 (setf (get marker_msgs::marker :datatype-) "marker_msgs/marker")
 (setf (get marker_msgs::marker :definition-)
       "std_msgs/Int16MultiArray ids
 std_msgs/Float32MultiArray xErrors
+std_msgs/Float32MultiArray yaws
 ================================================================================
 MSG: std_msgs/Int16MultiArray
 # Please look at the MultiArrayLayout message definition for
@@ -131,6 +147,6 @@ float32[]         data          # array of data
 
 
 
-(provide :marker_msgs/marker "4a29dc35e14078fe013cf3949883c4e9")
+(provide :marker_msgs/marker "29b5307f7b0077b567c8b87adcaca5dd")
 
 

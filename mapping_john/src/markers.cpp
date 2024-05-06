@@ -71,6 +71,12 @@ void Markers::markerPose(bool publish)
         xErrors_.clear();
     }
 
+    /** Empty the vector to re-populate with new markers*/
+    if (!yaws_.empty())
+    {
+        yaws_.clear();
+    }
+
     /** Check if there are marker IDs from detected tags*/
     if (!markerIds_.empty())
     {
@@ -85,6 +91,7 @@ void Markers::markerPose(bool publish)
             }
             cv::solvePnP(objPoints,markerCorners_.at(i),cameraMatrix_,distCoeffs_,rvecs_.at(i),tvecs_.at(i));
             xErrors_.push_back(tvecs_.at(i).at<double>(0));
+            yaws_.push_back(rvecs_.at(i).at<double>(2));
         }
     }
     else
@@ -130,6 +137,14 @@ void Markers::markerPose(bool publish)
             marker_info.xErrors.layout.dim[0].stride = 1;
             marker_info.xErrors.layout.dim[0].label = "horizontal errors";
             marker_info.xErrors.data = xErrors_;
+
+            /** Populate yaw error for each marker*/
+            marker_info.yaws.layout.dim.clear();
+            marker_info.yaws.layout.dim.resize(1);
+            marker_info.yaws.layout.dim[0].size = xErrors_.size();
+            marker_info.yaws.layout.dim[0].stride = 1;
+            marker_info.yaws.layout.dim[0].label = "yaws";
+            marker_info.yaws.data = yaws_;
 
             /** Publish the message*/
             pubMarker_.publish(marker_info);

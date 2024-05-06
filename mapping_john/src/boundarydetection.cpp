@@ -49,6 +49,24 @@ int BoundaryDetection::detectColour(cv::Mat image)
     std::vector<unsigned int> bluePix = {};
     std::vector<unsigned int> redPix = {};
 
+    // Return max values
+    // double minVal; 
+    // double maxVal; 
+    // cv::Point minLoc; 
+    // cv::Point maxLoc;
+
+    // cv::minMaxLoc(output_blue, &minVal, &maxVal, &minLoc, &maxLoc );
+
+    // std::cout << "blue min val: " << minVal << std::endl;
+    // std::cout << "blue max val: " << maxVal << std::endl;
+    // std::cout << "blue output size = " << output_blue.size() << std::endl;
+
+    // cv::minMaxLoc(output_red, &minVal, &maxVal, &minLoc, &maxLoc );
+
+    // std::cout << "red min val: " << minVal << std::endl;
+    // std::cout << "red max val: " << maxVal << std::endl;
+    // std::cout << "red output size = " << output_red.size() << std::endl;
+
     /** Iterate through each pixel, top left to bottom right*/
     for (int i = 1; i < y; i++)
     {
@@ -85,10 +103,10 @@ int BoundaryDetection::detectColour(cv::Mat image)
             
 
             // if (output_blue.at<int>(i,j) > -1 - 1e-3 && output_blue.at<int>(i,j) < -1 + 1e-3)
-            // if (output_blue.at<int>(i,j) > 255 - 1e-3 && output_blue.at<int>(i,j) < 255 + 1e-3)
-            std::cout << output_blue << std::endl;
-            cv::waitKey(0);
-            if (!isnan(output_blue.at<int>(i,j)))
+            if (output_blue.at<int>(i,j) > 255 - 1e-3 && output_blue.at<int>(i,j) < 255 + 1e-3)
+            // std::cout << output_blue << std::endl;
+            // cv::waitKey(0);
+            // if (!isnan(output_blue.at<int>(i,j)))
             {
                 bluePix.push_back(1);
                 if (bluePix.size() >= blue_id_threshold_)
@@ -104,7 +122,8 @@ int BoundaryDetection::detectColour(cv::Mat image)
             }
 
             /** Check if red intensity is above threshold*/
-            if (output_red.at<int>(i,j) > -1 - 1e-3 && output_red.at<int>(i,j) < -1 + 1e-3)
+            // if (output_red.at<int>(i,j) > -1 - 1e-3 && output_red.at<int>(i,j) < -1 + 1e-3)
+            if (output_red.at<int>(i,j) > 255 - 1e-3 && output_red.at<int>(i,j) < 255 + 1e-3)
             {
                 redPix.push_back(1);
                 if (redPix.size() >= red_id_threshold_)

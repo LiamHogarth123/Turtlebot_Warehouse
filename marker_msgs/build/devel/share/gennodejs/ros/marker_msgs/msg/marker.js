@@ -21,6 +21,7 @@ class marker {
       // initObj === null is a special case for deserialization where we don't initialize fields
       this.ids = null;
       this.xErrors = null;
+      this.yaws = null;
     }
     else {
       if (initObj.hasOwnProperty('ids')) {
@@ -35,6 +36,12 @@ class marker {
       else {
         this.xErrors = new std_msgs.msg.Float32MultiArray();
       }
+      if (initObj.hasOwnProperty('yaws')) {
+        this.yaws = initObj.yaws
+      }
+      else {
+        this.yaws = new std_msgs.msg.Float32MultiArray();
+      }
     }
   }
 
@@ -44,6 +51,8 @@ class marker {
     bufferOffset = std_msgs.msg.Int16MultiArray.serialize(obj.ids, buffer, bufferOffset);
     // Serialize message field [xErrors]
     bufferOffset = std_msgs.msg.Float32MultiArray.serialize(obj.xErrors, buffer, bufferOffset);
+    // Serialize message field [yaws]
+    bufferOffset = std_msgs.msg.Float32MultiArray.serialize(obj.yaws, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -55,6 +64,8 @@ class marker {
     data.ids = std_msgs.msg.Int16MultiArray.deserialize(buffer, bufferOffset);
     // Deserialize message field [xErrors]
     data.xErrors = std_msgs.msg.Float32MultiArray.deserialize(buffer, bufferOffset);
+    // Deserialize message field [yaws]
+    data.yaws = std_msgs.msg.Float32MultiArray.deserialize(buffer, bufferOffset);
     return data;
   }
 
@@ -62,6 +73,7 @@ class marker {
     let length = 0;
     length += std_msgs.msg.Int16MultiArray.getMessageSize(object.ids);
     length += std_msgs.msg.Float32MultiArray.getMessageSize(object.xErrors);
+    length += std_msgs.msg.Float32MultiArray.getMessageSize(object.yaws);
     return length;
   }
 
@@ -72,7 +84,7 @@ class marker {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '4a29dc35e14078fe013cf3949883c4e9';
+    return '29b5307f7b0077b567c8b87adcaca5dd';
   }
 
   static messageDefinition() {
@@ -80,6 +92,7 @@ class marker {
     return `
     std_msgs/Int16MultiArray ids
     std_msgs/Float32MultiArray xErrors
+    std_msgs/Float32MultiArray yaws
     ================================================================================
     MSG: std_msgs/Int16MultiArray
     # Please look at the MultiArrayLayout message definition for
@@ -153,6 +166,13 @@ class marker {
     }
     else {
       resolved.xErrors = new std_msgs.msg.Float32MultiArray()
+    }
+
+    if (msg.yaws !== undefined) {
+      resolved.yaws = std_msgs.msg.Float32MultiArray.Resolve(msg.yaws)
+    }
+    else {
+      resolved.yaws = new std_msgs.msg.Float32MultiArray()
     }
 
     return resolved;

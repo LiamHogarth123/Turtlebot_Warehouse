@@ -94,6 +94,9 @@ public:
     /** Horizontal (x) position errors*/
     std::vector<float> xErrors_;
 
+    /** Yaw rotational errors*/
+    std::vector<float> yaws_;
+
     /** Define the aruco dictionary to be used*/
     cv::Ptr<cv::aruco::Dictionary> dictionary_;
 
