@@ -17,7 +17,7 @@ class Control
     */
     Control();
 
-    void updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom, sensor_msgs::LaserScan temp_lidar);
+    void updateControlParam(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom, sensor_msgs::LaserScan temp_lidar);
 
     geometry_msgs::Twist reachGoal();
     
@@ -71,6 +71,7 @@ class Control
     nav_msgs::Odometry prevOdom;
 
     Sensorprocessing ObjectDetection;
+   
 
  
 };

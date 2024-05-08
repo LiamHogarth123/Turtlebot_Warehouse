@@ -3,4 +3,6 @@
           IDS
           XERRORS-VAL
           XERRORS
+          YAWS-VAL
+          YAWS
 ))

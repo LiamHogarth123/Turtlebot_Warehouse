@@ -27,7 +27,7 @@ int main(int argc, char **argv){
   ImageConverter ic(nh);
 
   /** Initialise boundary detector*/
-  BoundaryDetection boundary;
+  BoundaryDetection boundary(nh);
 
   /** Initialise marker functionality*/
   Markers markers(nh);
@@ -95,20 +95,36 @@ int main(int argc, char **argv){
   // cv::Mat input = cv::imread("/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/test/test_tags_alley.jpg");
   ros::Rate loop_rate(10);
   while (ros::ok()) {
-    cv::Mat input = ic.getRGBD();
+    cv::Mat rgbdInput = ic.getRGBD();
+    cv::Mat camInput = ic.getCam();
     std::cout << "running" << std::endl;
-    if (!input.empty()) {
-      std::vector<int> marker_ids = markers.detectMarker(input);
+    if (!rgbdInput.empty()) {
+      std::vector<int> marker_ids = markers.detectMarker(rgbdInput);
       markers.markerPose(1);
 
-      // Check for key press or ROS events
-      char key = cv::waitKey(1);
-        if (key == 27 || !ros::ok()) {  // Exit on ESC key press or ROS shutdown
-        break;
-      }
+      // // Check for key press or ROS events
+      // char key = cv::waitKey(1);
+      //   if (key == 27 || !ros::ok()) {  // Exit on ESC key press or ROS shutdown
+      //   break;
+      // }
     }
     else{
-      std::cout << "no image" << std::endl;
+      std::cout << "no RGBD image" << std::endl;
+    }
+
+    if (!camInput.empty()) {
+      // boundary.runBoundaryDetection(camInput);
+      int flag = boundary.detectColour(camInput);
+      std::cout << flag << std::endl;
+
+      // // Check for key press or ROS events
+      // char key = cv::waitKey(1);
+      //   if (key == 27 || !ros::ok()) {  // Exit on ESC key press or ROS shutdown
+      //   break;
+      // }
+    }
+    else{
+      std::cout << "no webcam image" << std::endl;
     }
 
     // Process any ROS callbacks

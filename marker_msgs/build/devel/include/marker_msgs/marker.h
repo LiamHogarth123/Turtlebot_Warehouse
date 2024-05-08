@@ -17,6 +17,7 @@
 
 #include <std_msgs/Int16MultiArray.h>
 #include <std_msgs/Float32MultiArray.h>
+#include <std_msgs/Float32MultiArray.h>
 
 namespace marker_msgs
 {
@@ -27,11 +28,13 @@ struct marker_
 
   marker_()
     : ids()
-    , xErrors()  {
+    , xErrors()
+    , yaws()  {
     }
   marker_(const ContainerAllocator& _alloc)
     : ids(_alloc)
-    , xErrors(_alloc)  {
+    , xErrors(_alloc)
+    , yaws(_alloc)  {
   (void)_alloc;
     }
 
@@ -42,6 +45,9 @@ struct marker_
 
    typedef  ::std_msgs::Float32MultiArray_<ContainerAllocator>  _xErrors_type;
   _xErrors_type xErrors;
+
+   typedef  ::std_msgs::Float32MultiArray_<ContainerAllocator>  _yaws_type;
+  _yaws_type yaws;
 
 
 
@@ -73,7 +79,8 @@ template<typename ContainerAllocator1, typename ContainerAllocator2>
 bool operator==(const ::marker_msgs::marker_<ContainerAllocator1> & lhs, const ::marker_msgs::marker_<ContainerAllocator2> & rhs)
 {
   return lhs.ids == rhs.ids &&
-    lhs.xErrors == rhs.xErrors;
+    lhs.xErrors == rhs.xErrors &&
+    lhs.yaws == rhs.yaws;
 }
 
 template<typename ContainerAllocator1, typename ContainerAllocator2>
@@ -130,12 +137,12 @@ struct MD5Sum< ::marker_msgs::marker_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "4a29dc35e14078fe013cf3949883c4e9";
+    return "29b5307f7b0077b567c8b87adcaca5dd";
   }
 
   static const char* value(const ::marker_msgs::marker_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x4a29dc35e14078feULL;
-  static const uint64_t static_value2 = 0x013cf3949883c4e9ULL;
+  static const uint64_t static_value1 = 0x29b5307f7b0077b5ULL;
+  static const uint64_t static_value2 = 0x67c8b87adcaca5ddULL;
 };
 
 template<class ContainerAllocator>
@@ -156,6 +163,7 @@ struct Definition< ::marker_msgs::marker_<ContainerAllocator> >
   {
     return "std_msgs/Int16MultiArray ids\n"
 "std_msgs/Float32MultiArray xErrors\n"
+"std_msgs/Float32MultiArray yaws\n"
 "================================================================================\n"
 "MSG: std_msgs/Int16MultiArray\n"
 "# Please look at the MultiArrayLayout message definition for\n"
@@ -227,6 +235,7 @@ namespace serialization
     {
       stream.next(m.ids);
       stream.next(m.xErrors);
+      stream.next(m.yaws);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -251,6 +260,9 @@ struct Printer< ::marker_msgs::marker_<ContainerAllocator> >
     s << indent << "xErrors: ";
     s << std::endl;
     Printer< ::std_msgs::Float32MultiArray_<ContainerAllocator> >::stream(s, indent + "  ", v.xErrors);
+    s << indent << "yaws: ";
+    s << std::endl;
+    Printer< ::std_msgs::Float32MultiArray_<ContainerAllocator> >::stream(s, indent + "  ", v.yaws);
   }
 };
 

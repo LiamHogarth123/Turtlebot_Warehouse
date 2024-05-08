@@ -7,7 +7,6 @@
 /** Include other relevant headers*/
 #include "ros/ros.h"
 #include "sensor_msgs/Image.h"
-#include "geometry_msgs/PoseArray.h"
 #include "std_msgs/UInt16MultiArray.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
@@ -41,7 +40,7 @@ public:
      *  The main processing thread that will run continously and utilise the data
      *  When data needs to be combined then running a thread seperate to callback will guarantee data is processed
      */
-    void markersThread();
+    // void markersThread();
 
     /**
      * @brief Calibrate AR tag detector
@@ -94,6 +93,9 @@ public:
 
     /** Horizontal (x) position errors*/
     std::vector<float> xErrors_;
+
+    /** Yaw rotational errors*/
+    std::vector<float> yaws_;
 
     /** Define the aruco dictionary to be used*/
     cv::Ptr<cv::aruco::Dictionary> dictionary_;

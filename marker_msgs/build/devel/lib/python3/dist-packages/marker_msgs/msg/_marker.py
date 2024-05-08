@@ -9,11 +9,12 @@ import struct
 import std_msgs.msg
 
 class marker(genpy.Message):
-  _md5sum = "4a29dc35e14078fe013cf3949883c4e9"
+  _md5sum = "29b5307f7b0077b567c8b87adcaca5dd"
   _type = "marker_msgs/marker"
   _has_header = False  # flag to mark the presence of a Header object
   _full_text = """std_msgs/Int16MultiArray ids
 std_msgs/Float32MultiArray xErrors
+std_msgs/Float32MultiArray yaws
 ================================================================================
 MSG: std_msgs/Int16MultiArray
 # Please look at the MultiArrayLayout message definition for
@@ -66,8 +67,8 @@ MultiArrayLayout  layout        # specification of data layout
 float32[]         data          # array of data
 
 """
-  __slots__ = ['ids','xErrors']
-  _slot_types = ['std_msgs/Int16MultiArray','std_msgs/Float32MultiArray']
+  __slots__ = ['ids','xErrors','yaws']
+  _slot_types = ['std_msgs/Int16MultiArray','std_msgs/Float32MultiArray','std_msgs/Float32MultiArray']
 
   def __init__(self, *args, **kwds):
     """
@@ -77,7 +78,7 @@ float32[]         data          # array of data
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       ids,xErrors
+       ids,xErrors,yaws
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -90,9 +91,12 @@ float32[]         data          # array of data
         self.ids = std_msgs.msg.Int16MultiArray()
       if self.xErrors is None:
         self.xErrors = std_msgs.msg.Float32MultiArray()
+      if self.yaws is None:
+        self.yaws = std_msgs.msg.Float32MultiArray()
     else:
       self.ids = std_msgs.msg.Int16MultiArray()
       self.xErrors = std_msgs.msg.Float32MultiArray()
+      self.yaws = std_msgs.msg.Float32MultiArray()
 
   def _get_types(self):
     """
@@ -140,6 +144,23 @@ float32[]         data          # array of data
       buff.write(_struct_I.pack(length))
       pattern = '<%sf'%length
       buff.write(struct.Struct(pattern).pack(*self.xErrors.data))
+      length = len(self.yaws.layout.dim)
+      buff.write(_struct_I.pack(length))
+      for val1 in self.yaws.layout.dim:
+        _x = val1.label
+        length = len(_x)
+        if python3 or type(_x) == unicode:
+          _x = _x.encode('utf-8')
+          length = len(_x)
+        buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
+        _x = val1
+        buff.write(_get_struct_2I().pack(_x.size, _x.stride))
+      _x = self.yaws.layout.data_offset
+      buff.write(_get_struct_I().pack(_x))
+      length = len(self.yaws.data)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sf'%length
+      buff.write(struct.Struct(pattern).pack(*self.yaws.data))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -155,6 +176,8 @@ float32[]         data          # array of data
         self.ids = std_msgs.msg.Int16MultiArray()
       if self.xErrors is None:
         self.xErrors = std_msgs.msg.Float32MultiArray()
+      if self.yaws is None:
+        self.yaws = std_msgs.msg.Float32MultiArray()
       end = 0
       start = end
       end += 4
@@ -218,6 +241,37 @@ float32[]         data          # array of data
       s = struct.Struct(pattern)
       end += s.size
       self.xErrors.data = s.unpack(str[start:end])
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      self.yaws.layout.dim = []
+      for i in range(0, length):
+        val1 = std_msgs.msg.MultiArrayDimension()
+        start = end
+        end += 4
+        (length,) = _struct_I.unpack(str[start:end])
+        start = end
+        end += length
+        if python3:
+          val1.label = str[start:end].decode('utf-8', 'rosmsg')
+        else:
+          val1.label = str[start:end]
+        _x = val1
+        start = end
+        end += 8
+        (_x.size, _x.stride,) = _get_struct_2I().unpack(str[start:end])
+        self.yaws.layout.dim.append(val1)
+      start = end
+      end += 4
+      (self.yaws.layout.data_offset,) = _get_struct_I().unpack(str[start:end])
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sf'%length
+      start = end
+      s = struct.Struct(pattern)
+      end += s.size
+      self.yaws.data = s.unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -264,6 +318,23 @@ float32[]         data          # array of data
       buff.write(_struct_I.pack(length))
       pattern = '<%sf'%length
       buff.write(self.xErrors.data.tostring())
+      length = len(self.yaws.layout.dim)
+      buff.write(_struct_I.pack(length))
+      for val1 in self.yaws.layout.dim:
+        _x = val1.label
+        length = len(_x)
+        if python3 or type(_x) == unicode:
+          _x = _x.encode('utf-8')
+          length = len(_x)
+        buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
+        _x = val1
+        buff.write(_get_struct_2I().pack(_x.size, _x.stride))
+      _x = self.yaws.layout.data_offset
+      buff.write(_get_struct_I().pack(_x))
+      length = len(self.yaws.data)
+      buff.write(_struct_I.pack(length))
+      pattern = '<%sf'%length
+      buff.write(self.yaws.data.tostring())
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -280,6 +351,8 @@ float32[]         data          # array of data
         self.ids = std_msgs.msg.Int16MultiArray()
       if self.xErrors is None:
         self.xErrors = std_msgs.msg.Float32MultiArray()
+      if self.yaws is None:
+        self.yaws = std_msgs.msg.Float32MultiArray()
       end = 0
       start = end
       end += 4
@@ -343,6 +416,37 @@ float32[]         data          # array of data
       s = struct.Struct(pattern)
       end += s.size
       self.xErrors.data = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=length)
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      self.yaws.layout.dim = []
+      for i in range(0, length):
+        val1 = std_msgs.msg.MultiArrayDimension()
+        start = end
+        end += 4
+        (length,) = _struct_I.unpack(str[start:end])
+        start = end
+        end += length
+        if python3:
+          val1.label = str[start:end].decode('utf-8', 'rosmsg')
+        else:
+          val1.label = str[start:end]
+        _x = val1
+        start = end
+        end += 8
+        (_x.size, _x.stride,) = _get_struct_2I().unpack(str[start:end])
+        self.yaws.layout.dim.append(val1)
+      start = end
+      end += 4
+      (self.yaws.layout.data_offset,) = _get_struct_I().unpack(str[start:end])
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      pattern = '<%sf'%length
+      start = end
+      s = struct.Struct(pattern)
+      end += s.size
+      self.yaws.data = numpy.frombuffer(str[start:end], dtype=numpy.float32, count=length)
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill

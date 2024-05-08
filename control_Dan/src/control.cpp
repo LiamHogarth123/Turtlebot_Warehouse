@@ -43,7 +43,7 @@ Control::Control(){
 }
 
 
-void Control::updateGoal(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom, sensor_msgs::LaserScan temp_lidar){
+void Control::updateControlParam(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom, sensor_msgs::LaserScan temp_lidar){
     goal = temp_goal;
     odom = temp_odom;
     lidar = temp_lidar;
