@@ -63,26 +63,13 @@ void Method::separateThread() {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
   geometry_msgs::Point goal;
-  goal.x = 2;
-  goal.y = -2;
 
   geometry_msgs::Point start;
 
-   
-  std::cout << "Odom  x" << start.x << "y   " << start.y << std::endl;
-
   //Liam Map generation
-  //////////////////////////////////////////////////////////////////////////
-  std::cout << "map section" << std::endl;
-  
-
-
+  /////////////////////////////////////////////////////////////////////////
   prmMap.GeneratePRM(latestMapData_, latestMapMetaData_);
-  
-  std::cout << "PRM generated" << std::endl;
   std::vector<geometry_msgs::Point> trajectory;
-
-  
 
 
   while (true){
@@ -104,10 +91,7 @@ void Method::separateThread() {
   //Dan control start
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
-    // visualization_msgs::MarkerArray markers;
-    // visualiseCones(Leader_goals, markers);
-    // pub_.publish(markers);
-    // std::cout << "Size of markers vector: " << markers.markers.size() << std::endl;
+
 
     while (!missionComplete){
       turtleMovement();
