@@ -1,8 +1,0 @@
-prefix=/home/liam/git/Turtlebot_Warehouse/test_turtlebotMovement/build/devel
-
-Name: TestMovenmentturtleboi
-Description: Description of TestMovenmentturtleboi
-Version: 0.0.1
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

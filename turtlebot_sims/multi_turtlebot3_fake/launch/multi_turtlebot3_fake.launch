@@ -1,0 +1,75 @@
+<launch>
+  <!-- Define model parameter for both TurtleBots -->
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+
+  <!-- Define initial position and orientation for TurtleBot 1 -->
+  <arg name="tb1_x" default="0.0"/>
+  <arg name="tb1_y" default="0.0"/>
+  <arg name="tb1_yaw" default="0.0"/>
+
+  <!-- Define initial position and orientation for TurtleBot 2 -->
+  <arg name="tb2_x" default="2.0"/>
+  <arg name="tb2_y" default="2.0"/>
+  <arg name="tb2_yaw" default="1.57"/>
+
+
+
+
+
+
+  <!-- TurtleBot 1 Launch in namespace 'turtlebot1' -->
+  <group ns="tb1">
+    <!-- Set tf_prefix for TurtleBot 1 -->
+    <param name="tf_prefix" value="tb1"/>
+
+    <param name="tb3_model" value="$(arg model)"/>
+
+    <!-- Include the robot description and other necessary configurations -->
+    <include file="$(find turtlebot3_bringup)/launch/includes/description.launch.xml">
+      <arg name="model" value="$(arg model)" />
+    </include>
+
+    <!-- Launch the robot state publisher -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+      <param name="publish_frequency" type="double" value="50.0" />
+    </node>
+
+    <!-- Launch the TurtleBot fake node for simulation with initial pose arguments -->
+    <node pkg="turtlebot3_fake" type="turtlebot3_fake_node" name="turtlebot3_fake_node" output="screen">
+      <param name="initial_x" value="$(arg tb1_x)"/>
+      <param name="initial_y" value="$(arg tb1_y)"/>
+      <param name="initial_yaw" value="$(arg tb1_yaw)"/>
+    </node>
+  </group>
+
+
+
+
+  <!-- TurtleBot 2 Launch in namespace 'turtlebot2' -->
+  <group ns="tb2">
+    <!-- Set tf_prefix for TurtleBot 2 -->
+    <param name="tf_prefix" value="tb2"/>
+
+    <param name="tb3_model" value="$(arg model)"/>
+
+    <!-- Include the robot description and other necessary configurations -->
+    <include file="$(find turtlebot3_bringup)/launch/includes/description.launch.xml">
+      <arg name="model" value="$(arg model)" />
+    </include>
+
+    <!-- Launch the robot state publisher -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+      <param name="publish_frequency" type="double" value="50.0" />
+    </node>
+
+    <!-- Launch the TurtleBot fake node for simulation with initial pose arguments -->
+    <node pkg="turtlebot3_fake" type="turtlebot3_fake_node" name="turtlebot3_fake_node" output="screen">
+      <param name="initial_x" value="$(arg tb2_x)"/>
+      <param name="initial_y" value="$(arg tb2_y)"/>
+      <param name="initial_yaw" value="$(arg tb2_yaw)"/>
+    </node>
+  </group>
+
+  <!-- Launch RViz with a custom configuration to visualize both robots -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find turtlebot3_fake)/rviz/custom_multi_turtlebot_config.rviz"/>
+</launch>
