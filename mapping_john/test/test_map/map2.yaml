@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 <<<<<<< HEAD:mapping_john/test/test_map/map3.yaml
 image: /home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/test/test_map/map.pgm
 =======
 image: /home/liam/catkin_ws/src/navigation/map_server/maps/map.pgm
 >>>>>>> aa6dd0fb1792a8f138419af43c36e080c6710071:mapping_john/test/test_map/map2.yaml
+=======
+image: /home/liam/catkin_ws/src/navigation/map_server/maps/map.pgm
+>>>>>>> aa6dd0fb1792a8f138419af43c36e080c6710071
 resolution: 0.050000
 origin: [-10.000000, -10.000000, 0.000000]
 negate: 0
