@@ -1,11 +1,11 @@
 Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
 Change Dir: /home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/ninja cmTC_feb5f && [1/2] Building C object CMakeFiles/cmTC_feb5f.dir/src.c.o
-[2/2] Linking C executable cmTC_feb5f
-FAILED: cmTC_feb5f 
-: && /usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD  -rdynamic CMakeFiles/cmTC_feb5f.dir/src.c.o  -o cmTC_feb5f   && :
-/usr/bin/ld: CMakeFiles/cmTC_feb5f.dir/src.c.o: in function `main':
+Run Build Command(s):/usr/bin/ninja cmTC_b5a80 && [1/2] Building C object CMakeFiles/cmTC_b5a80.dir/src.c.o
+[2/2] Linking C executable cmTC_b5a80
+FAILED: cmTC_b5a80 
+: && /usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD  -rdynamic CMakeFiles/cmTC_b5a80.dir/src.c.o  -o cmTC_b5a80   && :
+/usr/bin/ld: CMakeFiles/cmTC_b5a80.dir/src.c.o: in function `main':
 src.c:(.text+0x46): undefined reference to `pthread_create'
 /usr/bin/ld: src.c:(.text+0x52): undefined reference to `pthread_detach'
 /usr/bin/ld: src.c:(.text+0x63): undefined reference to `pthread_join'
@@ -36,10 +36,10 @@ int main(void)
 Determining if the function pthread_create exists in the pthreads failed with the following output:
 Change Dir: /home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/ninja cmTC_643da && [1/2] Building C object CMakeFiles/cmTC_643da.dir/CheckFunctionExists.c.o
-[2/2] Linking C executable cmTC_643da
-FAILED: cmTC_643da 
-: && /usr/bin/cc -DCHECK_FUNCTION_EXISTS=pthread_create  -rdynamic CMakeFiles/cmTC_643da.dir/CheckFunctionExists.c.o  -o cmTC_643da  -lpthreads && :
+Run Build Command(s):/usr/bin/ninja cmTC_6c1a4 && [1/2] Building C object CMakeFiles/cmTC_6c1a4.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_6c1a4
+FAILED: cmTC_6c1a4 
+: && /usr/bin/cc -DCHECK_FUNCTION_EXISTS=pthread_create  -rdynamic CMakeFiles/cmTC_6c1a4.dir/CheckFunctionExists.c.o  -o cmTC_6c1a4  -lpthreads && :
 /usr/bin/ld: cannot find -lpthreads
 collect2: error: ld returned 1 exit status
 ninja: build stopped: subcommand failed.

@@ -59,8 +59,7 @@ public:
     ros::Publisher pubDetection_;
 
 private:
-    double blue_id_threshold_ = 1000; /** Number of -1 pixels to identify a colour*/
-    double red_id_threshold_ = 3000; /** Number of -1 pixels to identify a colour*/
+    double colour_threshold_ = 1000; /** Number of non-zero pixels to identify a colour*/
 };
 
 #endif

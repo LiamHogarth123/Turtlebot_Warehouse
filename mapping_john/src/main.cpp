@@ -113,9 +113,9 @@ int main(int argc, char **argv){
     }
 
     if (!camInput.empty()) {
-      // boundary.runBoundaryDetection(camInput);
-      int flag = boundary.detectColour(camInput);
-      std::cout << flag << std::endl;
+      boundary.runBoundaryDetection(camInput);
+      // int flag = boundary.detectColour(camInput);
+      // std::cout << flag << std::endl;
 
       // // Check for key press or ROS events
       // char key = cv::waitKey(1);
