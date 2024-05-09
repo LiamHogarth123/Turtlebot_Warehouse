@@ -48,9 +48,13 @@ public:
 
   void Send_cmd_tb2(geometry_msgs::Twist intructions);
 
+
   void separateThread();
 
   void turtleMovement();
+
+
+  void Function(std::vector<geometry_msgs::Point> trajectory , DefaultTurtleBot* turtleboi, Control* Turtle_GPS);
 
   visualization_msgs::MarkerArray visualiseCones(std::vector<geometry_msgs::Point> cones, visualization_msgs::MarkerArray& markerArray);
   void publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub);
@@ -98,6 +102,8 @@ public:
 
   double goal_index;
 
+  std::vector<bool> Finished;
+
 
  
 
@@ -120,7 +126,7 @@ public:
 
   PRM prmMap; 
   TaskAlloction TA;
-  Control TurtleGPS;
+  
 
   nav_msgs::OccupancyGrid latestMapData_;
   nav_msgs::MapMetaData latestMapMetaData_;
