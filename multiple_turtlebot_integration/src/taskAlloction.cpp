@@ -15,7 +15,7 @@ TaskAlloction::TaskAlloction()
 }
 
 void TaskAlloction::SetTurtlebotPositions(const std::vector<geometry_msgs::Point>& Turtlebot_Positions){
-    std::vector<geometry_msgs::Point> robotPositions;
+    // std::vector<geometry_msgs::Point> robotPositions;
     geometry_msgs::Point robot1Pos;
     robot1Pos.x = 0.0;
     robot1Pos.y = 0.0;
@@ -43,27 +43,27 @@ void TaskAlloction::SetGoals(){
     geometry_msgs::Point item6;
     // Define item locations
     item1.x = 2.75;
-    item1.y = 5.2;
+    item1.y = -5.2;
     item1.z = 0.0;
 
-    item2.x = 12.4;
-    item2.y = 8.0;
+    item2.x = 7.0;
+    item2.y = 0.0;
     item2.z = 0.0;
 
-    item3.x = -4.0;
-    item3.y = -8.0;
+    item3.x = 3.0;
+    item3.y = -2.0;
     item3.z = 0.0;
 
-    item4.x = 7.1;
-    item4.y = 5.0;
+    item4.x = -1.0;
+    item4.y = -4.0;
     item4.z = 0.0;
 
-    item5.x = 13.1;
-    item5.y = -10.0;
+    item5.x = 3;
+    item5.y = -5.0;
     item5.z = 0.0;
 
-    item6.x = 8.1;
-    item6.y = -3.0;
+    item6.x = 3.1;
+    item6.y = 2.0;
     item6.z = 0.0;    
    
     itemLocations.push_back(item1);
@@ -83,8 +83,8 @@ std::vector<std::vector<geometry_msgs::Point>> TaskAlloction::taskAllocation(){
 
     
     // Hypothetical drop off location
-    deliveryLocation.x = 20.0;
-    deliveryLocation.y = 20.0;
+    deliveryLocation.x = 7.0;
+    deliveryLocation.y = -4.0;
     deliveryLocation.z = 0.0;
 
     // Store item locations in the vector
@@ -149,7 +149,7 @@ std::vector<std::vector<geometry_msgs::Point>> TaskAlloction::taskAllocation(){
             if (!allocatedPoints[i].empty()) {
                 robotPositions[i] = allocatedPoints[i][0];
                 // Clear the allocated points for the robot
-                allocatedPoints[i].clear();
+                // allocatedPoints[i].clear();
                 std::cout << "Robot " << i + 1 << " position after goal: (" << robotPositions[i].x << ", " << robotPositions[i].y << ", " << robotPositions[i].z << ")" << std::endl;
             }
         }
@@ -160,6 +160,15 @@ std::vector<std::vector<geometry_msgs::Point>> TaskAlloction::taskAllocation(){
         allocatedPoints[i].push_back(deliveryLocation);
         std::cout << "Robot " << i + 1 << " visited drop-off location: (" << deliveryLocation.x << ", " << deliveryLocation.y << ", " << deliveryLocation.z << ")" << std::endl;
     }
+    //  for (size_t i = 0; i < RobotGoals.size(); ++i) {
+    // std::cout << "Vector " << i << ":\n";
+    //   for (size_t j = 0; j < RobotGoals[i].size(); ++j) {
+    //     std::cout << "Index " << j << ": ";
+    //     std::cout << "x = " << RobotGoals[i][j].x << ", y = " << RobotGoals[i][j].y << std::endl;
+    //   }
+    //     std::cout << std::endl;
+    // }
+
 
     return allocatedPoints;
 }

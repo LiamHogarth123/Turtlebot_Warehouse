@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC  -Wno-deprecated -Wdeprecated-declarations -g  -shared -Wl,-soname,libintergration_test_turtlebot.so -o devel/lib/libintergration_test_turtlebot.so CMakeFiles/intergration_test_turtlebot.dir/src/turtlebot.cpp.o 

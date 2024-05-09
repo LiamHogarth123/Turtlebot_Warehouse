@@ -1,8 +1,0 @@
-prefix=/home/liam/git/Turtlebot_Warehouse/intergration_test/build/devel
-
-Name: intergration_test
-Description: Description of intergration_test
-Version: 0.0.1
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
