@@ -1,0 +1,5 @@
+<launch>
+    <!-- Start the map server node -->
+
+    <node name="map_provider" pkg="map_server" type="map_server" args="$(find map_server)/maps/map.yaml" />
+</launch>
