@@ -33,6 +33,21 @@ std::vector<std::vector<geometry_msgs::Point>> Method::taskAllocation(){
     geometry_msgs::Point item4;
     geometry_msgs::Point item5;
     geometry_msgs::Point item6;
+    geometry_msgs::Point item7;
+    geometry_msgs::Point item8;
+    geometry_msgs::Point item9;
+    geometry_msgs::Point item10;
+    geometry_msgs::Point item11;
+    geometry_msgs::Point item12;
+    geometry_msgs::Point item13;
+    geometry_msgs::Point item14;
+    geometry_msgs::Point item15;
+    geometry_msgs::Point item16;
+    geometry_msgs::Point item17;
+    geometry_msgs::Point item18;
+    geometry_msgs::Point item19;
+    geometry_msgs::Point item20;
+
 
     geometry_msgs::Point deliveryLocation;
 
@@ -59,7 +74,63 @@ std::vector<std::vector<geometry_msgs::Point>> Method::taskAllocation(){
 
     item6.x = 8.1;
     item6.y = -3.0;
-    item6.z = 0.0;    
+    item6.z = 0.0; 
+
+    item7.x = 0.5;
+    item7.y = -2.0;
+    item7.z = 0.0;
+
+    item8.x = -6.7;
+    item8.y = 4.3;
+    item8.z = 0.0;
+
+    item9.x = 10.0;
+    item9.y = 12.0;
+    item9.z = 0.0;
+
+    item10.x = 3.5;
+    item10.y = 9.8;
+    item10.z = 0.0;
+
+    item11.x = -8.9;
+    item11.y = -5.6;
+    item11.z = 0.0;
+
+    item12.x = 15.2;
+    item12.y = -7.9;
+    item12.z = 0.0;
+
+    item13.x = 6.0;
+    item13.y = 3.0;
+    item13.z = 0.0;
+
+    item14.x = -2.3;
+    item14.y = 11.5;
+    item14.z = 0.0;
+
+    item15.x = 9.2;
+    item15.y = -1.5;
+    item15.z = 0.0;
+
+    item16.x = -3.8;
+    item16.y = 6.7;
+    item16.z = 0.0;
+
+    item17.x = 7.9;
+    item17.y = 8.6;
+    item17.z = 0.0;
+
+    item18.x = 0.3;
+    item18.y = -4.2;
+    item18.z = 0.0;
+
+    item19.x = 11.8;
+    item19.y = 2.1;
+    item19.z = 0.0;
+
+    item20.x = -5.6;
+    item20.y = -9.3;
+    item20.z = 0.0;   
 
     // Hypothetical drop off location
     deliveryLocation.x = 20.0;
@@ -74,6 +145,28 @@ std::vector<std::vector<geometry_msgs::Point>> Method::taskAllocation(){
     itemLocations.push_back(item4);
     itemLocations.push_back(item5);
     itemLocations.push_back(item6);
+    itemLocations.push_back(item7);
+    itemLocations.push_back(item8);
+    itemLocations.push_back(item9);
+    itemLocations.push_back(item10);
+    itemLocations.push_back(item11);
+    itemLocations.push_back(item12);
+    itemLocations.push_back(item13);
+    itemLocations.push_back(item14);
+    itemLocations.push_back(item15);
+    itemLocations.push_back(item16);
+    itemLocations.push_back(item17);
+    itemLocations.push_back(item18);
+    itemLocations.push_back(item19);
+    itemLocations.push_back(item20);
+
+    // randomly select the goals
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::shuffle(itemLocations.begin(), itemLocations.end(), gen);
+    // Select the first 6 locations
+        itemLocations.resize(6); 
+
 
     // Set number of robots
     const int numRobots = 2;
@@ -95,55 +188,62 @@ std::vector<std::vector<geometry_msgs::Point>> Method::taskAllocation(){
     // Vector to store points allocated to each robot
     std::vector<std::vector<geometry_msgs::Point>> allocatedPoints(numRobots);
 
-    while (!itemLocations.empty()) {
-        // Allocate one point to each robot based on distance
-        for (int i = 0; i < numRobots; ++i) {
-            if (itemLocations.empty()) break; // Break if there are no more items to allocate
-            double minDistance = std::numeric_limits<double>::max();
-            int closestItemIndex = -1;
-
-            // Find the closest item to the current robot position
-            for (size_t j = 0; j < itemLocations.size(); ++j) {
-                double distance = calculateDistance(itemLocations[j], robotPositions[i]);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestItemIndex = j;
-                }
-            }
-
-            // Assign the closest item to the robot
-            if (closestItemIndex != -1) {
-                allocatedPoints[i].push_back(itemLocations[closestItemIndex]);
-                itemLocations.erase(itemLocations.begin() + closestItemIndex); // Remove allocated item
-            }
-        }
-
-        // Print allocated points for each robot
-        for (int i = 0; i < numRobots; ++i) {
-            std::cout << "Robot " << i + 1 << " allocated points:" << std::endl;
-            for (const auto& point : allocatedPoints[i]) {
-                std::cout << "Point: (" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl;
-            }
-        }
-
-        // Update robot positions to the first allocated points
-        for (int i = 0; i < numRobots; ++i) {
-            if (!allocatedPoints[i].empty()) {
-                robotPositions[i] = allocatedPoints[i][0];
-                // Clear the allocated points for the robot
-                allocatedPoints[i].clear();
-                std::cout << "Robot " << i + 1 << " position after goal: (" << robotPositions[i].x << ", " << robotPositions[i].y << ", " << robotPositions[i].z << ")" << std::endl;
-            }
-        }
+while (!itemLocations.empty()) {
+    // Print remaining goals
+    std::cout << "Remaining goals: ";
+    for (size_t i = 0; i < itemLocations.size(); ++i) {
+        std::cout << "Item " << i + 1 << ": (" << itemLocations[i].x << ", " << itemLocations[i].y << ", " << itemLocations[i].z << ") ";
     }
+    std::cout << std::endl;
 
-    // Visit drop-off location after completing item collections
+    // Print visited goals for each robot
     for (int i = 0; i < numRobots; ++i) {
-        allocatedPoints[i].push_back(deliveryLocation);
-        std::cout << "Robot " << i + 1 << " visited drop-off location: (" << deliveryLocation.x << ", " << deliveryLocation.y << ", " << deliveryLocation.z << ")" << std::endl;
+        std::cout << "Robot " << i + 1 << " visited their allocated goals... ";
+        for (const auto& point : allocatedPoints[i]) {
+            std::cout << "(" << point.x << ", " << point.y << ", " << point.z << ") ";
+        }
+        std::cout << std::endl;
     }
 
-    return allocatedPoints;
+    // Allocate one point to each robot based on distance
+    for (int i = 0; i < numRobots; ++i) {
+        if (itemLocations.empty()) break; // Break if there are no more items to allocate
+        double minDistance = std::numeric_limits<double>::max();
+        int closestItemIndex = -1;
+
+        // Find the closest item to the current robot position
+        for (size_t j = 0; j < itemLocations.size(); ++j) {
+            double distance = calculateDistance(itemLocations[j], robotPositions[i]);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestItemIndex = j;
+            }
+        }
+
+        // Assign the closest item to the robot
+        if (closestItemIndex != -1) {
+            std::cout << "Robot " << i + 1 << " selected item " << closestItemIndex + 1 << " at (" << itemLocations[closestItemIndex].x << ", " << itemLocations[closestItemIndex].y << ", " << itemLocations[closestItemIndex].z << ")" << std::endl;
+            allocatedPoints[i].push_back(itemLocations[closestItemIndex]);
+            itemLocations.erase(itemLocations.begin() + closestItemIndex); // Remove allocated item
+        }
+    }
+
+    // Update robot positions to the first allocated points
+    for (int i = 0; i < numRobots; ++i) {
+        if (!allocatedPoints[i].empty()) {
+            robotPositions[i] = allocatedPoints[i][0];
+        }
+    }
+}
+
+// Visit drop-off location after completing item collections
+for (int i = 0; i < numRobots; ++i) {
+    double distanceToGoal = calculateDistance(robotPositions[i], deliveryLocation);
+    std::cout << "Robot " << i + 1 << " reached the drop-off location at (" << deliveryLocation.x << ", " << deliveryLocation.y << ", " << deliveryLocation.z << ")" << std::endl;
+    allocatedPoints[i].push_back(deliveryLocation);
+}
+
+return allocatedPoints;
 }
 double Method::calculateDistance(const geometry_msgs::Point& p1, const geometry_msgs::Point& p2) {
     return std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
