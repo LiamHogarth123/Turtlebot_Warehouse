@@ -78,6 +78,8 @@ public:
      */
     void markerPose(bool publish);
 
+    std::pair<float,float> extractMarkerInfo(marker_msgs::marker msg, int target);
+
     /** Calibration information*/
     cv::Mat cameraMatrix_; // Calibration matrix
     cv::Mat distCoeffs_; // Distortion coefficients
