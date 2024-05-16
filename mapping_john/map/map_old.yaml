@@ -1,4 +1,4 @@
-image: /home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/test/test_map/map.pgm
+image: /home/john/Desktop/Turtlebot_Warehouse/mapping_john/map/map.pgm
 resolution: 0.050000
 origin: [-10.000000, -10.000000, 0.000000]
 negate: 0
