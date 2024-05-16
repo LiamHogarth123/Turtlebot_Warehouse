@@ -7,6 +7,9 @@
 #include <nav_msgs/Odometry.h>
 #include "ros/ros.h"
 #include <fstream>
+#include <random> // for std::random_device, std::mt19937
+#include <algorithm> // for std::shuffle
+
 
 Method::Method(ros::NodeHandle nh) :
   nh_(nh)
@@ -137,28 +140,29 @@ std::vector<std::vector<geometry_msgs::Point>> Method::taskAllocation(){
     deliveryLocation.y = 20.0;
     deliveryLocation.z = 0.0;
 
-    // Store item locations in the vector
-    std::vector<geometry_msgs::Point> itemLocations;
-    itemLocations.push_back(item1);
-    itemLocations.push_back(item2);
-    itemLocations.push_back(item3);
-    itemLocations.push_back(item4);
-    itemLocations.push_back(item5);
-    itemLocations.push_back(item6);
-    itemLocations.push_back(item7);
-    itemLocations.push_back(item8);
-    itemLocations.push_back(item9);
-    itemLocations.push_back(item10);
-    itemLocations.push_back(item11);
-    itemLocations.push_back(item12);
-    itemLocations.push_back(item13);
-    itemLocations.push_back(item14);
-    itemLocations.push_back(item15);
-    itemLocations.push_back(item16);
-    itemLocations.push_back(item17);
-    itemLocations.push_back(item18);
-    itemLocations.push_back(item19);
-    itemLocations.push_back(item20);
+ // Store item index and locations in the vector of pairs
+std::vector<std::pair<int, geometry_msgs::Point>> itemLocations;
+    itemLocations.push_back({1, item1});
+    itemLocations.push_back({2, item2});
+    itemLocations.push_back({3, item3});
+    itemLocations.push_back({4, item4});
+    itemLocations.push_back({5, item5});
+    itemLocations.push_back({6, item6});
+    itemLocations.push_back({7, item7});
+    itemLocations.push_back({8, item8});
+    itemLocations.push_back({9, item9});
+    itemLocations.push_back({10, item10});
+    itemLocations.push_back({11, item11});
+    itemLocations.push_back({12, item12});
+    itemLocations.push_back({13, item13});
+    itemLocations.push_back({14, item14});
+    itemLocations.push_back({15, item15});
+    itemLocations.push_back({16, item16});
+    itemLocations.push_back({17, item17});
+    itemLocations.push_back({18, item18});
+    itemLocations.push_back({19, item19});
+    itemLocations.push_back({20, item20});
+
 
     // randomly select the goals
         std::random_device rd;
@@ -192,7 +196,7 @@ while (!itemLocations.empty()) {
     // Print remaining goals
     std::cout << "Remaining goals: ";
     for (size_t i = 0; i < itemLocations.size(); ++i) {
-        std::cout << "Item " << i + 1 << ": (" << itemLocations[i].x << ", " << itemLocations[i].y << ", " << itemLocations[i].z << ") ";
+        std::cout << "Item " << itemLocations[i].first << ": (" << itemLocations[i].second.x << ", " << itemLocations[i].second.y << ", " << itemLocations[i].second.z << ") ";
     }
     std::cout << std::endl;
 
@@ -213,7 +217,7 @@ while (!itemLocations.empty()) {
 
         // Find the closest item to the current robot position
         for (size_t j = 0; j < itemLocations.size(); ++j) {
-            double distance = calculateDistance(itemLocations[j], robotPositions[i]);
+            double distance = calculateDistance(itemLocations[j].second, robotPositions[i]);
             if (distance < minDistance) {
                 minDistance = distance;
                 closestItemIndex = j;
@@ -222,8 +226,8 @@ while (!itemLocations.empty()) {
 
         // Assign the closest item to the robot
         if (closestItemIndex != -1) {
-            std::cout << "Robot " << i + 1 << " selected item " << closestItemIndex + 1 << " at (" << itemLocations[closestItemIndex].x << ", " << itemLocations[closestItemIndex].y << ", " << itemLocations[closestItemIndex].z << ")" << std::endl;
-            allocatedPoints[i].push_back(itemLocations[closestItemIndex]);
+            std::cout << "Robot " << i + 1 << " selected item " << itemLocations[closestItemIndex].first << " at (" << itemLocations[closestItemIndex].second.x << ", " << itemLocations[closestItemIndex].second.y << ", " << itemLocations[closestItemIndex].second.z << ")" << std::endl;
+            allocatedPoints[i].push_back(itemLocations[closestItemIndex].second);
             itemLocations.erase(itemLocations.begin() + closestItemIndex); // Remove allocated item
         }
     }
