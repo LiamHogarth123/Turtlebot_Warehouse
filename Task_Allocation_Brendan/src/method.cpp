@@ -54,7 +54,7 @@ std::vector<std::vector<geometry_msgs::Point>> Method::taskAllocation(){
 
     geometry_msgs::Point deliveryLocation;
 
-    // Define item locations
+ // Define item locations from click to point
     item1.x = -3.2544;
     item1.y = 3.5730;
     item1.z = 0.0;
@@ -135,7 +135,7 @@ std::vector<std::vector<geometry_msgs::Point>> Method::taskAllocation(){
     item20.y = 1.0532;
     item20.z = 0.0;   
 
-    // Hypothetical drop off location
+    // drop off location
     deliveryLocation.x = 0;
     deliveryLocation.y = 0.1;
     deliveryLocation.z = 0.0;
