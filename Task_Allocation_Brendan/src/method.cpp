@@ -55,89 +55,89 @@ std::vector<std::vector<geometry_msgs::Point>> Method::taskAllocation(){
     geometry_msgs::Point deliveryLocation;
 
     // Define item locations
-    item1.x = 2.75;
-    item1.y = 5.2;
+    item1.x = -3.2544;
+    item1.y = 3.5730;
     item1.z = 0.0;
 
-    item2.x = 12.4;
-    item2.y = 8.0;
+    item2.x = -2.7472;
+    item2.y = 3.5726;
     item2.z = 0.0;
 
-    item3.x = -4.0;
-    item3.y = -8.0;
+    item3.x = -1.2976;
+    item3.y = 3.6621;
     item3.z = 0.0;
 
-    item4.x = 7.1;
-    item4.y = 5.0;
+    item4.x = -0.7855;
+    item4.y = 3.6251;
     item4.z = 0.0;
 
-    item5.x = 13.1;
-    item5.y = -10.0;
+    item5.x = 0.7801;
+    item5.y = 3.7118;
     item5.z = 0.0;
 
-    item6.x = 8.1;
-    item6.y = -3.0;
+    item6.x = 1.2212;
+    item6.y = 3.7347;
     item6.z = 0.0; 
 
-    item7.x = 0.5;
-    item7.y = -2.0;
+    item7.x = 1.2171;
+    item7.y = 3.1830;
     item7.z = 0.0;
 
-    item8.x = -6.7;
-    item8.y = 4.3;
+    item8.x = 0.7765;
+    item8.y = 3.1796;
     item8.z = 0.0;
 
-    item9.x = 10.0;
-    item9.y = 12.0;
+    item9.x = -0.7314;
+    item9.y = 3.0769;
     item9.z = 0.0;
 
-    item10.x = 3.5;
-    item10.y = 9.8;
+    item10.x = -1.2151;
+    item10.y = 3.0938;
     item10.z = 0.0;
 
-    item11.x = -8.9;
-    item11.y = -5.6;
+    item11.x = -2.6439;
+    item11.y = 3.0570;
     item11.z = 0.0;
 
-    item12.x = 15.2;
-    item12.y = -7.9;
+    item12.x = -3.1716;
+    item12.y = -3.0556;
     item12.z = 0.0;
 
-    item13.x = 6.0;
-    item13.y = 3.0;
+    item13.x = 1.2809;
+    item13.y = 1.6715;
     item13.z = 0.0;
 
-    item14.x = -2.3;
-    item14.y = 11.5;
+    item14.x = 0.7911;
+    item14.y = 1.6353;
     item14.z = 0.0;
 
-    item15.x = 9.2;
-    item15.y = -1.5;
+    item15.x = -0.7227;
+    item15.y = 1.6829;
     item15.z = 0.0;
 
-    item16.x = -3.8;
-    item16.y = 6.7;
+    item16.x = -1.1151;
+    item16.y = 1.6685;
     item16.z = 0.0;
 
-    item17.x = 7.9;
-    item17.y = 8.6;
+    item17.x = -2.6844;
+    item17.y = 1.6303;
     item17.z = 0.0;
 
-    item18.x = 0.3;
-    item18.y = -4.2;
+    item18.x = -3.1243;
+    item18.y = 1.6487;
     item18.z = 0.0;
 
-    item19.x = 11.8;
-    item19.y = 2.1;
+    item19.x = 0.8086;
+    item19.y = 1.0466;
     item19.z = 0.0;
 
-    item20.x = -5.6;
-    item20.y = -9.3;
+    item20.x = 1.2534;
+    item20.y = 1.0532;
     item20.z = 0.0;   
 
     // Hypothetical drop off location
-    deliveryLocation.x = 20.0;
-    deliveryLocation.y = 20.0;
+    deliveryLocation.x = 0;
+    deliveryLocation.y = 0.1;
     deliveryLocation.z = 0.0;
 
  // Store item index and locations in the vector of pairs
