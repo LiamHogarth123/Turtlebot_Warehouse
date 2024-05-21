@@ -7,6 +7,9 @@
 #include <nav_msgs/Odometry.h>
 #include "ros/ros.h"
 #include <fstream>
+#include <random> // for std::random_device, std::mt19937
+#include <algorithm> // for std::shuffle
+
 
 Method::Method(ros::NodeHandle nh) :
   nh_(nh)
@@ -51,114 +54,115 @@ std::vector<std::vector<geometry_msgs::Point>> Method::taskAllocation(){
 
     geometry_msgs::Point deliveryLocation;
 
-    // Define item locations
-    item1.x = 2.75;
-    item1.y = 5.2;
+ // Define item locations from click to point
+    item1.x = -3.2544;
+    item1.y = 3.5730;
     item1.z = 0.0;
 
-    item2.x = 12.4;
-    item2.y = 8.0;
+    item2.x = -2.7472;
+    item2.y = 3.5726;
     item2.z = 0.0;
 
-    item3.x = -4.0;
-    item3.y = -8.0;
+    item3.x = -1.2976;
+    item3.y = 3.6621;
     item3.z = 0.0;
 
-    item4.x = 7.1;
-    item4.y = 5.0;
+    item4.x = -0.7855;
+    item4.y = 3.6251;
     item4.z = 0.0;
 
-    item5.x = 13.1;
-    item5.y = -10.0;
+    item5.x = 0.7801;
+    item5.y = 3.7118;
     item5.z = 0.0;
 
-    item6.x = 8.1;
-    item6.y = -3.0;
+    item6.x = 1.2212;
+    item6.y = 3.7347;
     item6.z = 0.0; 
 
-    item7.x = 0.5;
-    item7.y = -2.0;
+    item7.x = 1.2171;
+    item7.y = 3.1830;
     item7.z = 0.0;
 
-    item8.x = -6.7;
-    item8.y = 4.3;
+    item8.x = 0.7765;
+    item8.y = 3.1796;
     item8.z = 0.0;
 
-    item9.x = 10.0;
-    item9.y = 12.0;
+    item9.x = -0.7314;
+    item9.y = 3.0769;
     item9.z = 0.0;
 
-    item10.x = 3.5;
-    item10.y = 9.8;
+    item10.x = -1.2151;
+    item10.y = 3.0938;
     item10.z = 0.0;
 
-    item11.x = -8.9;
-    item11.y = -5.6;
+    item11.x = -2.6439;
+    item11.y = 3.0570;
     item11.z = 0.0;
 
-    item12.x = 15.2;
-    item12.y = -7.9;
+    item12.x = -3.1716;
+    item12.y = -3.0556;
     item12.z = 0.0;
 
-    item13.x = 6.0;
-    item13.y = 3.0;
+    item13.x = 1.2809;
+    item13.y = 1.6715;
     item13.z = 0.0;
 
-    item14.x = -2.3;
-    item14.y = 11.5;
+    item14.x = 0.7911;
+    item14.y = 1.6353;
     item14.z = 0.0;
 
-    item15.x = 9.2;
-    item15.y = -1.5;
+    item15.x = -0.7227;
+    item15.y = 1.6829;
     item15.z = 0.0;
 
-    item16.x = -3.8;
-    item16.y = 6.7;
+    item16.x = -1.1151;
+    item16.y = 1.6685;
     item16.z = 0.0;
 
-    item17.x = 7.9;
-    item17.y = 8.6;
+    item17.x = -2.6844;
+    item17.y = 1.6303;
     item17.z = 0.0;
 
-    item18.x = 0.3;
-    item18.y = -4.2;
+    item18.x = -3.1243;
+    item18.y = 1.6487;
     item18.z = 0.0;
 
-    item19.x = 11.8;
-    item19.y = 2.1;
+    item19.x = 0.8086;
+    item19.y = 1.0466;
     item19.z = 0.0;
 
-    item20.x = -5.6;
-    item20.y = -9.3;
+    item20.x = 1.2534;
+    item20.y = 1.0532;
     item20.z = 0.0;   
 
-    // Hypothetical drop off location
-    deliveryLocation.x = 20.0;
-    deliveryLocation.y = 20.0;
+    // drop off location
+    deliveryLocation.x = 0;
+    deliveryLocation.y = 0.1;
     deliveryLocation.z = 0.0;
 
-    // Store item locations in the vector
-    std::vector<geometry_msgs::Point> itemLocations;
-    itemLocations.push_back(item1);
-    itemLocations.push_back(item2);
-    itemLocations.push_back(item3);
-    itemLocations.push_back(item4);
-    itemLocations.push_back(item5);
-    itemLocations.push_back(item6);
-    itemLocations.push_back(item7);
-    itemLocations.push_back(item8);
-    itemLocations.push_back(item9);
-    itemLocations.push_back(item10);
-    itemLocations.push_back(item11);
-    itemLocations.push_back(item12);
-    itemLocations.push_back(item13);
-    itemLocations.push_back(item14);
-    itemLocations.push_back(item15);
-    itemLocations.push_back(item16);
-    itemLocations.push_back(item17);
-    itemLocations.push_back(item18);
-    itemLocations.push_back(item19);
-    itemLocations.push_back(item20);
+ // Store item index and locations in the vector of pairs
+std::vector<std::pair<int, geometry_msgs::Point>> itemLocations;
+    itemLocations.push_back({1, item1});
+    itemLocations.push_back({2, item2});
+    itemLocations.push_back({3, item3});
+    itemLocations.push_back({4, item4});
+    itemLocations.push_back({5, item5});
+    itemLocations.push_back({6, item6});
+    itemLocations.push_back({7, item7});
+    itemLocations.push_back({8, item8});
+    itemLocations.push_back({9, item9});
+    itemLocations.push_back({10, item10});
+    itemLocations.push_back({11, item11});
+    itemLocations.push_back({12, item12});
+    itemLocations.push_back({13, item13});
+    itemLocations.push_back({14, item14});
+    itemLocations.push_back({15, item15});
+    itemLocations.push_back({16, item16});
+    itemLocations.push_back({17, item17});
+    itemLocations.push_back({18, item18});
+    itemLocations.push_back({19, item19});
+    itemLocations.push_back({20, item20});
+
 
     // randomly select the goals
         std::random_device rd;
@@ -192,7 +196,7 @@ while (!itemLocations.empty()) {
     // Print remaining goals
     std::cout << "Remaining goals: ";
     for (size_t i = 0; i < itemLocations.size(); ++i) {
-        std::cout << "Item " << i + 1 << ": (" << itemLocations[i].x << ", " << itemLocations[i].y << ", " << itemLocations[i].z << ") ";
+        std::cout << "Item " << itemLocations[i].first << ": (" << itemLocations[i].second.x << ", " << itemLocations[i].second.y << ", " << itemLocations[i].second.z << ") ";
     }
     std::cout << std::endl;
 
@@ -213,7 +217,7 @@ while (!itemLocations.empty()) {
 
         // Find the closest item to the current robot position
         for (size_t j = 0; j < itemLocations.size(); ++j) {
-            double distance = calculateDistance(itemLocations[j], robotPositions[i]);
+            double distance = calculateDistance(itemLocations[j].second, robotPositions[i]);
             if (distance < minDistance) {
                 minDistance = distance;
                 closestItemIndex = j;
@@ -222,8 +226,8 @@ while (!itemLocations.empty()) {
 
         // Assign the closest item to the robot
         if (closestItemIndex != -1) {
-            std::cout << "Robot " << i + 1 << " selected item " << closestItemIndex + 1 << " at (" << itemLocations[closestItemIndex].x << ", " << itemLocations[closestItemIndex].y << ", " << itemLocations[closestItemIndex].z << ")" << std::endl;
-            allocatedPoints[i].push_back(itemLocations[closestItemIndex]);
+            std::cout << "Robot " << i + 1 << " selected item " << itemLocations[closestItemIndex].first << " at (" << itemLocations[closestItemIndex].second.x << ", " << itemLocations[closestItemIndex].second.y << ", " << itemLocations[closestItemIndex].second.z << ")" << std::endl;
+            allocatedPoints[i].push_back(itemLocations[closestItemIndex].second);
             itemLocations.erase(itemLocations.begin() + closestItemIndex); // Remove allocated item
         }
     }

@@ -9,7 +9,7 @@
 
 #include <vector>
 #include <utility> // for std::pair
-#include "opencv2/opencv.hpp"
+// #include "opencv2/opencv.hpp"
 #include <yaml-cpp/yaml.h>
 #include <iostream>
 #include <string>
@@ -179,8 +179,8 @@ bool PRM::pathIsClear(Node Node_A, Node Node_B){
     /////////////////////////////////////////////////////
     for (const auto& pair : BressenhamPoints) {
         
-        cv::Point point(pair.first, pair.second);
-        path_points_withoutValidation.push_back(point);   
+        // cv::Point point(pair.first, pair.second);
+        // path_points_withoutValidation.push_back(point);   
     }
 
 
@@ -201,8 +201,8 @@ bool PRM::pathIsClear(Node Node_A, Node Node_B){
     
     for (const auto& pair : BressenhamPoints) {
         
-        cv::Point point(pair.first, pair.second-16);
-        path_points.push_back(point);   
+        // cv::Point point(pair.first, pair.second-16);
+        // path_points.push_back(point);   
     }
 
     return true;
@@ -337,133 +337,125 @@ std::vector<Node> PRM::createNodesAndEdges(std::vector<Node> Graph_){
 
 
 void PRM::visualise_PRM(std::vector<Node> Graph_, std::vector<int> path) {
-    //READ Image
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
-    std::cout << "visualization opens" << std::endl;
-    // Load the grayscale map image
-    cv::Mat grayscaleMapImage = cv::imread("/home/liam/catkin_ws/src/navigation/map_server/maps/map.pgm", cv::IMREAD_GRAYSCALE);
-    if (grayscaleMapImage.empty()) {
-        std::cerr << "Could not open or find the map image" << std::endl;
-        return; // Exit if the image could not be loaded
-    }
-    std::cout << "map read" << std::endl;
+//     //READ Image
+//     ///////////////////////////////////////////////////////////////////////////////////////////////////
+//     std::cout << "visualization opens" << std::endl;
+//     // Load the grayscale map image
+//     cv::Mat grayscaleMapImage = cv::imread("/home/liam/catkin_ws/src/navigation/map_server/maps/map.pgm", cv::IMREAD_GRAYSCALE);
+//     if (grayscaleMapImage.empty()) {
+//         std::cerr << "Could not open or find the map image" << std::endl;
+//         return; // Exit if the image could not be loaded
+//     }
+//     std::cout << "map read" << std::endl;
 
-    // Convert the grayscale image to a BGR (color) image
-    cv::Mat mapImage;
-    cv::cvtColor(grayscaleMapImage, mapImage, cv::COLOR_GRAY2BGR);
-    cv::flip(mapImage, mapImage, 0);
-
-
+//     // Convert the grayscale image to a BGR (color) image
+//     cv::Mat mapImage;
+//     cv::cvtColor(grayscaleMapImage, mapImage, cv::COLOR_GRAY2BGR);
+//     cv::flip(mapImage, mapImage, 0);
 
 
 
-// Draws the nodes without ajustment
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    int radius = 0; // You can adjust this value as needed
-    cv::Scalar color(0, 0, 255); // BGR value for red
+
+// // Draws the nodes without ajustment
+// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//     int radius = 0; // You can adjust this value as needed
+//     cv::Scalar color(0, 0, 255); // BGR value for red
     
-    // for (size_t z = 0; z< Graph_.size(); z++){
-    //     Graph_[z].y = -Graph_[z].y;
-    // }
+//     // for (size_t z = 0; z< Graph_.size(); z++){
+//     //     Graph_[z].y = -Graph_[z].y;
+//     // }
 
 
-    for (size_t k = 0; k < Graph_.size(); k++){
+//     for (size_t k = 0; k < Graph_.size(); k++){
     
-        // std::cout << k << std::endl;
-        cv::Point center(Graph_[k].x, Graph_[k].y);
+//         // std::cout << k << std::endl;
+//         cv::Point center(Graph_[k].x, Graph_[k].y);
       
-        if (center.x >= 0 && center.x < mapImage.cols && center.y >= 0 && center.y < mapImage.rows) {
+//         if (center.x >= 0 && center.x < mapImage.cols && center.y >= 0 && center.y < mapImage.rows) {
             
-            for (size_t l = 0; l < Graph_.at(k).edges.size(); l++) {
-            //    std::cout << "l =" << l << std::endl;
-                int index = Graph_.at(k).edges.at(l);
+//             for (size_t l = 0; l < Graph_.at(k).edges.size(); l++) {
+//             //    std::cout << "l =" << l << std::endl;
+//                 int index = Graph_.at(k).edges.at(l);
 
-                const auto& connected_node = Graph_[index];
+//                 const auto& connected_node = Graph_[index];
                 
               
-                cv::Point connected_node_center(connected_node.x, connected_node.y);
+//                 cv::Point connected_node_center(connected_node.x, connected_node.y);
 
-                cv::line(mapImage, center, connected_node_center, cv::Scalar(0, 255, 255) /*blue*/, 0  /*thickness*/);
-            }
+//                 cv::line(mapImage, center, connected_node_center, cv::Scalar(0, 255, 255) /*blue*/, 0  /*thickness*/);
+//             }
 
-            // cv::circle(mapImage, center, radius, color, -1);
+//             // cv::circle(mapImage, center, radius, color, -1);
             
-        } 
-        else {
-            // The center is outside the image, handle accordingly
-            // This could mean adjusting the position, skipping the draw, etc.
-            std::cout << "out of bounds" << std::endl;
-        }
-    }
-//DRAWING NODES Again
-/////////////////////////////////////////////////////////////////////////////
-    for (size_t k = 0; k < Graph_.size(); k++){
+//         } 
+//         else {
+//             // The center is outside the image, handle accordingly
+//             // This could mean adjusting the position, skipping the draw, etc.
+//             std::cout << "out of bounds" << std::endl;
+//         }
+//     }
+// //DRAWING NODES Again
+// /////////////////////////////////////////////////////////////////////////////
+//     for (size_t k = 0; k < Graph_.size(); k++){
     
-        cv::Point center(Graph_[k].x, Graph_[k].y);
+//         cv::Point center(Graph_[k].x, Graph_[k].y);
 
-        center.x = Graph_[k].x;
-        center.y = Graph_[k].y;
-        if (center.x >= 0 && center.x < mapImage.cols && center.y >= 0 && center.y < mapImage.rows) {
-            cv::circle(mapImage, center, radius, cv::Scalar(255, 0, 0), -1);
-        } 
-        else {
-            std::cout << "out of bounds" << std::endl;
-        }
+//         center.x = Graph_[k].x;
+//         center.y = Graph_[k].y;
+//         if (center.x >= 0 && center.x < mapImage.cols && center.y >= 0 && center.y < mapImage.rows) {
+//             cv::circle(mapImage, center, radius, cv::Scalar(255, 0, 0), -1);
+//         } 
+//         else {
+//             std::cout << "out of bounds" << std::endl;
+//         }
 
-    }
+//     }
 
-    // //DRAW Goal
-    // //////////////////////////////////////////////////////////////
-    // for (auto node : Graph_){
-    //     if (node.id = 5){
-    //         cv::Point goal;
-    //         goal.x = node.x;
-    //         goal.y = node.y;
-    //         cv::circle(mapImage, goal, 2, cv::Scalar(0, 0, 255), -1);
-    //         break;
-    //     }
-    // }
+//     // //DRAW Goal
+//     // //////////////////////////////////////////////////////////////
+//     // for (auto node : Graph_){
+//     //     if (node.id = 5){
+//     //         cv::Point goal;
+//     //         goal.x = node.x;
+//     //         goal.y = node.y;
+//     //         cv::circle(mapImage, goal, 2, cv::Scalar(0, 0, 255), -1);
+//     //         break;
+//     //     }
+//     // }
 
 
-    //Draw Path
-    ////////////////////////////////////////////////////////////////
+//     //Draw Path
+//     ////////////////////////////////////////////////////////////////
     
-    for (int x = 0; x < path.size(); x++){
-        // std::cout << "STUCK" << x << "of " << path.size()  << std::endl;
-        cv::Point temp;
-        temp.x = Graph_.at(path.at(x)).x;
-        temp.y = Graph_.at(path.at(x)).y;
+//     for (int x = 0; x < path.size(); x++){
+//         // std::cout << "STUCK" << x << "of " << path.size()  << std::endl;ast
+//             cv::Point prev;
+//             prev.x = Graph_.at(path.at(x-1)).x;
+//             prev.y = Graph_.at(path.at(x-1)).y;
+
+//             cv::line(mapImage, temp, prev, cv::Scalar(0, 0, 255) /*blue*/, 2  /*thickness*/);
+//         }
+//         cv::circle(mapImage, temp, 0, cv::Scalar(255, 0, 0), -1);
+//     }
+
+//     for (int x = 0; x < path.size(); x++){
+//         // std::cout << "STUCK" << x << "of " << path.size()  << std::endl;
+//         cv::Point temp;
+//         temp.x = Graph_.at(path.at(x)).x;
+//         temp.y = Graph_.at(path.at(x)).y;
         
-        if (x == 0){
+//         cv::circle(mapImage, temp, 0, cv::Scalar(255, 0, 0), -1);
+//     }
 
-        }
-        else {
-            cv::Point prev;
-            prev.x = Graph_.at(path.at(x-1)).x;
-            prev.y = Graph_.at(path.at(x-1)).y;
+//     // Display the map with nodes
+//     cv::namedWindow("SLAM Map with Nodes", cv::WINDOW_AUTOSIZE);
+//     cv::imshow("SLAM Map with Nodes", mapImage);
+//     // Optionally, save the color map with nodes to a file
+//     cv::imwrite("/home/liam/Desktop/map_with_nodes fixed!!!.png", mapImage);
 
-            cv::line(mapImage, temp, prev, cv::Scalar(0, 0, 255) /*blue*/, 2  /*thickness*/);
-        }
-        cv::circle(mapImage, temp, 0, cv::Scalar(255, 0, 0), -1);
-    }
-
-    for (int x = 0; x < path.size(); x++){
-        // std::cout << "STUCK" << x << "of " << path.size()  << std::endl;
-        cv::Point temp;
-        temp.x = Graph_.at(path.at(x)).x;
-        temp.y = Graph_.at(path.at(x)).y;
-        
-        cv::circle(mapImage, temp, 0, cv::Scalar(255, 0, 0), -1);
-    }
-
-    // Display the map with nodes
-    cv::namedWindow("SLAM Map with Nodes", cv::WINDOW_AUTOSIZE);
-    cv::imshow("SLAM Map with Nodes", mapImage);
-    // Optionally, save the color map with nodes to a file
-    cv::imwrite("/home/liam/Desktop/map_with_nodes fixed!!!.png", mapImage);
-
-    cv::waitKey(0);
+//     cv::waitKey(0);
 }
 
 

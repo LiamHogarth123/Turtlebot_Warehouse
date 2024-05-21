@@ -218,3 +218,33 @@ double Markers::calibrate(cv::Mat calibImage)
     // https://docs.opencv.org/4.x/d5/dae/tutorial_aruco_detection.html
     return repError;
 }
+
+std::pair<float,float> extractMarkerInfo(marker_msgs::marker msg,int target)
+{
+    std::vector<int16_t> markerIds = msg.ids.data;
+    std::vector<float> xErrors = msg.xErrors.data;
+    std::vector<float> yaws = msg.yaws.data;
+
+    int16_t targetId = static_cast<int16_t>(target);
+
+    int targetIdx = 0;
+
+    for (unsigned int i = 0; i < markerIds.size(); i++)
+    {
+        if (markerIds.at(i) == targetId)
+        {
+            targetIdx = i;
+        }
+        else{
+            continue;
+        }
+    }
+
+    float xError = xErrors[targetIdx];
+
+    float yaw = yaws[targetIdx];
+
+    std::pair<float,float> vals = std::make_pair(xError,yaw);
+
+    return vals;
+}
