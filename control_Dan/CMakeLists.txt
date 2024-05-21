@@ -7,12 +7,16 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   nav_msgs
+  marker_msgs
   rosbag
   roslib
   message_generation  # Add this line for message generation
 )
 
 find_package(Eigen3 REQUIRED)
+
+find_package(marker_msgs REQUIRED)
+
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated -Wdeprecated-declarations")
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")

@@ -1,22 +1,22 @@
 [
 {
   "directory": "/home/dan/git/Turtlebot_Warehouse/control_Dan/build",
-  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"control_Dan\\\" -Dcontrol_Dan_control_EXPORTS -I/home/dan/git/Turtlebot_Warehouse/control_Dan/include -I/home/dan/git/Turtlebot_Warehouse/control_Dan/src -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g -fPIC   -std=gnu++11 -o CMakeFiles/control_Dan_control.dir/src/control.cpp.o -c /home/dan/git/Turtlebot_Warehouse/control_Dan/src/control.cpp",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"control_Dan\\\" -Dcontrol_Dan_control_EXPORTS -I/home/dan/git/Turtlebot_Warehouse/control_Dan/include -I/home/dan/git/Turtlebot_Warehouse/control_Dan/src -I/home/dan/catkin_ws/devel/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g -fPIC   -std=gnu++11 -o CMakeFiles/control_Dan_control.dir/src/control.cpp.o -c /home/dan/git/Turtlebot_Warehouse/control_Dan/src/control.cpp",
   "file": "/home/dan/git/Turtlebot_Warehouse/control_Dan/src/control.cpp"
 },
 {
   "directory": "/home/dan/git/Turtlebot_Warehouse/control_Dan/build",
-  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"control_Dan\\\" -I/home/dan/git/Turtlebot_Warehouse/control_Dan/include -I/home/dan/git/Turtlebot_Warehouse/control_Dan/src -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/control_Dan_method.dir/src/main.cpp.o -c /home/dan/git/Turtlebot_Warehouse/control_Dan/src/main.cpp",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"control_Dan\\\" -I/home/dan/git/Turtlebot_Warehouse/control_Dan/include -I/home/dan/git/Turtlebot_Warehouse/control_Dan/src -I/home/dan/catkin_ws/devel/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/control_Dan_method.dir/src/main.cpp.o -c /home/dan/git/Turtlebot_Warehouse/control_Dan/src/main.cpp",
   "file": "/home/dan/git/Turtlebot_Warehouse/control_Dan/src/main.cpp"
 },
 {
   "directory": "/home/dan/git/Turtlebot_Warehouse/control_Dan/build",
-  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"control_Dan\\\" -I/home/dan/git/Turtlebot_Warehouse/control_Dan/include -I/home/dan/git/Turtlebot_Warehouse/control_Dan/src -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/control_Dan_method.dir/src/method.cpp.o -c /home/dan/git/Turtlebot_Warehouse/control_Dan/src/method.cpp",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"control_Dan\\\" -I/home/dan/git/Turtlebot_Warehouse/control_Dan/include -I/home/dan/git/Turtlebot_Warehouse/control_Dan/src -I/home/dan/catkin_ws/devel/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g   -std=gnu++11 -o CMakeFiles/control_Dan_method.dir/src/method.cpp.o -c /home/dan/git/Turtlebot_Warehouse/control_Dan/src/method.cpp",
   "file": "/home/dan/git/Turtlebot_Warehouse/control_Dan/src/method.cpp"
 },
 {
   "directory": "/home/dan/git/Turtlebot_Warehouse/control_Dan/build",
-  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"control_Dan\\\" -Dcontrol_Dan_sensorprocessing_EXPORTS -I/home/dan/git/Turtlebot_Warehouse/control_Dan/include -I/home/dan/git/Turtlebot_Warehouse/control_Dan/src -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g -fPIC   -std=gnu++11 -o CMakeFiles/control_Dan_sensorprocessing.dir/src/sensorprocessing.cpp.o -c /home/dan/git/Turtlebot_Warehouse/control_Dan/src/sensorprocessing.cpp",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"control_Dan\\\" -Dcontrol_Dan_sensorprocessing_EXPORTS -I/home/dan/git/Turtlebot_Warehouse/control_Dan/include -I/home/dan/git/Turtlebot_Warehouse/control_Dan/src -I/home/dan/catkin_ws/devel/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3  -std=c++11  -Wno-deprecated -Wdeprecated-declarations -g -fPIC   -std=gnu++11 -o CMakeFiles/control_Dan_sensorprocessing.dir/src/sensorprocessing.cpp.o -c /home/dan/git/Turtlebot_Warehouse/control_Dan/src/sensorprocessing.cpp",
   "file": "/home/dan/git/Turtlebot_Warehouse/control_Dan/src/sensorprocessing.cpp"
 },
 {

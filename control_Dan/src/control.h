@@ -27,7 +27,7 @@ class Control
 
     double distanceToGoal();
 
-    double angleToGoal();
+    double angleToGoal(nav_msgs::Odometry temp_odom, geometry_msgs::Point temp_goal);
 
     double steeringPID();
 

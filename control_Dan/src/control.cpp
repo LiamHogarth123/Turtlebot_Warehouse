@@ -64,17 +64,21 @@ geometry_msgs::Twist Control::reachGoal(){
     double obstacleMidpoint = collisionDetection();
     double avoidanceFactor = -0.1; // the value determining the rate of avoidance (lower is faster rate of change)
     if (obstacleMidpoint > 0) {
-        std::cout << "avoiding object on left" << std::endl;
-        velocityZ = avoidanceFactor/obstacleMidpoint; 
+        std::cout << obstacleMidpoint << std::endl;
+        // std::cout << "avoiding object on left" << std::endl;
+        velocityZ = avoidanceFactor/pow(obstacleMidpoint+0.23,2); 
         if (velocityZ < -maxVelz) {
             velocityZ = -maxVelz;
         }
+        // velocityX = velocityX * 0.5;
     } else if (obstacleMidpoint < 0) {
+        // std::cout << obstacleMidpoint << std::endl;
         std::cout << "avoiding object on right" << std::endl;
-        velocityZ = avoidanceFactor/obstacleMidpoint;
+        velocityZ = avoidanceFactor/-pow(obstacleMidpoint-0.23,2);
         if (velocityZ > maxVelz) {
             velocityZ = maxVelz;
         }
+        // velocityX = velocityX * 0.5;
     }
 
     // setting final velocity commands
@@ -84,7 +88,7 @@ geometry_msgs::Twist Control::reachGoal(){
     // std::cout << "---------------------------------------------" << std::endl;
     // std::cout << "distanceToGoal: " << distanceToGoal() << std::endl;
     // std::cout << "forward velocity command: " << velocityX << std::endl;
-    // std::cout << "angleToGoal: " << angleToGoal() << std::endl;
+    // std::cout << "angleToGoal: " << angleToGoal(odom, goal) << std::endl;
     // std::cout << "angular velocity command: " << velocityZ << std::endl;
 
     // xPlot.push_back(velocityX);
@@ -142,7 +146,7 @@ double Control::velocityPID(){
 
 double Control::steeringPID(){
 ///////// Angular control /////////
-    double current_heading = angleToGoal();
+    double current_heading = angleToGoal(odom, goal);
     double heading_error = -(toleranceAngle - current_heading);
 
     // Update integral and derivative terms for heading error
@@ -165,12 +169,12 @@ double Control::steeringPID(){
 
     prev_heading_error_ = heading_error;
 
-    if (fabs(angular_command) > maxVelz){
-            angular_command = maxVelz;
-        }
+    // if (fabs(angular_command) > maxVelz){
+    //         angular_command = maxVelz;
+    //     }
 
     // Steer smoothing
-    if (fabs(angleToGoal()) < toleranceAngle){
+    if (fabs(current_heading) < toleranceAngle){
         angular_command = 0;
         heading_integral_ = 0;
     }
@@ -236,9 +240,9 @@ double Control::distanceToGoal(){
     return distance;
 }
 
-double Control::angleToGoal() {
+double Control::angleToGoal(nav_msgs::Odometry temp_odom, geometry_msgs::Point temp_goal) {
     tf::Quaternion current_orientation;
-    tf::quaternionMsgToTF(odom.pose.pose.orientation, current_orientation);
+    tf::quaternionMsgToTF(temp_odom.pose.pose.orientation, current_orientation);
 
     // Normalize the quaternion
     current_orientation.normalize();
@@ -250,7 +254,7 @@ double Control::angleToGoal() {
     heading_vector = tf::quatRotate(current_orientation, heading_vector);
 
     // Calculate the vector to the goal
-    tf::Vector3 goal_vector(goal.x - odom.pose.pose.position.x, goal.y - odom.pose.pose.position.y, 0);
+    tf::Vector3 goal_vector(temp_goal.x - temp_odom.pose.pose.position.x, temp_goal.y - temp_odom.pose.pose.position.y, 0);
 
     // Normalize the vectors
     heading_vector.normalize();

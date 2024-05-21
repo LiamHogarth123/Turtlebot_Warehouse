@@ -27,17 +27,18 @@ Method::Method(ros::NodeHandle nh) :
 
   sub2_ = nh_.subscribe("tb3_0/scan", 10, &Method::LidaCallback,this);
 
-  // sub3_ = nh_.subscribe("tb3_0/camera/rgb/image_raw", 1000, &Method::RGBCallback, this);
+  sub3_ = nh_.subscribe("tb3_0/boundary/detection", 10, &Method::boundaryCallback,this); 
 
-  // sub4_ = nh_.subscribe("tb3_0/camera/depth/image_raw", 1000, &Method::ImageDepthCallback, this);
+  sub4_ = nh_.subscribe("tb3_0/markers/info", 10, &Method::tagCallback,this); // AR tag
+
 
   cmd_velocity_tb1 = nh_.advertise<geometry_msgs::Twist>("tb3_0/cmd_vel",10);
 
 // Robot 2 guider --------------------- tb3_1
 
-  sub5_ = nh_.subscribe("tb3_1/odom", 1000, &Method::guiderOdomCallback,this);
+  // sub5_ = nh_.subscribe("tb3_1/odom", 1000, &Method::guiderOdomCallback,this);
 
-  cmd_velocity_tb2 = nh.advertise<geometry_msgs::Twist>("tb3_1/cmd_vel",10);
+  // cmd_velocity_tb2 = nh.advertise<geometry_msgs::Twist>("tb3_1/cmd_vel",10);
 
 
   
@@ -63,7 +64,7 @@ void Method::separateThread() {
 
       geometry_msgs::Point point2;
       point2.x = 3.0;
-      point2.y = 0.0;
+      point2.y = 1.0;
       Leader_goals.push_back(point2);
 
       geometry_msgs::Point point3;
@@ -92,6 +93,8 @@ void Method::separateThread() {
       }
     case 3:{
       teleop_mode = true;
+
+      // LiDAR testing
       Lidar.Newdata(updated_Lidar);
       // Lidar.scanningRange(20);
       Lidar.findObstacle();
@@ -115,16 +118,32 @@ void Method::separateThread() {
 
   }
   else{
+    
+    // visualise goals
     visualization_msgs::MarkerArray markers;
     visualiseCones(Leader_goals, markers);
     pub_.publish(markers);
     //std::cout << "Size of markers vector: " << markers.markers.size() << std::endl;
 
+
+    int falsePositiveCheck = 0;
     while (!missionComplete){
-      turtleMovement();
-    }
+      
+      turtleMovement(); // main function
 
+      // Checks for boundary and kills program if detected
+      if (boundaryStatus.data == 1){ // blue detected
+        falsePositiveCheck++;
+        if (falsePositiveCheck > 3) {
+          std::cout << "Boundary Detected!! Seek Operator Assistance" << std::endl;
+          break;
+        }
+      } else { // red = 2, nothing = 0
+        falsePositiveCheck = 0;
+      }
+    } 
 
+    tagAlignment();
 
     // std::vector<std::vector<double>> plots = TurtleGPS.getPlots();
     
@@ -152,30 +171,81 @@ void Method::separateThread() {
 
 void Method::turtleMovement(){
     
-    // std::cout << Leader_goals.size() << std::endl;
-    // std::cout << goal_index << std::endl;
-    geometry_msgs::Point targetGoal = Leader_goals.at(goal_index);
-    
+  geometry_msgs::Point targetGoal = Leader_goals.at(goal_index);
+  
+  // update conrol parameters and run control algorithms
+  TurtleGPS.updateControlParam(targetGoal, Current_Odom, updated_Lidar);
+  geometry_msgs::Twist botTraj = TurtleGPS.reachGoal();
+  
+  // checks if goal has been hit or if the goal is unreachable as it is inside an obstacle
+  if (TurtleGPS.goal_hit(targetGoal, Current_Odom) || goalInObstacleCheck()){ 
+      std::cout << "goal hit" << std::endl;
+    if (goal_index != Leader_goals.size() - 1){
+        
+        goal_index++;
+        
+    } else {
+      // end of goals reached
+      missionComplete = true;
+      botTraj.linear.z = 0;
+      // adjust TurtleBot to be on top of last goal
+      botTraj.linear.x = 0.10;
+      Send_cmd_tb1(botTraj);
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+      botTraj.linear.x = 0;
 
-    TurtleGPS.updateControlParam(targetGoal, Current_Odom, updated_Lidar);
-    geometry_msgs::Twist botTraj = TurtleGPS.reachGoal();
-    
-    if (TurtleGPS.goal_hit(targetGoal, Current_Odom) || goalInObstacleCheck()){ 
-        std::cout << "goal hit" << std::endl;
-      if (goal_index != Leader_goals.size() - 1){
-         
-         goal_index++;
-         
-      } else {
-        missionComplete = true;
-        botTraj.linear.x = 0;
-        botTraj.linear.z = 0;
+    }
+  } 
+
+  // send velocity commands
+  Send_cmd_tb1(botTraj);
+  
+  std::this_thread::sleep_for(std::chrono::milliseconds(200));
+}
+
+void Method::tagAlignment(){
+  
+  // current tag info
+  int tagID;
+  geometry_msgs::Point tagPosition;
+  // velocity variables
+  geometry_msgs::Twist rotation;
+  rotation.linear.z = 0;
+  double angle = TurtleGPS.angleToGoal(Current_Odom, tagPosition); // heading angle to goal
+  
+  // searches array to find the target tag and gets the index
+  auto it = std::find(arTag.ids.data.begin(), arTag.ids.data.end(), tagID);
+
+  if (it != arTag.ids.data.end()) {
+    // The value was found, output the index
+    int index = std::distance(arTag.ids.data.begin(), it);
+
+    // Gets the associated yaw
+    if (index < arTag.yaws.data.size()) {
+      float yawError = arTag.yaws.data[index];
+      
+      if (fabs(yawError) > 0.05){ // within tolerance
+      // simple proportional control
+      float yawControl = 0.1 * yawError;
+
+      rotation.linear.z = yawControl;
+      } else{
+        rotation.linear.z = 0;
       }
     } 
+  } else {
+    // The value was not found in the array        
+    // rotates until tag detected
+    if (angle > 0){
+      rotation.linear.z = 0.5;
+      
+    } else if (angle < 0){
+      rotation.linear.z = -0.5;
+    }
+  }
+  
+  Send_cmd_tb1(rotation);
 
-    Send_cmd_tb1(botTraj);
-    
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
 }
 
 bool Method::goalInObstacleCheck() { // doesnt work if there is only 1 goal and it is inside an object
@@ -211,9 +281,9 @@ void Method::Send_cmd_tb1(geometry_msgs::Twist intructions){
   cmd_velocity_tb1.publish(intructions);
 }
 
-void Method::Send_cmd_tb2(geometry_msgs::Twist intructions){
-  cmd_velocity_tb2.publish(intructions);
-}
+// void Method::Send_cmd_tb2(geometry_msgs::Twist intructions){
+//   cmd_velocity_tb2.publish(intructions);
+// }
 
 
 
@@ -225,26 +295,26 @@ void Method::odomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg){
   Current_Odom = *odomMsg;
 }
 
-void  Method::RGBCallback(const sensor_msgs::Image::ConstPtr& Msg){
-  std::unique_lock<std::mutex> lck3 (RGB_locker);
-  updated_RGB = *Msg;
-
-}
 
 void Method::LidaCallback(const sensor_msgs::LaserScan::ConstPtr& Msg){
   std::unique_lock<std::mutex> lck3 (Lidar_locker);
   updated_Lidar = *Msg;
 }
 
-void Method::ImageDepthCallback(const sensor_msgs::Image::ConstPtr& Msg){
-  std::unique_lock<std::mutex> lck3 (ImageDepth_locker);
-  updated_imageDepth = *Msg;
+void Method::boundaryCallback(const std_msgs::Int16::ConstPtr& Msg){
+  std::unique_lock<std::mutex> lck3 (Lidar_locker);
+  boundaryStatus = *Msg;
 }
 
-void Method::guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg){
-  std::unique_lock<std::mutex> lck3 (odom_locker2);
-  guider_Odom = *odomMsg;
+void Method::tagCallback(const marker_msgs::marker::ConstPtr& Msg){
+  std::unique_lock<std::mutex> lck3 (Lidar_locker);
+  arTag = *Msg;
 }
+
+// void Method::guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg){
+//   std::unique_lock<std::mutex> lck3 (odom_locker2);
+//   guider_Odom = *odomMsg;
+// }
 
 
 visualization_msgs::MarkerArray Method::visualiseCones(std::vector<geometry_msgs::Point> cones, visualization_msgs::MarkerArray& markerArray) {
