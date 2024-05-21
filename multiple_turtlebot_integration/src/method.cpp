@@ -194,11 +194,9 @@ void Method::separateThread() {
     for (size_t j = 0; j < turtlebots.size(); j++) {
       threads.emplace_back(&Method::Function, std::ref(*this), trajectory.at(j), std::ref(turtlebots.at(j)), std::ref(Turtle_Controllers.at(j)));
     }
-
     for (auto& thread : threads) {
       thread.join();
     }
-
     std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
     // std::this_thread::sleep_for(std::chrono::milliseconds(5000000));
