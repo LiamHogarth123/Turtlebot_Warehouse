@@ -1,6 +1,6 @@
 #include <vector>
 #include <utility> // for std::pair
-#include "opencv2/opencv.hpp"
+// #include "opencv2/opencv.hpp"
 #include "nav_msgs/OccupancyGrid.h"
 #include "nav_msgs/MapMetaData.h"
 
@@ -80,6 +80,6 @@ public:
 
     int numberOfPoints_;
 
-    std::vector<cv::Point> path_points_withoutValidation;
-    std::vector<cv::Point> path_points;
+    // std::vector<cv::Point> path_points_withoutValidation;
+    // std::vector<cv::Point> path_points;
 };

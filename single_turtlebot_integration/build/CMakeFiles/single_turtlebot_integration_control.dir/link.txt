@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -Wno-deprecated -Wdeprecated-declarations -g  -shared -Wl,-soname,libsingle_turtlebot_integration_control.so -o devel/lib/libsingle_turtlebot_integration_control.so CMakeFiles/single_turtlebot_integration_control.dir/src/control.cpp.o 

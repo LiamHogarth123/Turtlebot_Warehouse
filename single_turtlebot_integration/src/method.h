@@ -50,8 +50,11 @@ public:
 
   void turtleMovement();
 
-  visualization_msgs::MarkerArray visualiseCones(std::vector<geometry_msgs::Point> cones, visualization_msgs::MarkerArray& markerArray);
+  geometry_msgs::Point findLookAheadPoint(const std::vector<geometry_msgs::Point>& path, const geometry_msgs::Point& current_position, double look_ahead_distance);
+
   void publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub);
+
+  void publishLookAheadMarker(const geometry_msgs::Point& look_ahead_point);
 
   // ros::Publisher marker_pub;
 
@@ -61,6 +64,7 @@ public:
   ros::Publisher cmd_velocity_tb1;
   ros::Publisher cmd_velocity_tb2;
   ros::Publisher pub_;
+  ros::Publisher single_marker_pub_;
 
   
 // Subscribers for turtlebot 1

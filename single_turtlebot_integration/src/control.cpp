@@ -14,7 +14,7 @@
 Control::Control(){
     
  
-    toleranceDistance = 0.2;
+    toleranceDistance = 0.05;
     toleranceAngle = 0.05;
     prev_error_ = 0;
     prev_heading_error_ = 0;
@@ -57,11 +57,11 @@ geometry_msgs::Twist Control::reachGoal(){
     cmd_vel.linear.x = velocityX;
     cmd_vel.angular.z = velocityZ;
 
-    std::cout << "---------------------------------------------" << std::endl;
-    std::cout << "distanceToGoal: " << distanceToGoal() << std::endl;
-    std::cout << "control_command: " << velocityX << std::endl;
-    std::cout << "angleToGoal: " << angleToGoal() << std::endl;
-    std::cout << "angular_command: " << velocityZ << std::endl;
+    // std::cout << "---------------------------------------------" << std::endl;
+    // std::cout << "distanceToGoal: " << distanceToGoal() << std::endl;
+    // std::cout << "control_command: " << velocityX << std::endl;
+    // std::cout << "angleToGoal: " << angleToGoal() << std::endl;
+    // std::cout << "angular_command: " << velocityZ << std::endl;
 
     return cmd_vel;
     
@@ -127,7 +127,7 @@ double Control::steeringPID(){
             heading_integral_ = -maxHeadingIntegral;
         }
 
-    std::cout << "heading integral: " << heading_integral_ << std::endl;
+    // std::cout << "heading integral: " << heading_integral_ << std::endl;
 
     double heading_derivative = heading_error - prev_heading_error_;
 
