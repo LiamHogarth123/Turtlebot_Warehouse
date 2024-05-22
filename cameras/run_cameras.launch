@@ -1,0 +1,20 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="tb" default=""/>
+
+  <group ns="$(arg tb)">   
+    <!-- USB Cam -->
+    <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen">
+      <param name="image_width" value="640" />
+      <param name="image_height" value="480" />
+      <param name="framerate" value="10" />
+    </node>
+    
+    <!-- RealSense -->
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+      <arg name="color_width" value="640"/>
+      <arg name="color_height" value="480"/>
+      <arg name="color_fps"  value="10"/>
+    </include>
+  </group>
+</launch>

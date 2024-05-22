@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>cameras</name>
+  <version>0.0.1</version>
+  <description>
+    This package provides roslaunch scripts for starting the cameras.
+  </description>
+  <maintainer email="john.e.hunter-1@student.uts.edu.au">John Hunter</maintainer>
+  <license>BSD</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>realsense2_camera</exec_depend>
+  <exec_depend>usb_cam</exec_depend>
+</package>
+
