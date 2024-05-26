@@ -20,9 +20,10 @@ class BoundaryDetection
 public:
     /**
      * @brief Constructor
-     * @param[in] nh nodehandle
+     * @param[in] nh ROS NodeHandle
+     * @param[in] tb TurtleBot name
      */
-    BoundaryDetection(ros::NodeHandle nh);
+    BoundaryDetection(ros::NodeHandle nh, const std::string tb);
 
     /**
      * @brief Constructor

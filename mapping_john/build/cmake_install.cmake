@@ -143,6 +143,10 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/mapping_john" TYPE FILE FILES "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/package.xml")
 endif()
 
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/mapping_john/launch" TYPE DIRECTORY FILES "/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/launch/" FILES_MATCHING REGEX "/[^/]*\\.launch$")
+endif()
+
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/john/catkin_ws/src/Turtlebot_Warehouse/mapping_john/build/gtest/cmake_install.cmake")

@@ -3,14 +3,35 @@
 #include <vector>
 #include <iostream>
 
-Markers::Markers(ros::NodeHandle nh)
+Markers::Markers(ros::NodeHandle nh, const std::string tb)
 {
     dictionary_ = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
     parameters_ = cv::aruco::DetectorParameters::create();
-    cameraMatrix_ = (cv::Mat_<double>(3,3) << 912.5086,0.0,651.25220,0.0,912.21368,348.58951,0.0,0.0,1.0);
-    distCoeffs_ = (cv::Mat_<double>(1,5) << 0.0,0.0,0.0,0.0,0.0);
-    pubIds_ = nh_.advertise<std_msgs::Int16MultiArray>("/markers/ids",100);
-    pubMarker_ = nh_.advertise<marker_msgs::marker>("/markers/info",100);
+    cameraMatrix_ = (cv::Mat_<double>(3, 3) << 912.5086, 0.0, 651.25220, 0.0, 912.21368, 348.58951, 0.0, 0.0, 1.0);
+    distCoeffs_ = (cv::Mat_<double>(1, 5) << 0.0, 0.0, 0.0, 0.0, 0.0);
+
+    /** Identify topic names*/
+    std::string idsTopic;
+    std::string infoTopic;
+
+    /** If a name is provided*/
+    if (!tb.empty())
+    {
+        idsTopic = "/" + tb + "/markers/ids";
+        infoTopic = "/" + tb + "/markers/info";
+    }
+    /** Proceed with no name if none is provided*/
+    else
+    {
+        idsTopic = "/markers/ids";
+        infoTopic = "/markers/info";
+    }
+
+    /** Initialise 'IDs' publisher*/
+    pubIds_ = nh_.advertise<std_msgs::Int16MultiArray>(idsTopic, 100);
+
+    /** Initialise 'info' publisher*/
+    pubMarker_ = nh_.advertise<marker_msgs::marker>(infoTopic, 100);
 }
 
 Markers::Markers()
@@ -39,7 +60,7 @@ std::vector<int> Markers::detectMarker(cv::Mat image)
 {
     /** Perform marker detection using OpenCV*/
     cv::aruco::detectMarkers(image, dictionary_, markerCorners_, markerIds_, parameters_, rejectedCandidates_);
-    
+
     /** DEBUG ONLY*/
     // if (markerIds_.size() >= 1)
     // {
@@ -60,10 +81,10 @@ std::vector<int> Markers::detectMarker(cv::Mat image)
 void Markers::markerPose(bool publish)
 {
     cv::Mat objPoints(4, 1, CV_32FC3);
-    objPoints.ptr<cv::Vec3f>(0)[0] = cv::Vec3f(-markerLength_/2.f, markerLength_/2.f, 0);
-    objPoints.ptr<cv::Vec3f>(0)[1] = cv::Vec3f(markerLength_/2.f, markerLength_/2.f, 0);
-    objPoints.ptr<cv::Vec3f>(0)[2] = cv::Vec3f(markerLength_/2.f, -markerLength_/2.f, 0);
-    objPoints.ptr<cv::Vec3f>(0)[3] = cv::Vec3f(-markerLength_/2.f, -markerLength_/2.f, 0);
+    objPoints.ptr<cv::Vec3f>(0)[0] = cv::Vec3f(-markerLength_ / 2.f, markerLength_ / 2.f, 0);
+    objPoints.ptr<cv::Vec3f>(0)[1] = cv::Vec3f(markerLength_ / 2.f, markerLength_ / 2.f, 0);
+    objPoints.ptr<cv::Vec3f>(0)[2] = cv::Vec3f(markerLength_ / 2.f, -markerLength_ / 2.f, 0);
+    objPoints.ptr<cv::Vec3f>(0)[3] = cv::Vec3f(-markerLength_ / 2.f, -markerLength_ / 2.f, 0);
 
     /** Empty the vector to re-populate with new markers*/
     if (!xErrors_.empty())
@@ -81,7 +102,7 @@ void Markers::markerPose(bool publish)
     if (!markerIds_.empty())
     {
         /** Allocate size of rotation and translation vectors*/
-        cv::Mat emptyMat = (cv::Mat_<double>(1,3) << 0.0,0.0,0.0);
+        cv::Mat emptyMat = (cv::Mat_<double>(1, 3) << 0.0, 0.0, 0.0);
         for (unsigned int i = 0; i < markerIds_.size(); i++)
         {
             if (rvecs_.size() != markerIds_.size())
@@ -89,7 +110,7 @@ void Markers::markerPose(bool publish)
                 rvecs_.push_back(emptyMat);
                 tvecs_.push_back(emptyMat);
             }
-            cv::solvePnP(objPoints,markerCorners_.at(i),cameraMatrix_,distCoeffs_,rvecs_.at(i),tvecs_.at(i));
+            cv::solvePnP(objPoints, markerCorners_.at(i), cameraMatrix_, distCoeffs_, rvecs_.at(i), tvecs_.at(i));
             xErrors_.push_back(tvecs_.at(i).at<double>(0));
             yaws_.push_back(rvecs_.at(i).at<double>(2));
         }
@@ -97,7 +118,7 @@ void Markers::markerPose(bool publish)
     else
     {
         /** If there are no tags detected, return -1*/
-        cv::Mat negativeMat = (cv::Mat_<double>(1,3) << -1,-1,-1);
+        cv::Mat negativeMat = (cv::Mat_<double>(1, 3) << -1, -1, -1);
         rvecs_.push_back(negativeMat);
         tvecs_.push_back(negativeMat);
     }
@@ -115,7 +136,7 @@ void Markers::markerPose(bool publish)
             marker_ids.layout.dim[0].stride = 1;
             marker_ids.layout.dim[0].label = "ids";
             marker_ids.data.clear();
-            marker_ids.data.insert(marker_ids.data.end(),markerIds_.begin(),markerIds_.end());
+            marker_ids.data.insert(marker_ids.data.end(), markerIds_.begin(), markerIds_.end());
 
             /** Publish the message*/
             pubIds_.publish(marker_ids);
@@ -128,7 +149,7 @@ void Markers::markerPose(bool publish)
             marker_info.ids.layout.dim[0].stride = 1;
             marker_info.ids.layout.dim[0].label = "ids";
             marker_info.ids.data.clear();
-            marker_info.ids.data.insert(marker_info.ids.data.end(),markerIds_.begin(),markerIds_.end());
+            marker_info.ids.data.insert(marker_info.ids.data.end(), markerIds_.begin(), markerIds_.end());
 
             /** Populate horizontal error for each marker*/
             marker_info.xErrors.layout.dim.clear();
@@ -198,10 +219,9 @@ double Markers::calibrate(cv::Mat calibImage)
     }
 
     // DEBUG ONLY
-    std::cout << "Corners size = " << markerCorners.size() << "\n";
-    std::cout << "Ids size = " << markerIds.size() << "\n";
-    // std::cout << "Corners size = " << allCorners.size() << "\n";
-    // std::cout << "Ids size = " << allIds.size() << "\n";
+    std::cout << "Corners size = " << markerCorners.size() << std::endl;
+    ;
+    std::cout << "Ids size = " << markerIds.size() << std::endl;
 
     /** Define calibration output*/
     double repError;
@@ -217,34 +237,4 @@ double Markers::calibrate(cv::Mat calibImage)
     // cv::solvePnP();
     // https://docs.opencv.org/4.x/d5/dae/tutorial_aruco_detection.html
     return repError;
-}
-
-std::pair<float,float> extractMarkerInfo(marker_msgs::marker msg,int target)
-{
-    std::vector<int16_t> markerIds = msg.ids.data;
-    std::vector<float> xErrors = msg.xErrors.data;
-    std::vector<float> yaws = msg.yaws.data;
-
-    int16_t targetId = static_cast<int16_t>(target);
-
-    int targetIdx = 0;
-
-    for (unsigned int i = 0; i < markerIds.size(); i++)
-    {
-        if (markerIds.at(i) == targetId)
-        {
-            targetIdx = i;
-        }
-        else{
-            continue;
-        }
-    }
-
-    float xError = xErrors[targetIdx];
-
-    float yaw = yaws[targetIdx];
-
-    std::pair<float,float> vals = std::make_pair(xError,yaw);
-
-    return vals;
 }

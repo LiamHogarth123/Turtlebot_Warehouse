@@ -20,9 +20,10 @@ class Markers
 public:
     /**
      * @brief Constructor
-     * @param[in] nh nodehandle
+     * @param[in] nh ROS NodeHandle
+     * @param[in] tb TurtleBot name
      */
-    Markers(ros::NodeHandle nh);
+    Markers(ros::NodeHandle nh, const std::string tb);
 
     /**
      * @brief Constructor
@@ -78,17 +79,15 @@ public:
      */
     void markerPose(bool publish);
 
-    std::pair<float,float> extractMarkerInfo(marker_msgs::marker msg, int target);
-
     /** Calibration information*/
     cv::Mat cameraMatrix_; // Calibration matrix
-    cv::Mat distCoeffs_; // Distortion coefficients
+    cv::Mat distCoeffs_;   // Distortion coefficients
 
     /** Detected marker information*/
-    std::vector<int> markerIds_; // IDs of detected markers
-    std::vector<std::vector<cv::Point2f>> markerCorners_; // Coordinates of corners of detected markers
+    std::vector<int> markerIds_;                               // IDs of detected markers
+    std::vector<std::vector<cv::Point2f>> markerCorners_;      // Coordinates of corners of detected markers
     std::vector<std::vector<cv::Point2f>> rejectedCandidates_; // Rejected potential markers
-    
+
     /** Vectors of each marker detected*/
     std::vector<cv::Mat> rvecs_; // Rotation vectors
     std::vector<cv::Mat> tvecs_; // Translation vectors
@@ -107,12 +106,12 @@ public:
 
 protected:
     /** Calibration input parameters*/
-    int markersX_ = 5; // Number of markers on x-axis
-    int markersY_ = 7; // Number of markers on y-axis
-    float markerLength_ = 0.025; // Length on board in metres
+    int markersX_ = 5;              // Number of markers on x-axis
+    int markersY_ = 7;              // Number of markers on y-axis
+    float markerLength_ = 0.025;    // Length on board in metres
     float markerSeparation_ = 0.01; // Distance between markers on board in metres
-    float squareLength_ = 0.034; // Length of sides of square
-    float aspectRatio_ = 1; // Aspect ratio between fx and fy
+    float squareLength_ = 0.034;    // Length of sides of square
+    float aspectRatio_ = 1;         // Aspect ratio between fx and fy
 
     /** Nodehandle for this node. Note, only 1 nodehandle is required (there is only 1 node).*/
     ros::NodeHandle nh_;
@@ -121,14 +120,14 @@ protected:
      * Publisher of marker IDs only
      * @typedef std_msgs/Int16MultiArray
      * @topic /markers/ids
-    */ 
+     */
     ros::Publisher pubIds_;
 
     /**
      * Publisher of marker IDs AND horizontal error (in metres)
      * @typedef marker_msgs/marker
      * @topic /markers/info
-    */   
+     */
     ros::Publisher pubMarker_;
 };
 
