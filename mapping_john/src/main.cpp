@@ -12,40 +12,23 @@ int main(int argc, char **argv)
   /** Initialise node*/
   ros::init(argc, argv, "mapping_john");
 
-  // /** Create node handle*/
-  // ros::NodeHandle nh;
+  /** Create node handle*/
+  ros::NodeHandle nh;
 
   /** Read namespace*/
   std::string tb;
 
-  // if (nh.getParam("tb", tb))
-  // {
-  //   ROS_INFO("The 'tb' namespace is %s", tb.c_str());
-  // }
-  // else
-  // {
-  //   std::cout << "No 'tb' namespace set!" << std::endl;
-  // }
-
-  if (argc > 1) {
-    tb = argv[1]; // Read the first argument as 'tb'
+  /** Store value if argument passed*/
+  if (argc > 1)
+  {
+    tb = argv[1];
     ROS_INFO("The 'tb' argument is %s", tb.c_str());
-  } else {
+  }
+  /** Otherwise continue with no namespace*/
+  else
+  {
     std::cout << "No 'tb' argument provided!" << std::endl;
   }
-
-  /** Create node handle*/
-  ros::NodeHandle nh;
-
-  // if (argc > 1) // Check if at least one argument is provided
-  // {
-  //   tb = argv[1]; // Read the first argument as 'tb'
-  //   ROS_INFO("The 'tb' argument is %s", tb.c_str());
-  // }
-  // else
-  // {
-  //   std::cout << "No 'tb' argument provided!" << std::endl;
-  // }
 
   /** Initialise image converter*/
   ImageConverter ic(nh, tb);

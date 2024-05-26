@@ -1,9 +1,8 @@
 <launch>
-    <arg name="tb" default="tb3" />
+    <arg name="tb" default="" />
 
     <group ns="$(arg tb)">
-        <node name="mapping_john_method" pkg="mapping_john" type="mapping_john_method" output="screen">
-            <!-- <arg name="tb" type="string" value="$(arg tb)" /> -->
+        <node name="mapping_john_method" pkg="mapping_john" type="mapping_john_method" args="$(arg tb)" output="screen">
         </node>
     </group>
 </launch>
