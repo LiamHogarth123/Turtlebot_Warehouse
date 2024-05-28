@@ -1,6 +1,6 @@
 #include <vector>
 #include <utility> // for std::pair
-#include "opencv2/opencv.hpp"
+// #include "opencv2/opencv.hpp"
 #include "nav_msgs/OccupancyGrid.h"
 #include "nav_msgs/MapMetaData.h"
 
@@ -91,17 +91,17 @@ private:
     // Visualisation Functions
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void visualise_PRM(std::vector<Node> Graph_, std::vector<int> path);
+    // void visualise_PRM(std::vector<Node> Graph_, std::vector<int> path);
 
-    cv::Mat Load_Map();
+    // cv::Mat Load_Map();
 
-    cv::Mat visalise_prm(cv::Mat mapImage, std::vector<Node> Graph_);
+    // cv::Mat visalise_prm(cv::Mat mapImage, std::vector<Node> Graph_);
 
-    cv::Mat visalise_PRM_With_Path(std::vector<int> path, cv::Mat mapImage, std::vector<Node> Graph_);
+    // cv::Mat visalise_PRM_With_Path(std::vector<int> path, cv::Mat mapImage, std::vector<Node> Graph_);
 
-    void show_map(cv::Mat mapImage);
+    // void show_map(cv::Mat mapImage);
 
-    void save_map(cv::Mat mapImage);
+    // void save_map(cv::Mat mapImage);
 
 
 
@@ -125,6 +125,6 @@ private:
 
     int numberOfPoints_;
 
-    std::vector<cv::Point> path_points_withoutValidation;
-    std::vector<cv::Point> path_points;
+    // std::vector<cv::Point> path_points_withoutValidation;
+    // std::vector<cv::Point> path_points;
 };

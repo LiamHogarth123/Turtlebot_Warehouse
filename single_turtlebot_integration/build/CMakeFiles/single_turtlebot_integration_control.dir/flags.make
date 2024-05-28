@@ -6,5 +6,5 @@ CXX_FLAGS =  -Wno-deprecated -Wdeprecated-declarations -g -fPIC   -std=gnu++11
 
 CXX_DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"single_turtlebot_integration\" -Dsingle_turtlebot_integration_control_EXPORTS
 
-CXX_INCLUDES = -I/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 -I/usr/include/opencv 
+CXX_INCLUDES = -I/home/dan/git/Turtlebot_Warehouse/single_turtlebot_integration/include -I/opt/ros/melodic/include -I/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp -I/usr/include/eigen3 
 
