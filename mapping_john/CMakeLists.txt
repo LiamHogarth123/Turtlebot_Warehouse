@@ -55,3 +55,9 @@ add_executable(${PROJECT_NAME}_method src/main.cpp src/method.cpp src/boundaryde
 add_dependencies(${PROJECT_NAME}_method ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(${PROJECT_NAME}_method ${catkin_LIBRARIES} ${OpenCV_LIBS})
+
+# Install the launch file
+install(DIRECTORY launch/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+  FILES_MATCHING PATTERN "*.launch"
+)

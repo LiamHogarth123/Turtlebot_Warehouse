@@ -16,8 +16,10 @@ class ImageConverter
 public:
     /**
      * @brief Constructor
+     * @param[in] nh ROS NodeHandle
+     * @param[in] tb TurtleBot name
      */
-    ImageConverter(ros::NodeHandle nh);
+    ImageConverter(ros::NodeHandle nh, const std::string tb);
 
     /**
      * @brief Constructor
@@ -32,13 +34,13 @@ public:
     /**
      * @brief Function to return the webcam image as a cv::Mat
      * @return Latest image, stored in cam_image_
-    */
+     */
     cv::Mat getCam();
 
     /**
      * @brief Function to return the RGB-D image as a cv::Mat
      * @return Latest image, stored in rgbd_image_
-    */
+     */
     cv::Mat getRGBD();
 
     /**
@@ -47,7 +49,7 @@ public:
      * @note This function and the declaration are ROS specific
      * @return void
      */
-    void camCallback(const sensor_msgs::ImageConstPtr& msg);
+    void camCallback(const sensor_msgs::ImageConstPtr &msg);
 
     /**
      * @brief RGBD conversion callback
@@ -55,9 +57,9 @@ public:
      * @note This function and the declaration are ROS specific
      * @return void
      */
-    void rgbdCallback(const sensor_msgs::ImageConstPtr& msg);
+    void rgbdCallback(const sensor_msgs::ImageConstPtr &msg);
 
-// protected:
+    // protected:
     /** Nodehandle for this node. Note, only 1 nodehandle is required (there is only 1 node).*/
     ros::NodeHandle nh_;
 
