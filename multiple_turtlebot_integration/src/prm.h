@@ -1,6 +1,6 @@
 #include <vector>
 #include <utility> // for std::pair
-// #include "opencv2/opencv.hpp"
+#include "opencv2/opencv.hpp"
 #include "nav_msgs/OccupancyGrid.h"
 #include "nav_msgs/MapMetaData.h"
 
@@ -23,51 +23,96 @@ class PRM {
 public:
     PRM(); 
 
-    std::vector<Node> samplePoints();
-
-    geometry_msgs::Point convertNodeToPoint(Node temp);
+    //User Functions
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    void visualise_PRM(std::vector<Node> Graph_, std::vector<int> path);
-
     void GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_);
 
     std::vector<geometry_msgs::Point> DijkstraToGoal(geometry_msgs::Point start, geometry_msgs::Point goal);
 
-    std::vector<Node> createNodesAndEdges(std::vector<Node> Graph_);
+    std::vector<geometry_msgs::Point> A_star_To_Goal(geometry_msgs::Point start, geometry_msgs::Point goal);
 
-    void findPath(int startNodeId, int goalNodeId);
+    void UpdateMapData(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_);
 
-    int setGoalNode(geometry_msgs::Point goal);
+    std::vector<geometry_msgs::Point> test();
+
+    void show_Prm();
+
+
+private:
+    // Gemerating the PRM Functions
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    std::vector<Node> samplePoints();
 
     bool ValidPoint(geometry_msgs::Point point);
 
-    void UpdateMapData(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_);
-    
     bool pathIsClear(Node Node_A, Node Node_B);
 
     std::vector<std::pair<int, int>> bresenhamLinePoints(int startX, int startY, int endX, int endY);
 
     bool ValidPointForPath(int x1, int y1);
 
-    std::vector<geometry_msgs::Point> test();
+    std::vector<Node> createNodesAndEdges(std::vector<Node> Graph_);
+
+    
+
+    
+    
+    // Converting cordinate planes
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    geometry_msgs::Point convertNodeToPoint(Node temp);
 
     float nodeDistance(const Node& a, const Node& b);
 
     float euclideanDistance(const Node& node1, const Node& node2);
     
-    std::vector<int> findPathDijkstra(const std::vector<Node>& graph, int startId, int targetId);
-
+    int setGoalNode(geometry_msgs::Point goal);
+    
     std::vector<geometry_msgs::Point> ConvertParthToWorld(std::vector<int> path, std::vector<Node> Graph_);
 
-    std::vector<int> findPathAStar(const std::vector<Node>& graph, int startId, int targetId);
 
     double getYawFromQuaternion(const geometry_msgs::Quaternion& quat);
+
     std::vector<Node> rotateNodes(std::vector<Node>& graph, const geometry_msgs::Quaternion& orientation, const geometry_msgs::Pose& mapOrigin);
 
     bool newPoint(geometry_msgs::Point point, std::vector<Node> temp);
 
 
-public:
+    // Path finding
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    std::vector<int> findPathAStar(const std::vector<Node>& graph, int startId, int targetId);
+
+    std::vector<int> findPathDijkstra(const std::vector<Node>& graph, int startId, int targetId);
+
+    void findPath(int startNodeId, int goalNodeId);
+
+
+    // Visualisation Functions
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    void visualise_PRM(std::vector<Node> Graph_, std::vector<int> path);
+
+    cv::Mat Load_Map();
+
+    cv::Mat visalise_prm(cv::Mat mapImage, std::vector<Node> Graph_);
+
+    cv::Mat visalise_PRM_With_Path(std::vector<int> path, cv::Mat mapImage, std::vector<Node> Graph_);
+
+    void show_map(cv::Mat mapImage);
+
+    void save_map(cv::Mat mapImage);
+
+
+
+   
+
+    
+
+   
+
+
+private:
 
     std::vector<Node> nodes;
    
@@ -80,6 +125,6 @@ public:
 
     int numberOfPoints_;
 
-    // std::vector<cv::Point> path_points_withoutValidation;
-    // std::vector<cv::Point> path_points;
+    std::vector<cv::Point> path_points_withoutValidation;
+    std::vector<cv::Point> path_points;
 };

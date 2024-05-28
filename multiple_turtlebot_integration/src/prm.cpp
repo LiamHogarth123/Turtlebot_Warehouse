@@ -9,7 +9,7 @@
 
 #include <vector>
 #include <utility> // for std::pair
-// #include "opencv2/opencv.hpp"
+#include "opencv2/opencv.hpp"
 #include <yaml-cpp/yaml.h>
 #include <iostream>
 #include <string>
@@ -25,11 +25,15 @@
 //To do list
 // --- Add diagonal criteria to check points
 // --- Add check to see if node edge overlaps another node
-// --- Add check that nodes are on top of each themselve
+// --- Add check that nodes are not on top of each themselve
+// --- Fix the goal node assignment
+// --- Add multiple different visualisation
 
 PRM::PRM() {
 }
 
+//User Functions
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void PRM::GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_) {
     UpdateMapData(map, MapMetaData_);
@@ -54,7 +58,7 @@ std::vector<geometry_msgs::Point> PRM::DijkstraToGoal(geometry_msgs::Point start
     
     std::cout << "start_Id  -->" << start_Id << std::endl;
         std::cout << "goal_Id  -->" << Goal_Id << std::endl; 
-    DijkstraNodes = findPathAStar(Graph, start_Id, Goal_Id);
+    DijkstraNodes = findPathDijkstra(Graph, start_Id, Goal_Id);
     std::cout << DijkstraNodes.size() << "---------------------------" << std::endl;
     std::vector<geometry_msgs::Point> trajectory;
     
@@ -65,13 +69,77 @@ std::vector<geometry_msgs::Point> PRM::DijkstraToGoal(geometry_msgs::Point start
 
 }
 
+std::vector<geometry_msgs::Point> PRM::A_star_To_Goal(geometry_msgs::Point start, geometry_msgs::Point goal){
+    std::vector<int> DijkstraNodes;
+    std::cout << "Dijkstra_Opens-------------" <<std::endl;
+    int start_Id = setGoalNode(start);
+    
+    int Goal_Id = setGoalNode(goal);
+    
+    std::cout << "start_Id  -->" << start_Id << std::endl;
+        std::cout << "goal_Id  -->" << Goal_Id << std::endl; 
+    DijkstraNodes = findPathAStar(Graph, start_Id, Goal_Id);
+    std::cout << DijkstraNodes.size() << "---------------------------" << std::endl;
+    std::vector<geometry_msgs::Point> trajectory;
+    
+    for (int x = 0; x < DijkstraNodes.size(); x++){
+        trajectory.push_back(convertNodeToPoint(Graph.at(DijkstraNodes.at(x))));
+    }
+    return trajectory;
+}
+
+
 
 void PRM::UpdateMapData(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_) {
     std::cout << "PRM map data openning" << std::endl;
     SlamMapData = map;
-    numberOfPoints_ = 3000;
+    numberOfPoints_ = 9000;
     latestMapMetaData_ = MapMetaData_;
 }
+
+
+
+
+std::vector<geometry_msgs::Point> PRM::test(){
+    
+    samplePoints();
+    std::vector<Node> ProbablityRoadMap;
+    ProbablityRoadMap = samplePoints();
+    std::cout << "points generated" << std::endl;
+    std::cout << "s" << std::endl;
+    std::cout << ProbablityRoadMap.size() << std::endl;
+    std::vector<Node> ProbablityRoadMap_ = createNodesAndEdges(ProbablityRoadMap);
+    std::vector<int> path;
+    path = findPathDijkstra(ProbablityRoadMap_, 2, 10);
+    // ProbablityRoadMap_ = rotateNodes(ProbablityRoadMap_, latestMapMetaData_.origin.orientation);
+    std::cout << "path size" << path.size() << std::endl; 
+    visualise_PRM(ProbablityRoadMap_, path);
+    std::cout << "start Node -> x = " << ProbablityRoadMap_.at(2).x << " -> Y=" << ProbablityRoadMap_.at(2).y << std::endl;
+    std::cout << "end Node -> x = " << ProbablityRoadMap_.at(10).x << " -> Y=" << ProbablityRoadMap_.at(10).y << std::endl;
+    std::cout << "Distance between nodes -> " << nodeDistance(ProbablityRoadMap_.at(2), ProbablityRoadMap_.at(10)) << std::endl;
+    std::vector<geometry_msgs::Point> trajectory; 
+    trajectory = ConvertParthToWorld(path, ProbablityRoadMap_);
+    return trajectory;
+
+}
+
+void PRM::show_Prm(){
+    cv::Mat MapImage = Load_Map();
+    MapImage = visalise_prm(MapImage, Graph);
+    save_map(MapImage);
+}
+
+
+
+
+
+
+
+
+
+
+// Gernating PRM
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 std::vector<Node> PRM::samplePoints(){
     //graph definition
@@ -142,22 +210,39 @@ bool PRM::ValidPoint(geometry_msgs::Point point){
     int grid_x = static_cast<int>(point.x);
     int grid_y = static_cast<int>(point.y);
 
-    // Calculate index using grid indices
     int index = grid_x + (grid_y * SlamMapData.info.width);
-    int above = index + 2*SlamMapData.info.width;
-    int below = index - 2*SlamMapData.info.width;
+   int grid_size = 5;
 
-    if (index >= SlamMapData.data.size()){
-        return false;
+    // Loop through the grid_size x grid_size area around the point
+    for (int dx = -grid_size/2; dx <= grid_size/2; ++dx) {
+        for (int dy = -grid_size/2; dy <= grid_size/2; ++dy) {
+            int new_x = grid_x + dx;
+            int new_y = grid_y + dy;
+
+            // Check if the new point is within the map boundaries
+            if (new_x < 0 || new_x >= SlamMapData.info.width || new_y < 0 || new_y >= SlamMapData.info.height) {
+                return false; // If the point is outside the map boundaries, return false
+            }
+
+            // Calculate the index of the new point
+            int new_index = new_x + (new_y * SlamMapData.info.width);
+
+            // Check if the new point is within the map boundaries
+            if (new_index >= SlamMapData.data.size() || new_index < 0) {
+                return false;
+            }
+
+            // Check if the point is free of obstacles (value 0)
+            if (SlamMapData.data.at(new_index) != 0) {
+                return false;
+            }
+        }
     }
 
+    return true; // All points in the grid are free of obstacles
 
-    if (SlamMapData.data.at(index) == 0 && SlamMapData.data.at(above) == 0 && SlamMapData.data.at(below) == 0 && SlamMapData.data.at(index+2) == 0 && SlamMapData.data.at(index-2) == 0 ) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    
+
 
 }
 
@@ -196,7 +281,6 @@ bool PRM::pathIsClear(Node Node_A, Node Node_B){
             // std::cout << "invalid Point " << std::endl;
             return false;
         }
-        
     }
     
     for (const auto& pair : BressenhamPoints) {
@@ -213,28 +297,42 @@ bool PRM::ValidPointForPath(int x1, int y1){
     int grid_x = x1;
     int grid_y = y1;
 
-    // Calculate index using grid indices
+    // // Calculate index using grid indices
     int index = grid_x + (grid_y * SlamMapData.info.width);
-    int above = index + 2*SlamMapData.info.width;
-    int below = index - 2*SlamMapData.info.width;
 
-    if (index >= SlamMapData.data.size()){
-        return false;
+
+ 
+
+       // Define the size of the grid to check around the point
+    int grid_size = 5;
+
+    // Loop through the grid_size x grid_size area around the point
+    for (int dx = -grid_size/2; dx <= grid_size/2; ++dx) {
+        for (int dy = -grid_size/2; dy <= grid_size/2; ++dy) {
+            int new_x = grid_x + dx;
+            int new_y = grid_y + dy;
+
+            // Check if the new point is within the map boundaries
+            if (new_x < 0 || new_x >= SlamMapData.info.width || new_y < 0 || new_y >= SlamMapData.info.height) {
+                return false; // If the point is outside the map boundaries, return false
+            }
+
+            // Calculate the index of the new point
+            int new_index = new_x + (new_y * SlamMapData.info.width);
+
+            // Check if the new point is within the map boundaries
+            if (new_index >= SlamMapData.data.size() || new_index < 0) {
+                return false;
+            }
+
+            // Check if the point is free of obstacles (value 0)
+            if (SlamMapData.data.at(new_index) != 0) {
+                return false;
+            }
+        }
     }
 
-
-    if (SlamMapData.data.at(index) == 0 &&
-        SlamMapData.data.at(above) == 0 &&
-        SlamMapData.data.at(below) == 0 &&
-        SlamMapData.data.at(index + 2) == 0 &&
-        SlamMapData.data.at(index - 2) == 0) {
-    
-    }
-    else {
-        // std::cout << "One or more conditions are not met" << std::endl;
-        return false;
-    }   
-
+    return true; // All points in the grid are free of obstacles
 }
 
 
@@ -327,7 +425,7 @@ std::vector<Node> PRM::createNodesAndEdges(std::vector<Node> Graph_){
             }
         }
     }
-
+    
 
 
     std::cout << edges << std::endl;
@@ -335,178 +433,122 @@ std::vector<Node> PRM::createNodesAndEdges(std::vector<Node> Graph_){
 }
 
 
+//Visualisation
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+cv::Mat PRM::Load_Map(){
+    //READ Image
+    cv::Mat grayscaleMapImage = cv::imread("/home/liam/catkin_ws/src/navigation/map_server/maps/map.pgm", cv::IMREAD_GRAYSCALE);
+    if (grayscaleMapImage.empty()) {
+        std::cerr << "Could not open or find the map image" << std::endl;
+    }
+    
+    cv::Mat mapImage;
+    cv::cvtColor(grayscaleMapImage, mapImage, cv::COLOR_GRAY2BGR);
+    cv::flip(mapImage, mapImage, 0);
+    return mapImage;
+}
+
+
+
+cv::Mat PRM::visalise_prm(cv::Mat mapImage, std::vector<Node> Graph_){
+    int radius = 0; // You can adjust this value as needed
+    cv::Scalar color(0, 0, 255); // BGR value for red
+    
+    for (size_t k = 0; k < Graph_.size(); k++){
+        cv::Point center(Graph_[k].x, Graph_[k].y);
+
+        if (center.x >= 0 && center.x < mapImage.cols && center.y >= 0 && center.y < mapImage.rows) {
+            
+            for (size_t l = 0; l < Graph_.at(k).edges.size(); l++) {
+                int index = Graph_.at(k).edges.at(l);
+                const auto& connected_node = Graph_[index];
+              
+                cv::Point connected_node_center(connected_node.x, connected_node.y);
+                cv::line(mapImage, center, connected_node_center, cv::Scalar(0, 255, 255) /*blue*/, 0  /*thickness*/);
+            }            
+        } 
+        else {
+            std::cout << "out of bounds" << std::endl;
+        }
+    }
+
+
+    for (size_t k = 0; k < Graph_.size(); k++){
+    
+        cv::Point center(Graph_[k].x, Graph_[k].y);
+
+        center.x = Graph_[k].x;
+        center.y = Graph_[k].y;
+        if (center.x >= 0 && center.x < mapImage.cols && center.y >= 0 && center.y < mapImage.rows) {
+            cv::circle(mapImage, center, radius, cv::Scalar(255, 0, 0), -1);
+        } 
+        else {
+            std::cout << "out of bounds" << std::endl;
+        }
+
+    }
+    return mapImage;
+}
+
+
+cv::Mat PRM::visalise_PRM_With_Path(std::vector<int> path, cv::Mat mapImage, std::vector<Node> Graph_){
+
+   
+    for (int x = 0; x < path.size(); x++){
+        // std::cout << "STUCK" << x << "of " << path.size()  << std::endl;ast
+        cv::Point prev;
+        prev.x = Graph_.at(path.at(x-1)).x;
+        prev.y = Graph_.at(path.at(x-1)).y;
+        cv::Point temp;
+        temp.x = Graph_.at(path.at(x)).x;
+        temp.y = Graph_.at(path.at(x)).y;
+        cv::line(mapImage, temp, prev, cv::Scalar(0, 0, 255) /*blue*/, 2  /*thickness*/);
+    
+    }
+
+    for (int x = 0; x < path.size(); x++){
+        // std::cout << "STUCK" << x << "of " << path.size()  << std::endl;
+        cv::Point temp;
+        temp.x = Graph_.at(path.at(x)).x;
+        temp.y = Graph_.at(path.at(x)).y;
+        
+        cv::circle(mapImage, temp, 0, cv::Scalar(255, 0, 0), -1);
+    }
+
+    return mapImage;
+}
+
+
+void PRM::show_map(cv::Mat mapImage){
+    cv::namedWindow("SLAM Map with Nodes", cv::WINDOW_AUTOSIZE);
+    cv::imshow("SLAM Map with Nodes", mapImage);
+}
+
+
+void PRM::save_map(cv::Mat mapImage){
+    cv::imwrite("/home/liam/Desktop/map_with_nodes fixed!!!.png", mapImage);
+}
+
+
+
 
 void PRM::visualise_PRM(std::vector<Node> Graph_, std::vector<int> path) {
-//     //READ Image
-//     ///////////////////////////////////////////////////////////////////////////////////////////////////
-//     std::cout << "visualization opens" << std::endl;
-//     // Load the grayscale map image
-//     cv::Mat grayscaleMapImage = cv::imread("/home/liam/catkin_ws/src/navigation/map_server/maps/map.pgm", cv::IMREAD_GRAYSCALE);
-//     if (grayscaleMapImage.empty()) {
-//         std::cerr << "Could not open or find the map image" << std::endl;
-//         return; // Exit if the image could not be loaded
-//     }
-//     std::cout << "map read" << std::endl;
-
-//     // Convert the grayscale image to a BGR (color) image
-//     cv::Mat mapImage;
-//     cv::cvtColor(grayscaleMapImage, mapImage, cv::COLOR_GRAY2BGR);
-//     cv::flip(mapImage, mapImage, 0);
-
-
-
-
-
-// // Draws the nodes without ajustment
-// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//     int radius = 0; // You can adjust this value as needed
-//     cv::Scalar color(0, 0, 255); // BGR value for red
-    
-//     // for (size_t z = 0; z< Graph_.size(); z++){
-//     //     Graph_[z].y = -Graph_[z].y;
-//     // }
-
-
-//     for (size_t k = 0; k < Graph_.size(); k++){
-    
-//         // std::cout << k << std::endl;
-//         cv::Point center(Graph_[k].x, Graph_[k].y);
-      
-//         if (center.x >= 0 && center.x < mapImage.cols && center.y >= 0 && center.y < mapImage.rows) {
-            
-//             for (size_t l = 0; l < Graph_.at(k).edges.size(); l++) {
-//             //    std::cout << "l =" << l << std::endl;
-//                 int index = Graph_.at(k).edges.at(l);
-
-//                 const auto& connected_node = Graph_[index];
-                
-              
-//                 cv::Point connected_node_center(connected_node.x, connected_node.y);
-
-//                 cv::line(mapImage, center, connected_node_center, cv::Scalar(0, 255, 255) /*blue*/, 0  /*thickness*/);
-//             }
-
-//             // cv::circle(mapImage, center, radius, color, -1);
-            
-//         } 
-//         else {
-//             // The center is outside the image, handle accordingly
-//             // This could mean adjusting the position, skipping the draw, etc.
-//             std::cout << "out of bounds" << std::endl;
-//         }
-//     }
-// //DRAWING NODES Again
-// /////////////////////////////////////////////////////////////////////////////
-//     for (size_t k = 0; k < Graph_.size(); k++){
-    
-//         cv::Point center(Graph_[k].x, Graph_[k].y);
-
-//         center.x = Graph_[k].x;
-//         center.y = Graph_[k].y;
-//         if (center.x >= 0 && center.x < mapImage.cols && center.y >= 0 && center.y < mapImage.rows) {
-//             cv::circle(mapImage, center, radius, cv::Scalar(255, 0, 0), -1);
-//         } 
-//         else {
-//             std::cout << "out of bounds" << std::endl;
-//         }
-
-//     }
-
-//     // //DRAW Goal
-//     // //////////////////////////////////////////////////////////////
-//     // for (auto node : Graph_){
-//     //     if (node.id = 5){
-//     //         cv::Point goal;
-//     //         goal.x = node.x;
-//     //         goal.y = node.y;
-//     //         cv::circle(mapImage, goal, 2, cv::Scalar(0, 0, 255), -1);
-//     //         break;
-//     //     }
-//     // }
-
-
-//     //Draw Path
-//     ////////////////////////////////////////////////////////////////
-    
-//     for (int x = 0; x < path.size(); x++){
-//         // std::cout << "STUCK" << x << "of " << path.size()  << std::endl;ast
-//             cv::Point prev;
-//             prev.x = Graph_.at(path.at(x-1)).x;
-//             prev.y = Graph_.at(path.at(x-1)).y;
-
-//             cv::line(mapImage, temp, prev, cv::Scalar(0, 0, 255) /*blue*/, 2  /*thickness*/);
-//         }
-//         cv::circle(mapImage, temp, 0, cv::Scalar(255, 0, 0), -1);
-//     }
-
-//     for (int x = 0; x < path.size(); x++){
-//         // std::cout << "STUCK" << x << "of " << path.size()  << std::endl;
-//         cv::Point temp;
-//         temp.x = Graph_.at(path.at(x)).x;
-//         temp.y = Graph_.at(path.at(x)).y;
-        
-//         cv::circle(mapImage, temp, 0, cv::Scalar(255, 0, 0), -1);
-//     }
-
-//     // Display the map with nodes
-//     cv::namedWindow("SLAM Map with Nodes", cv::WINDOW_AUTOSIZE);
-//     cv::imshow("SLAM Map with Nodes", mapImage);
-//     // Optionally, save the color map with nodes to a file
-//     cv::imwrite("/home/liam/Desktop/map_with_nodes fixed!!!.png", mapImage);
-
-//     cv::waitKey(0);
-}
-
-
-
-std::vector<geometry_msgs::Point> PRM::test(){
-    
-    samplePoints();
-
-
-    std::vector<Node> ProbablityRoadMap;
-    
-    ProbablityRoadMap = samplePoints();
-   
-    std::cout << "points generated" << std::endl;
-    std::cout << "s" << std::endl;
-
-    std::cout << ProbablityRoadMap.size() << std::endl;
-
-
-    std::vector<Node> ProbablityRoadMap_ = createNodesAndEdges(ProbablityRoadMap);
-
-    std::vector<int> path;
-
-   
-
-    path = findPathDijkstra(ProbablityRoadMap_, 2, 10);
-    // ProbablityRoadMap_ = rotateNodes(ProbablityRoadMap_, latestMapMetaData_.origin.orientation);
-    std::cout << "path size" << path.size() << std::endl; 
-
-
-    
-   
-
-    visualise_PRM(ProbablityRoadMap_, path);
-
-
-
-
-    std::cout << "start Node -> x = " << ProbablityRoadMap_.at(2).x << " -> Y=" << ProbablityRoadMap_.at(2).y << std::endl;
-    std::cout << "end Node -> x = " << ProbablityRoadMap_.at(10).x << " -> Y=" << ProbablityRoadMap_.at(10).y << std::endl;
-    std::cout << "Distance between nodes -> " << nodeDistance(ProbablityRoadMap_.at(2), ProbablityRoadMap_.at(10)) << std::endl;
-
-    std::vector<geometry_msgs::Point> trajectory; 
-    
-    trajectory = ConvertParthToWorld(path, ProbablityRoadMap_);
-
-    return trajectory;
 
 }
 
 
+
+
+
+
+
+
+
+
+//Path Planning
+///////////////////////////////////////////////////////////////////////////////////////
 
 void PRM::findPath(int startNodeId, int goalNodeId){
     //A star
@@ -603,6 +645,23 @@ std::vector<int> PRM::findPathAStar(const std::vector<Node>& graph, int startId,
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Converting cordinate planes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 float PRM::nodeDistance(const Node& a, const Node& b) {
     // Simple Euclidean distance for now
     return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
@@ -640,38 +699,6 @@ int PRM::setGoalNode(geometry_msgs::Point goal){
     return closestNodeId;
 } 
     
-    
-    
-    // int goal_id;
-    // bool goal_filled = false;
-    // int map_x = static_cast<int>((goal.x - latestMapMetaData_.origin.position.x) / latestMapMetaData_.resolution);
-    // int map_y = static_cast<int>((goal.y - latestMapMetaData_.origin.position.y) / latestMapMetaData_.resolution);
-    // for (auto node : Graph) {
-    //     double dx = node.x - map_x;
-    //     double dy = node.y - map_y;
-    //     float distance = sqrt(pow(dx, 2) + pow(dy, 2));
-    //     if (distance < 1){
-    //         goal_id = node.id;
-    //         goal_filled = true;
-    //     }
-    // }
-    // if (!goal_filled) {
-    //     if(ValidPoint(goal)) {
-    //         // std::cout << "if opens" << std::endl;
-    //         Node temp;
-    //         temp.x = goal.x;
-    //         temp.y = goal.y - 16;   
-    //         temp.id = Graph.back().id +1;
-    //         goal_id = temp.id;
-    //         Graph.push_back(temp);
-    //     }
-    //     else {
-    //         std::cout << "invalid goal" << std::endl;
-    //     }
-    // }
-    // return goal_id;
-
-
 
 geometry_msgs::Point PRM::convertNodeToPoint(Node temp){
     geometry_msgs::Point world_point;

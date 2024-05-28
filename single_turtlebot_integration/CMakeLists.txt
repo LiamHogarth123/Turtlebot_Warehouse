@@ -10,9 +10,11 @@ find_package(catkin REQUIRED COMPONENTS
   rosbag
   roslib
   message_generation
+  # marker_msgs
 )
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
+# find_package(marker_msgs REQUIRED)
 # find_package(yaml-cpp REQUIRED) # Ensure yaml-cpp is found
 
 # Set compiler flags for deprecation warnings
@@ -37,9 +39,8 @@ add_executable(${PROJECT_NAME}_method src/main.cpp src/method.cpp)
 # Add libraries
 # add_library(${PROJECT_NAME}_readMap src/readMap.cpp)
 add_library(${PROJECT_NAME}_prm src/prm.cpp)
-# add_library(${PROJECT_NAME}_taskAlloction src/taskAlloction.cpp)
-add_library(${PROJECT_NAME}_control src/control.cpp)
-
+add_library(${PROJECT_NAME})
+add_library(${PROJECT_NAME}_control src/control.cpp src/sensorprocessing.cpp)
 
 # Link libraries with the executable
 target_link_libraries(${PROJECT_NAME}_method
@@ -48,9 +49,10 @@ target_link_libraries(${PROJECT_NAME}_method
   # ${YAML_CPP_INCLUDE_DIR}# Link against yaml-cpp (no need for manual path specification)
   # ${PROJECT_NAME}_readMap
   ${PROJECT_NAME}_prm
-  # ${PROJECT_NAME}_taskAlloction
+  ${PROJECT_NAME}_sensorprocessing
   ${PROJECT_NAME}_control
 )
+
 
 # Optional: Link against pthreads if threading issues arise
 find_package(Threads REQUIRED)

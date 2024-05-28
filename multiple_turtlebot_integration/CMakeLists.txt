@@ -11,8 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
   roslib
   message_generation
 )
+
 find_package(Eigen3 REQUIRED)
-# find_package(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED)
 # find_package(yaml-cpp REQUIRED) # Ensure yaml-cpp is found
 
 # Set compiler flags for deprecation warnings
@@ -27,7 +28,7 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIR}
-  # ${OpenCV_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
   # ${YAML_CPP_INCLUDE_DIR} # Include the yaml-cpp headers
 )
 
@@ -45,7 +46,7 @@ add_library(${PROJECT_NAME}_turtlebot src/turtlebot.cpp)
 target_link_libraries(${PROJECT_NAME}_method
   ${catkin_LIBRARIES}
   ${OpenCV_LIBS}
-  # ${YAML_CPP_INCLUDE_DIR}# Link against yaml-cpp (no need for manual path specification)
+  # ${YAML_CPP_LIBRARIES} # Link against yaml-cpp (no need for manual path specification)
   # ${PROJECT_NAME}_readMap
   ${PROJECT_NAME}_prm
   ${PROJECT_NAME}_taskAlloction
@@ -56,6 +57,3 @@ target_link_libraries(${PROJECT_NAME}_method
 # Optional: Link against pthreads if threading issues arise
 find_package(Threads REQUIRED)
 target_link_libraries(${PROJECT_NAME}_method Threads::Threads)
-
-#map Survavier
-#consider using launch file to load yaml file

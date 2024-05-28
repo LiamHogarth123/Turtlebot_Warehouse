@@ -63,9 +63,9 @@ CMAKE_BINARY_DIR = /home/liam/git/Turtlebot_Warehouse/multiple_turtlebot_integra
 # Target rules for target CMakeFiles/multiple_turtlebot_integration_method.dir
 
 # All Build rule for target.
-CMakeFiles/multiple_turtlebot_integration_method.dir/all: CMakeFiles/multiple_turtlebot_integration_turtlebot.dir/all
-CMakeFiles/multiple_turtlebot_integration_method.dir/all: CMakeFiles/multiple_turtlebot_integration_control.dir/all
 CMakeFiles/multiple_turtlebot_integration_method.dir/all: CMakeFiles/multiple_turtlebot_integration_taskAlloction.dir/all
+CMakeFiles/multiple_turtlebot_integration_method.dir/all: CMakeFiles/multiple_turtlebot_integration_control.dir/all
+CMakeFiles/multiple_turtlebot_integration_method.dir/all: CMakeFiles/multiple_turtlebot_integration_turtlebot.dir/all
 CMakeFiles/multiple_turtlebot_integration_method.dir/all: CMakeFiles/multiple_turtlebot_integration_prm.dir/all
 	$(MAKE) -f CMakeFiles/multiple_turtlebot_integration_method.dir/build.make CMakeFiles/multiple_turtlebot_integration_method.dir/depend
 	$(MAKE) -f CMakeFiles/multiple_turtlebot_integration_method.dir/build.make CMakeFiles/multiple_turtlebot_integration_method.dir/build

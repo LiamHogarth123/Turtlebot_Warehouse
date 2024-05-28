@@ -19,12 +19,16 @@
   <build_depend>roslib</build_depend>
   <build_depend>geometry_msgs</build_depend>
 
+  <!-- <buil_depend>marker_msgs</build_dependdepend> -->
+
   <run_depend>roscpp</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>nav_msgs</run_depend>
   <run_depend>rosbag</run_depend>
   <run_depend>roslib</run_depend>
+  <!-- <depend>marker_msgs</depend> -->
+
   <run_depend>message_runtime</run_depend>
 
 </package>

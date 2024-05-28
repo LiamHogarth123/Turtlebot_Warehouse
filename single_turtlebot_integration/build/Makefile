@@ -181,6 +181,19 @@ single_turtlebot_integration_control/fast:
 .PHONY : single_turtlebot_integration_control/fast
 
 #=============================================================================
+# Target rules for targets named single_turtlebot_integration
+
+# Build rule for target.
+single_turtlebot_integration: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 single_turtlebot_integration
+.PHONY : single_turtlebot_integration
+
+# fast build rule for target.
+single_turtlebot_integration/fast:
+	$(MAKE) -f CMakeFiles/single_turtlebot_integration.dir/build.make CMakeFiles/single_turtlebot_integration.dir/build
+.PHONY : single_turtlebot_integration/fast
+
+#=============================================================================
 # Target rules for targets named single_turtlebot_integration_prm
 
 # Build rule for target.
@@ -1016,6 +1029,33 @@ src/prm.cpp.s:
 	$(MAKE) -f CMakeFiles/single_turtlebot_integration_prm.dir/build.make CMakeFiles/single_turtlebot_integration_prm.dir/src/prm.cpp.s
 .PHONY : src/prm.cpp.s
 
+src/sensorprocessing.o: src/sensorprocessing.cpp.o
+
+.PHONY : src/sensorprocessing.o
+
+# target to build an object file
+src/sensorprocessing.cpp.o:
+	$(MAKE) -f CMakeFiles/single_turtlebot_integration_control.dir/build.make CMakeFiles/single_turtlebot_integration_control.dir/src/sensorprocessing.cpp.o
+.PHONY : src/sensorprocessing.cpp.o
+
+src/sensorprocessing.i: src/sensorprocessing.cpp.i
+
+.PHONY : src/sensorprocessing.i
+
+# target to preprocess a source file
+src/sensorprocessing.cpp.i:
+	$(MAKE) -f CMakeFiles/single_turtlebot_integration_control.dir/build.make CMakeFiles/single_turtlebot_integration_control.dir/src/sensorprocessing.cpp.i
+.PHONY : src/sensorprocessing.cpp.i
+
+src/sensorprocessing.s: src/sensorprocessing.cpp.s
+
+.PHONY : src/sensorprocessing.s
+
+# target to generate assembly for a file
+src/sensorprocessing.cpp.s:
+	$(MAKE) -f CMakeFiles/single_turtlebot_integration_control.dir/build.make CMakeFiles/single_turtlebot_integration_control.dir/src/sensorprocessing.cpp.s
+.PHONY : src/sensorprocessing.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -1026,6 +1066,7 @@ help:
 	@echo "... list_install_components"
 	@echo "... test"
 	@echo "... single_turtlebot_integration_control"
+	@echo "... single_turtlebot_integration"
 	@echo "... single_turtlebot_integration_prm"
 	@echo "... single_turtlebot_integration_method"
 	@echo "... topic_tools_generate_messages_py"
@@ -1098,6 +1139,9 @@ help:
 	@echo "... src/prm.o"
 	@echo "... src/prm.i"
 	@echo "... src/prm.s"
+	@echo "... src/sensorprocessing.o"
+	@echo "... src/sensorprocessing.i"
+	@echo "... src/sensorprocessing.s"
 .PHONY : help
 
 

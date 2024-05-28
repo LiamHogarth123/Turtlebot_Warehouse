@@ -8,6 +8,8 @@
 
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration/build/devel:$CMAKE_PREFIX_PATH"
-export PWD='/home/liam/.local/share/Trash/files/build.4'
+export LD_LIBRARY_PATH="/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration/build/devel/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration/build/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
+export PWD='/home/liam/.local/share/Trash/files/build.7'
 export ROSLISP_PACKAGE_DIRECTORIES="/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration/build/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
 export ROS_PACKAGE_PATH="/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration:$ROS_PACKAGE_PATH"

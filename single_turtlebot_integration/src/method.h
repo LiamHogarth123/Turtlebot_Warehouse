@@ -17,6 +17,11 @@
 
 #include "visualization_msgs/MarkerArray.h"
 
+#include "std_msgs/Int16.h"
+
+// #include "marker_msgs/marker.h"
+
+
 
 /**
  @class Sample
@@ -57,6 +62,13 @@ public:
   void publishLookAheadMarker(const geometry_msgs::Point& look_ahead_point);
 
   // ros::Publisher marker_pub;
+
+
+  //DAN WEIRD FUNCTIONS
+  bool goalInObstacleCheck();
+  
+  void tagAlignment();
+
 
 
 // Prameters for ROS
@@ -109,6 +121,9 @@ public:
   bool teleop_mode;
   bool missionComplete;
 
+
+  // marker_msgs::marker arTag;
+  std_msgs::Int16 boundaryStatus;
 
 
 

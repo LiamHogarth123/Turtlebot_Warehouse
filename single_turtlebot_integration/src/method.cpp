@@ -94,7 +94,7 @@ void Method::separateThread() {
     //Dan control start
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-
+    int falsePositiveCheck = 0;
     int loop_interation = 0;
     while (!missionComplete){
       geometry_msgs::Point targetGoal;
@@ -103,7 +103,7 @@ void Method::separateThread() {
 
       if (loop_interation < 1) {
         targetGoal = Leader_goals.at(loop_interation+1);
-        TurtleGPS.updateGoal(targetGoal, Current_Odom);
+        TurtleGPS.updateControlParam(targetGoal, Current_Odom, updated_Lida);
         botTraj = TurtleGPS.reachGoal();
 
         if (TurtleGPS.goal_hit(targetGoal, Current_Odom)){
@@ -113,7 +113,7 @@ void Method::separateThread() {
       else {
         targetGoal = findLookAheadPoint(Leader_goals, Current_Odom.pose.pose.position, 0.25);
 
-        TurtleGPS.updateGoal(targetGoal, Current_Odom);
+        TurtleGPS.updateControlParam(targetGoal, Current_Odom, updated_Lida);
         botTraj = TurtleGPS.reachGoal();
       
         if (TurtleGPS.goal_hit(Leader_goals.back(), Current_Odom)){
@@ -127,14 +127,118 @@ void Method::separateThread() {
       publishLookAheadMarker(targetGoal);
       
       std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+        // Checks for boundary and kills program if detected
+      if (boundaryStatus.data == 1){ // blue detected
+        falsePositiveCheck++;
+        if (falsePositiveCheck > 3) {
+          std::cout << "Boundary Detected!! Seek Operator Assistance" << std::endl;
+          break;
+        }
+      } else { // red = 2, nothing = 0
+        falsePositiveCheck = 0;
+      }
+
+
     }
-      
+    
+    if (false){
+      tagAlignment();
+    }
+
+
     missionComplete = false;
     goal_index = 0;
 
     
   }
 }
+
+
+void Method::tagAlignment(){
+  
+  // current tag info
+  int tagID;
+  geometry_msgs::Point tagPosition;
+  // velocity variables
+  geometry_msgs::Twist rotation;
+  rotation.linear.z = 0;
+  double angle = TurtleGPS.angleToGoal(Current_Odom, tagPosition); // heading angle to goal
+  
+  // // searches array to find the target tag and gets the index
+  // auto it = std::find(arTag.ids.data.begin(), arTag.ids.data.end(), tagID);
+
+  // if (it != arTag.ids.data.end()) {
+  //   // The value was found, output the index
+  //   int index = std::distance(arTag.ids.data.begin(), it);
+
+  //   // Gets the associated yaw
+  //   if (index < arTag.yaws.data.size()) {
+  //     float yawError = arTag.yaws.data[index];
+      
+  //     if (fabs(yawError) > 0.05){ // within tolerance
+  //     // simple proportional control
+  //     float yawControl = 0.1 * yawError;
+
+  //     rotation.linear.z = yawControl;
+  //     } else{
+  //       rotation.linear.z = 0;
+  //     }
+  //   } 
+  // } else {
+  //   // The value was not found in the array        
+  //   // rotates until tag detected
+  //   if (angle > 0){
+  //     rotation.linear.z = 0.5;
+      
+  //   } else if (angle < 0){
+  //     rotation.linear.z = -0.5;
+  //   }
+  // }
+  
+  Send_cmd_tb1(rotation);
+
+}
+
+
+
+
+
+
+
+
+
+
+//High levl functions
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool Method::goalInObstacleCheck() { // doesnt work if there is only 1 goal and it is inside an object
+
+  geometry_msgs::Point currentGoal = Leader_goals.at(goal_index);
+  geometry_msgs::Point currentPos = Current_Odom.pose.pose.position;
+  geometry_msgs::Point referenceGoal;
+
+  if (goal_index != Leader_goals.size() - 1) {                              // for cases when there is a next goal
+    geometry_msgs::Point referenceGoal = Leader_goals.at(goal_index + 1);
+  } else if (Leader_goals.size() != 1) {                                    // for cases when it is the last goal and there is a previous goal
+    geometry_msgs::Point referenceGoal = Leader_goals.at(goal_index - 1);
+  }
+
+  // cosine rule
+  double a = hypot(referenceGoal.x - currentPos.x, referenceGoal.y - currentPos.y); // distance between next goal and bot
+  double b = hypot(currentGoal.x - currentPos.x, currentGoal.y - currentPos.y); // distance between current goal and bot
+  double c = hypot(referenceGoal.x - currentGoal.x, referenceGoal.y - currentGoal.y); // distance between goals
+
+  double A = (acos((b*b + c*c - a*a) / (2 * b * c))) * 180.0 / M_PI; // cosine rule for angle in degrees
+
+  if (A < 95 && A > 85) {   // checks if the bot is directly next to the current goal with reference to the next goal
+    return true;
+  }
+
+  return false;
+}
+
+
 
 
 geometry_msgs::Point Method::findLookAheadPoint(const std::vector<geometry_msgs::Point>& path, const geometry_msgs::Point& current_position, double look_ahead_distance) {
@@ -178,6 +282,24 @@ void Method::turtleMovement(){
 
   
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Publishing functions 

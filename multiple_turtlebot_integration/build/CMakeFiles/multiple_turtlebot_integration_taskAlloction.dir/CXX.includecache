@@ -25,6 +25,10 @@ ros/ros.h
 /home/liam/git/Turtlebot_Warehouse/multiple_turtlebot_integration/src/ros/ros.h
 fstream
 -
+random
+-
+algorithm
+-
 
 /home/liam/git/Turtlebot_Warehouse/multiple_turtlebot_integration/src/taskAlloction.h
 ros/ros.h
