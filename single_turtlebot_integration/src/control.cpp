@@ -63,23 +63,23 @@ geometry_msgs::Twist Control::reachGoal(){
     // Object avoidence
     double obstacleMidpoint = collisionDetection();
     double avoidanceFactor = -0.1; // the value determining the rate of avoidance (lower is faster rate of change)
-    if (obstacleMidpoint > 0) {
-        std::cout << obstacleMidpoint << std::endl;
-        // std::cout << "avoiding object on left" << std::endl;
-        velocityZ = avoidanceFactor/pow(obstacleMidpoint+0.23,2); 
-        if (velocityZ < -maxVelz) {
-            velocityZ = -maxVelz;
-        }
-        // velocityX = velocityX * 0.5;
-    } else if (obstacleMidpoint < 0) {
-        // std::cout << obstacleMidpoint << std::endl;
-        std::cout << "avoiding object on right" << std::endl;
-        velocityZ = avoidanceFactor/-pow(obstacleMidpoint-0.23,2);
-        if (velocityZ > maxVelz) {
-            velocityZ = maxVelz;
-        }
-        // velocityX = velocityX * 0.5;
-    }
+    // if (obstacleMidpoint > 0) {
+    //     std::cout << obstacleMidpoint << std::endl;
+    //     // std::cout << "avoiding object on left" << std::endl;
+    //     velocityZ = avoidanceFactor/pow(obstacleMidpoint+0.23,2); 
+    //     if (velocityZ < -maxVelz) {
+    //         velocityZ = -maxVelz;
+    //     }
+    //     // velocityX = velocityX * 0.5;
+    // } else if (obstacleMidpoint < 0) {
+    //     // std::cout << obstacleMidpoint << std::endl;
+    //     std::cout << "avoiding object on right" << std::endl;
+    //     velocityZ = avoidanceFactor/-pow(obstacleMidpoint-0.23,2);
+    //     if (velocityZ > maxVelz) {
+    //         velocityZ = maxVelz;
+    //     }
+    //     // velocityX = velocityX * 0.5;
+    // }
 
     // setting final velocity commands
     cmd_vel.linear.x = velocityX;

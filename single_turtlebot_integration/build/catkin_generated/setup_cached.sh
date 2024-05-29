@@ -7,8 +7,7 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/home/dan/git/Turtlebot_Warehouse/single_turtlebot_integration/build/devel:$CMAKE_PREFIX_PATH"
-export PATH='/opt/ros/melodic/bin:/home/dan/.local/bin:/home/dan/anaconda3/bin:/home/dan/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'
-export PWD='/home/dan/git/Turtlebot_Warehouse/single_turtlebot_integration/build'
-export ROSLISP_PACKAGE_DIRECTORIES="/home/dan/git/Turtlebot_Warehouse/single_turtlebot_integration/build/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
-export ROS_PACKAGE_PATH="/home/dan/git/Turtlebot_Warehouse/single_turtlebot_integration:$ROS_PACKAGE_PATH"
+export CMAKE_PREFIX_PATH="/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration/build/devel:$CMAKE_PREFIX_PATH"
+export PWD='/home/liam/.local/share/Trash/files/build.10'
+export ROSLISP_PACKAGE_DIRECTORIES="/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration/build/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
+export ROS_PACKAGE_PATH="/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration:$ROS_PACKAGE_PATH"

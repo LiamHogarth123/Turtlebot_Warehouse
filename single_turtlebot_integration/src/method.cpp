@@ -111,7 +111,7 @@ void Method::separateThread() {
         }
       }
       else {
-        targetGoal = findLookAheadPoint(Leader_goals, Current_Odom.pose.pose.position, 0.25);
+        targetGoal = findLookAheadPoint(Leader_goals, Current_Odom.pose.pose.position, 0.5);
 
         TurtleGPS.updateControlParam(targetGoal, Current_Odom, updated_Lida);
         botTraj = TurtleGPS.reachGoal();
