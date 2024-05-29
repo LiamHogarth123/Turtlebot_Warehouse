@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<package>
+  <name>mapping_john</name>
+  <version>0.0.1</version>
+  <description>Mapping and Navigation code for Robotics Studio 2</description>
+
+  <maintainer email="john.e.hunter-1@student.uts.edu.au">John Hunter</maintainer>
+
+  <license>MIT</license>
+
+  <author email="john.e.hunter-1@student.uts.edu.au">John Hunter</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>rosbag</build_depend>
+  <build_depend>roslib</build_depend>
+  <build_depend>marker_msgs</build_depend>
+  <!-- <build_depend>message_generation</build_depend> -->
+
+  <run_depend>roscpp</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>nav_msgs</run_depend>
+  <run_depend>rosbag</run_depend>
+  <run_depend>roslib</run_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>marker_msgs</run_depend>
+
+</package>
+
