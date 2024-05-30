@@ -33,10 +33,12 @@ public:
     /**
      * @brief Function to incorporate transform into odom reading
      * @param[in] odom Odometry of TurtleBot
-     * @param[in] map Odometry of Map
      * @return Converted odometry
     */
-    nav_msgs::Odometry odomToMap(nav_msgs::Odometry odom, geometry_msgs::Transform map);
+    nav_msgs::Odometry odomToMap(nav_msgs::Odometry odom);
+
+    /** Transform of map to odom*/
+    geometry_msgs::Transform map;
     
 
     // void callback(const SomeMessageTypeConstPtr& msg);

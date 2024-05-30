@@ -41,7 +41,7 @@ sensor_msgs::Image DefaultTurtleBot::Getupdated_imageDepth(){
     return updated_imageDepth;
 }
 
-nav_msgs::Odometry DefaultTurtleBot::odomToMap(nav_msgs::Odometry odom, geometry_msgs::Transform map)
+nav_msgs::Odometry DefaultTurtleBot::odomToMap(nav_msgs::Odometry odom)
 {
   nav_msgs::Odometry updatedOdom;
   updatedOdom.pose.pose.position.x = odom.pose.pose.position.x + map.translation.x;
