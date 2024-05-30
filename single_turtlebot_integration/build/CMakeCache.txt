@@ -422,6 +422,12 @@ single_turtlebot_integration_control_LIB_DEPENDS:STATIC=
 //Dependencies for target
 single_turtlebot_integration_prm_LIB_DEPENDS:STATIC=
 
+//Dependencies for target
+single_turtlebot_integration_taskAlloction_LIB_DEPENDS:STATIC=
+
+//Dependencies for target
+single_turtlebot_integration_turtlebot_LIB_DEPENDS:STATIC=
+
 //The directory containing a CMake configuration file for std_msgs.
 std_msgs_DIR:PATH=/opt/ros/melodic/share/std_msgs/cmake
 

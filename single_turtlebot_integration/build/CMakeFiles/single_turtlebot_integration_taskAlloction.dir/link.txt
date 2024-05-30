@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -Wno-deprecated -Wdeprecated-declarations -g  -shared -Wl,-soname,libsingle_turtlebot_integration_taskAlloction.so -o devel/lib/libsingle_turtlebot_integration_taskAlloction.so CMakeFiles/single_turtlebot_integration_taskAlloction.dir/src/taskAlloction.cpp.o 

@@ -6,6 +6,8 @@ CMakeFiles/single_turtlebot_integration_method.dir/src/main.cpp.o: ../src/main.c
 CMakeFiles/single_turtlebot_integration_method.dir/src/main.cpp.o: ../src/method.h
 CMakeFiles/single_turtlebot_integration_method.dir/src/main.cpp.o: ../src/prm.h
 CMakeFiles/single_turtlebot_integration_method.dir/src/main.cpp.o: ../src/sensorprocessing.h
+CMakeFiles/single_turtlebot_integration_method.dir/src/main.cpp.o: ../src/taskAlloction.h
+CMakeFiles/single_turtlebot_integration_method.dir/src/main.cpp.o: ../src/turtlebot.h
 CMakeFiles/single_turtlebot_integration_method.dir/src/main.cpp.o: /opt/ros/melodic/include/geometry_msgs/Point.h
 CMakeFiles/single_turtlebot_integration_method.dir/src/main.cpp.o: /opt/ros/melodic/include/geometry_msgs/PointStamped.h
 CMakeFiles/single_turtlebot_integration_method.dir/src/main.cpp.o: /opt/ros/melodic/include/geometry_msgs/Pose.h
@@ -103,6 +105,8 @@ CMakeFiles/single_turtlebot_integration_method.dir/src/method.cpp.o: ../src/meth
 CMakeFiles/single_turtlebot_integration_method.dir/src/method.cpp.o: ../src/method.h
 CMakeFiles/single_turtlebot_integration_method.dir/src/method.cpp.o: ../src/prm.h
 CMakeFiles/single_turtlebot_integration_method.dir/src/method.cpp.o: ../src/sensorprocessing.h
+CMakeFiles/single_turtlebot_integration_method.dir/src/method.cpp.o: ../src/taskAlloction.h
+CMakeFiles/single_turtlebot_integration_method.dir/src/method.cpp.o: ../src/turtlebot.h
 CMakeFiles/single_turtlebot_integration_method.dir/src/method.cpp.o: /opt/ros/melodic/include/geometry_msgs/Point.h
 CMakeFiles/single_turtlebot_integration_method.dir/src/method.cpp.o: /opt/ros/melodic/include/geometry_msgs/PointStamped.h
 CMakeFiles/single_turtlebot_integration_method.dir/src/method.cpp.o: /opt/ros/melodic/include/geometry_msgs/Pose.h

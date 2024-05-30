@@ -175,6 +175,8 @@ devel/lib/single_turtlebot_integration/single_turtlebot_integration_method: /usr
 devel/lib/single_turtlebot_integration/single_turtlebot_integration_method: /usr/lib/x86_64-linux-gnu/libopencv_xphoto.so.3.2.0
 devel/lib/single_turtlebot_integration/single_turtlebot_integration_method: devel/lib/libsingle_turtlebot_integration_prm.so
 devel/lib/single_turtlebot_integration/single_turtlebot_integration_method: devel/lib/libsingle_turtlebot_integration_control.so
+devel/lib/single_turtlebot_integration/single_turtlebot_integration_method: devel/lib/libsingle_turtlebot_integration_turtlebot.so
+devel/lib/single_turtlebot_integration/single_turtlebot_integration_method: devel/lib/libsingle_turtlebot_integration_taskAlloction.so
 devel/lib/single_turtlebot_integration/single_turtlebot_integration_method: /usr/lib/x86_64-linux-gnu/libopencv_video.so.3.2.0
 devel/lib/single_turtlebot_integration/single_turtlebot_integration_method: /usr/lib/x86_64-linux-gnu/libopencv_viz.so.3.2.0
 devel/lib/single_turtlebot_integration/single_turtlebot_integration_method: /usr/lib/x86_64-linux-gnu/libopencv_phase_unwrapping.so.3.2.0

@@ -9,7 +9,8 @@
 #include <fstream>
 #include "nav_msgs/OccupancyGrid.h"
 #include "nav_msgs/MapMetaData.h"
-
+// #include "taskAlloction.h"
+// #include <conio.h> // For _kbhit() and _getch()
 
 
 Method::Method(ros::NodeHandle nh) :
@@ -27,23 +28,6 @@ Method::Method(ros::NodeHandle nh) :
 
   single_marker_pub_ = nh.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
-// Robot 1 -----------------------------------------------------
-  sub1_ = nh_.subscribe("/odom", 1000, &Method::odomCallback,this);
-
-  sub2_ = nh_.subscribe("/scan", 10, &Method::LidaCallback,this);
-
-  sub3_ = nh_.subscribe("/camera/rgb/image_raw", 1000, &Method::RGBCallback, this);
-
-  sub4_ = nh_.subscribe("/camera/depth/image_raw", 1000, &Method::ImageDepthCallback, this);
-
-  cmd_velocity_tb1 = nh_.advertise<geometry_msgs::Twist>("/cmd_vel",10);
-
-  // Robot 2 guider ---------------------
-
-  sub5_ = nh_.subscribe("tb3_1/odom", 1000, &Method::guiderOdomCallback,this);
-
-  cmd_velocity_tb2 = nh.advertise<geometry_msgs::Twist>("tb3_1/cmd_vel",10);
-
 
   // Map ros topics
   mapSub = nh_.subscribe("/map", 1000, &Method::mapCallback, this);
@@ -56,103 +40,245 @@ Method::Method(ros::NodeHandle nh) :
   
 }
 
+
+
+
+
 void Method::separateThread() {
+
   while (latestMapData_.data.empty()){
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   }
+
+  //Create turtlebot
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ros::NodeHandle nh_1;
+  DefaultTurtleBot* tb1 =  new DefaultTurtleBot("", nh_1);
   
+
+
+
   //Brendan task allocation
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
-  geometry_msgs::Point goal;
+  std::vector<geometry_msgs::Point> roboPos;
+  roboPos.push_back(tb1->GetCurrent_Odom().pose.pose.position);
+  std::cout << "Task allocation next state" << std::endl;
+  TA.SetGoals();
+  TA.SetTurtlebotPositions(roboPos);
+  std::vector<std::vector<geometry_msgs::Point>> RobotGoals;
+  RobotGoals = TA.taskAllocation();
 
-  geometry_msgs::Point start;
+
+
+  
+
+
+  
 
   //Liam Map generation
   /////////////////////////////////////////////////////////////////////////
-  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_);
+  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_, false);
   prmMap.show_Prm();
   std::vector<geometry_msgs::Point> trajectory;
 
 
-  while (true){
+  geometry_msgs::Point goal;
 
-    std::cout << "Enter x-coordinate: ";
-    std::cin >> goal.x;
-
-    std::cout << "Enter y-coordinate: ";
-    std::cin >> goal.y;
-    start.x = Current_Odom.pose.pose.position.x;
-    start.y = Current_Odom.pose.pose.position.y; 
-
-    
-    trajectory = prmMap.A_star_To_Goal(start, goal);
-    publishMarkers(trajectory, marker_pub);
-    Leader_goals = trajectory;
+  geometry_msgs::Point start;
 
 
-    //Dan control start
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    int falsePositiveCheck = 0;
-    int loop_interation = 0;
-    while (!missionComplete){
-      geometry_msgs::Point targetGoal;
-      geometry_msgs::Twist botTraj;
+  char v;
+  int input;
+  std::cout << "UserDefined Goals (1) or constant goals (2)";
+  std::cin >> input;
+  if (input == 1){
+
+    while (true){
+
+
+      std::cout << "Enter x-coordinate: ";
+      std::cin >> goal.x;
+
+      std::cout << "Enter y-coordinate: ";
+      std::cin >> goal.y;
+      start.x = Current_Odom.pose.pose.position.x;
+      start.y = Current_Odom.pose.pose.position.y; 
+
       
+      trajectory = prmMap.A_star_To_Goal(start, goal);
+      publishMarkers(trajectory, marker_pub);
+      Leader_goals = trajectory;
 
-      if (loop_interation < 1) {
-        targetGoal = Leader_goals.at(loop_interation+1);
-        TurtleGPS.updateControlParam(targetGoal, Current_Odom, updated_Lida);
-        botTraj = TurtleGPS.reachGoal();
 
-        if (TurtleGPS.goal_hit(targetGoal, Current_Odom)){
-          loop_interation++;  
+      //Dan control start
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      
+      int falsePositiveCheck = 0;
+      int loop_interation = 0;
+      while (!missionComplete){
+        geometry_msgs::Point targetGoal;
+        geometry_msgs::Twist botTraj;
+        
+
+        if (loop_interation < 1) {
+          targetGoal = Leader_goals.at(loop_interation+1);
+          TurtleGPS.updateControlParam(targetGoal, tb1->GetCurrent_Odom(), updated_Lida);
+          botTraj = TurtleGPS.reachGoal();
+
+          if (TurtleGPS.goal_hit(targetGoal, Current_Odom)){
+            loop_interation++;  
+          }
         }
-      }
-      else {
-        targetGoal = findLookAheadPoint(Leader_goals, Current_Odom.pose.pose.position, 0.5);
+        else {
 
-        TurtleGPS.updateControlParam(targetGoal, Current_Odom, updated_Lida);
-        botTraj = TurtleGPS.reachGoal();
-      
-        if (TurtleGPS.goal_hit(Leader_goals.back(), Current_Odom)){
-          missionComplete = true;
+          targetGoal = findLookAheadPoint(Leader_goals, tb1->GetCurrent_Odom().pose.pose.position, 0.5);
+
+          TurtleGPS.updateControlParam(targetGoal, tb1->GetCurrent_Odom(), tb1->Getupdated_Lida());
+          botTraj = TurtleGPS.reachGoal();
+        
+          if (TurtleGPS.goal_hit(Leader_goals.back(), tb1->GetCurrent_Odom())){
+            missionComplete = true;
+          }
+        
         }
+        std::cout << botTraj.linear.x << std::endl;
+        tb1->Send_cmd_tb1(botTraj);
       
-      }
-      Send_cmd_tb1(botTraj);
-    
-      std::cout << "Look-Ahead Point: (" << targetGoal.x << ", " << targetGoal.y << ")" << std::endl;
-      publishLookAheadMarker(targetGoal);
-      
-      std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        std::cout << "Look-Ahead Point: (" << targetGoal.x << ", " << targetGoal.y << ")" << std::endl;
+        publishLookAheadMarker(targetGoal);
+        
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-        // Checks for boundary and kills program if detected
-      if (boundaryStatus.data == 1){ // blue detected
-        falsePositiveCheck++;
-        if (falsePositiveCheck > 3) {
-          std::cout << "Boundary Detected!! Seek Operator Assistance" << std::endl;
+          // Checks for boundary and kills program if detected
+        if (boundaryStatus.data == 1){ // blue detected
+          falsePositiveCheck++;
+          if (falsePositiveCheck > 3) {
+            std::cout << "Boundary Detected!! Seek Operator Assistance" << std::endl;
+            break;
+          }
+        } else { // red = 2, nothing = 0
+          falsePositiveCheck = 0;
+        }
+
+
+      }
+      
+      if (false){
+        tagAlignment();
+      }
+
+
+      missionComplete = false;
+      goal_index = 0;
+
+      std::cout << "Would you like to continue driving? (y/n): ";
+      std::cin >> v;
+      if (v == 'n' || v == 'N') {
           break;
-        }
-      } else { // red = 2, nothing = 0
-        falsePositiveCheck = 0;
       }
+    }
+  }
+  else {
+    double goal_list_index = 0;
+
+    while (goal_list_index < RobotGoals.at(0).size()){
+
+      start = tb1->GetCurrent_Odom().pose.pose.position;
+      goal = RobotGoals.at(0).at(goal_list_index);
+
+      trajectory = prmMap.A_star_To_Goal(start, goal);
+      publishMarkers(trajectory, marker_pub);
+      Leader_goals = trajectory;
+
+
+      //Dan control start
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+      int falsePositiveCheck = 0;
+      int loop_interation = 0;
+      while (!missionComplete){
+        geometry_msgs::Point targetGoal;
+        geometry_msgs::Twist botTraj;
+        
+
+        if (loop_interation < 1) {
+          targetGoal = Leader_goals.at(loop_interation+1);
+          TurtleGPS.updateControlParam(targetGoal, tb1->GetCurrent_Odom(), updated_Lida);
+          botTraj = TurtleGPS.reachGoal();
+
+          if (TurtleGPS.goal_hit(targetGoal, Current_Odom)){
+            loop_interation++;  
+          }
+        }
+        else {
+
+          targetGoal = findLookAheadPoint(Leader_goals, tb1->GetCurrent_Odom().pose.pose.position, 0.5);
+
+          TurtleGPS.updateControlParam(targetGoal, tb1->GetCurrent_Odom(), tb1->Getupdated_Lida());
+          botTraj = TurtleGPS.reachGoal();
+        
+          if (TurtleGPS.goal_hit(Leader_goals.back(), tb1->GetCurrent_Odom())){
+            missionComplete = true;
+          }
+        
+        }
+        std::cout << botTraj.linear.x << std::endl;
+        tb1->Send_cmd_tb1(botTraj);
+      
+        std::cout << "Look-Ahead Point: (" << targetGoal.x << ", " << targetGoal.y << ")" << std::endl;
+        publishLookAheadMarker(targetGoal);
+        
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+          // Checks for boundary and kills program if detected
+       
+
+      }
+      
+
+
+
+      missionComplete = false;
+      goal_index = 0;
+      goal_list_index++;
 
 
     }
-    
-    if (false){
-      tagAlignment();
-    }
-
-
-    missionComplete = false;
-    goal_index = 0;
-
     
   }
+
+    
+
+  ros::shutdown;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 void Method::tagAlignment(){
@@ -196,7 +322,7 @@ void Method::tagAlignment(){
   //   }
   // }
   
-  Send_cmd_tb1(rotation);
+  // tb1Send_cmd_tb1(rotation);
 
 }
 
@@ -304,44 +430,11 @@ void Method::turtleMovement(){
 
 // Publishing functions 
 ///////////////////////////////////////////////////////////////////////////////////////////
-void Method::Send_cmd_tb1(geometry_msgs::Twist intructions){
-  cmd_velocity_tb1.publish(intructions);
-}
-
-void Method::Send_cmd_tb2(geometry_msgs::Twist intructions){
-  cmd_velocity_tb2.publish(intructions);
-}
 
 
 
 //callbacks
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
-void Method::odomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg){
-  std::unique_lock<std::mutex> lck3 (odom_locker);
-  Current_Odom = *odomMsg;
-}
-
-void  Method::RGBCallback(const sensor_msgs::Image::ConstPtr& Msg){
-  std::unique_lock<std::mutex> lck3 (RGB_locker);
-  updated_RGB = *Msg;
-
-}
-
-void Method::LidaCallback(const sensor_msgs::LaserScan::ConstPtr& Msg){
-  std::unique_lock<std::mutex> lck3 (Lida_locker);
-  updated_Lida = *Msg;
-}
-
-void Method::ImageDepthCallback(const sensor_msgs::Image::ConstPtr& Msg){
-  std::unique_lock<std::mutex> lck3 (ImageDepth_locker);
-  updated_imageDepth = *Msg;
-}
-
-void Method::guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg){
-  std::unique_lock<std::mutex> lck3 (odom_locker2);
-  guider_Odom = *odomMsg;
-}
 
 void Method::mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg) {
   ROS_INFO("Received map with resolution %f meters/pixel", msg->info.resolution);

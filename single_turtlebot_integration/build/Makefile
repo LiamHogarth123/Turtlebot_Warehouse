@@ -168,6 +168,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named single_turtlebot_integration_taskAlloction
+
+# Build rule for target.
+single_turtlebot_integration_taskAlloction: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 single_turtlebot_integration_taskAlloction
+.PHONY : single_turtlebot_integration_taskAlloction
+
+# fast build rule for target.
+single_turtlebot_integration_taskAlloction/fast:
+	$(MAKE) -f CMakeFiles/single_turtlebot_integration_taskAlloction.dir/build.make CMakeFiles/single_turtlebot_integration_taskAlloction.dir/build
+.PHONY : single_turtlebot_integration_taskAlloction/fast
+
+#=============================================================================
 # Target rules for targets named single_turtlebot_integration_control
 
 # Build rule for target.
@@ -231,6 +244,19 @@ topic_tools_generate_messages_nodejs: cmake_check_build_system
 topic_tools_generate_messages_nodejs/fast:
 	$(MAKE) -f CMakeFiles/topic_tools_generate_messages_nodejs.dir/build.make CMakeFiles/topic_tools_generate_messages_nodejs.dir/build
 .PHONY : topic_tools_generate_messages_nodejs/fast
+
+#=============================================================================
+# Target rules for targets named single_turtlebot_integration_turtlebot
+
+# Build rule for target.
+single_turtlebot_integration_turtlebot: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 single_turtlebot_integration_turtlebot
+.PHONY : single_turtlebot_integration_turtlebot
+
+# fast build rule for target.
+single_turtlebot_integration_turtlebot/fast:
+	$(MAKE) -f CMakeFiles/single_turtlebot_integration_turtlebot.dir/build.make CMakeFiles/single_turtlebot_integration_turtlebot.dir/build
+.PHONY : single_turtlebot_integration_turtlebot/fast
 
 #=============================================================================
 # Target rules for targets named topic_tools_generate_messages_eus
@@ -1043,6 +1069,60 @@ src/sensorprocessing.cpp.s:
 	$(MAKE) -f CMakeFiles/single_turtlebot_integration_control.dir/build.make CMakeFiles/single_turtlebot_integration_control.dir/src/sensorprocessing.cpp.s
 .PHONY : src/sensorprocessing.cpp.s
 
+src/taskAlloction.o: src/taskAlloction.cpp.o
+
+.PHONY : src/taskAlloction.o
+
+# target to build an object file
+src/taskAlloction.cpp.o:
+	$(MAKE) -f CMakeFiles/single_turtlebot_integration_taskAlloction.dir/build.make CMakeFiles/single_turtlebot_integration_taskAlloction.dir/src/taskAlloction.cpp.o
+.PHONY : src/taskAlloction.cpp.o
+
+src/taskAlloction.i: src/taskAlloction.cpp.i
+
+.PHONY : src/taskAlloction.i
+
+# target to preprocess a source file
+src/taskAlloction.cpp.i:
+	$(MAKE) -f CMakeFiles/single_turtlebot_integration_taskAlloction.dir/build.make CMakeFiles/single_turtlebot_integration_taskAlloction.dir/src/taskAlloction.cpp.i
+.PHONY : src/taskAlloction.cpp.i
+
+src/taskAlloction.s: src/taskAlloction.cpp.s
+
+.PHONY : src/taskAlloction.s
+
+# target to generate assembly for a file
+src/taskAlloction.cpp.s:
+	$(MAKE) -f CMakeFiles/single_turtlebot_integration_taskAlloction.dir/build.make CMakeFiles/single_turtlebot_integration_taskAlloction.dir/src/taskAlloction.cpp.s
+.PHONY : src/taskAlloction.cpp.s
+
+src/turtlebot.o: src/turtlebot.cpp.o
+
+.PHONY : src/turtlebot.o
+
+# target to build an object file
+src/turtlebot.cpp.o:
+	$(MAKE) -f CMakeFiles/single_turtlebot_integration_turtlebot.dir/build.make CMakeFiles/single_turtlebot_integration_turtlebot.dir/src/turtlebot.cpp.o
+.PHONY : src/turtlebot.cpp.o
+
+src/turtlebot.i: src/turtlebot.cpp.i
+
+.PHONY : src/turtlebot.i
+
+# target to preprocess a source file
+src/turtlebot.cpp.i:
+	$(MAKE) -f CMakeFiles/single_turtlebot_integration_turtlebot.dir/build.make CMakeFiles/single_turtlebot_integration_turtlebot.dir/src/turtlebot.cpp.i
+.PHONY : src/turtlebot.cpp.i
+
+src/turtlebot.s: src/turtlebot.cpp.s
+
+.PHONY : src/turtlebot.s
+
+# target to generate assembly for a file
+src/turtlebot.cpp.s:
+	$(MAKE) -f CMakeFiles/single_turtlebot_integration_turtlebot.dir/build.make CMakeFiles/single_turtlebot_integration_turtlebot.dir/src/turtlebot.cpp.s
+.PHONY : src/turtlebot.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -1052,11 +1132,13 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... test"
+	@echo "... single_turtlebot_integration_taskAlloction"
 	@echo "... single_turtlebot_integration_control"
 	@echo "... single_turtlebot_integration_prm"
 	@echo "... single_turtlebot_integration_method"
 	@echo "... topic_tools_generate_messages_py"
 	@echo "... topic_tools_generate_messages_nodejs"
+	@echo "... single_turtlebot_integration_turtlebot"
 	@echo "... topic_tools_generate_messages_eus"
 	@echo "... std_srvs_generate_messages_py"
 	@echo "... std_srvs_generate_messages_nodejs"
@@ -1128,6 +1210,12 @@ help:
 	@echo "... src/sensorprocessing.o"
 	@echo "... src/sensorprocessing.i"
 	@echo "... src/sensorprocessing.s"
+	@echo "... src/taskAlloction.o"
+	@echo "... src/taskAlloction.i"
+	@echo "... src/taskAlloction.s"
+	@echo "... src/turtlebot.o"
+	@echo "... src/turtlebot.i"
+	@echo "... src/turtlebot.s"
 .PHONY : help
 
 

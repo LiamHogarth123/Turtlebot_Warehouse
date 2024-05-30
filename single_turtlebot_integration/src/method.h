@@ -19,6 +19,8 @@
 #include "visualization_msgs/MarkerArray.h"
 
 #include "std_msgs/Int16.h"
+#include "turtlebot.h"
+#include "taskAlloction.h"
 
 // #include "marker_msgs/marker.h"
 
@@ -38,19 +40,11 @@ public:
   Method(ros::NodeHandle nh);
 
 
-  void odomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg);
-  void LidaCallback(const sensor_msgs::LaserScan::ConstPtr& Msg);
-  void RGBCallback(const sensor_msgs::Image::ConstPtr& Msg);
-  void ImageDepthCallback(const sensor_msgs::Image::ConstPtr& Msg);
-  void guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg);
+  
 
   void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
+
   void mapMetadataCallback(const nav_msgs::MapMetaData::ConstPtr& msg);
-
-
-  void Send_cmd_tb1(geometry_msgs::Twist intructions);
-
-  void Send_cmd_tb2(geometry_msgs::Twist intructions);
 
   void separateThread();
 
@@ -71,6 +65,8 @@ public:
   void tagAlignment();
 
 
+
+  bool running;
 
 // Prameters for ROS
   ros::NodeHandle nh_;
@@ -138,6 +134,7 @@ public:
   // readMap mapReader;
 
   PRM prmMap; 
+  TaskAlloction TA;
 
   nav_msgs::OccupancyGrid latestMapData_;
   nav_msgs::MapMetaData latestMapMetaData_;

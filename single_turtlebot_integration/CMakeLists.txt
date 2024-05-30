@@ -30,6 +30,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIR}
   ${OpenCV_INCLUDE_DIRS}
+  
   # ${YAML_CPP_INCLUDE_DIR} # Include the yaml-cpp headers
 )
 
@@ -40,6 +41,11 @@ add_executable(${PROJECT_NAME}_method src/main.cpp src/method.cpp)
 # add_library(${PROJECT_NAME}_readMap src/readMap.cpp)
 add_library(${PROJECT_NAME}_prm src/prm.cpp)
 add_library(${PROJECT_NAME}_control src/control.cpp src/sensorprocessing.cpp)
+add_library(${PROJECT_NAME}_turtlebot src/turtlebot.cpp)
+add_library(${PROJECT_NAME}_taskAlloction src/taskAlloction.cpp)
+
+
+
 
 # Link libraries with the executable
 target_link_libraries(${PROJECT_NAME}_method
@@ -49,6 +55,9 @@ target_link_libraries(${PROJECT_NAME}_method
   # ${PROJECT_NAME}_readMap
   ${PROJECT_NAME}_prm
   ${PROJECT_NAME}_control
+  ${PROJECT_NAME}_turtlebot
+  ${PROJECT_NAME}_taskAlloction
+
 )
 
 # Optional: Link against pthreads if threading issues arise

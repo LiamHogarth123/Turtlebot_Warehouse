@@ -1,8 +1,10 @@
 #include <vector>
 #include <utility> // for std::pair
 #include "opencv2/opencv.hpp"
-#include "nav_msgs/OccupancyGrid.h"
+
 #include "nav_msgs/MapMetaData.h"
+#include <nav_msgs/Odometry.h>
+#include <nav_msgs/OccupancyGrid.h>
 
 
 struct Node {
@@ -18,15 +20,25 @@ struct ComparePair {
     }
 };
 
+struct PrmData {
+    std::vector<Node> Exported_Graph;
+    nav_msgs::OccupancyGrid map;
+    nav_msgs::MapMetaData MapMetaData_;
+    
+};
+
 
 class PRM {
 public:
     PRM(); 
 
+    
+
+
     //User Functions
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    void GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_);
+    void GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_, bool User_controlled);
 
     std::vector<geometry_msgs::Point> DijkstraToGoal(geometry_msgs::Point start, geometry_msgs::Point goal);
 
@@ -37,6 +49,19 @@ public:
     std::vector<geometry_msgs::Point> test();
 
     void show_Prm();
+
+    PrmData ExportPrmData();
+
+    void Load_PRM(PrmData Imports);
+
+    
+
+    void User_remove_Nodes();
+
+    bool checkCollision(const std::vector<geometry_msgs::Point>& traj1, const std::vector<geometry_msgs::Point>& traj2);
+
+    // void setoffset(nav_msgs::Odometry start_odom);
+
 
 
 private:
@@ -65,6 +90,8 @@ private:
     float nodeDistance(const Node& a, const Node& b);
 
     float euclideanDistance(const Node& node1, const Node& node2);
+
+    double calculateDistance(const geometry_msgs::Point& p1, const geometry_msgs::Point& p2);
     
     int setGoalNode(geometry_msgs::Point goal);
     
@@ -103,8 +130,21 @@ private:
 
     void save_map(cv::Mat mapImage);
 
-    void show_Prm_with_trajctory(std::vector<int> Node_id);
+    //OPEN CV Define load area 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    static void staticMouseCallback(int event, int x, int y, int flags, void* userdata);
+    void mouseCallback(int event, int x, int y, int flags, void* userdata);
+    std::vector<cv::Point> getUserDefinedPolygon(const std::string& mapImagePath);
+    bool isPointInPolygon(const cv::Point& point, const std::vector<cv::Point>& polygon);
+    std::vector<Node> samplePointsCV();
+    static std::vector<cv::Point> polygonPoints;
 
+
+    //User Removal of nodes
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    static void staticRemoveNodeCallback(int event, int x, int y, int flags, void* userdata);
+    void removeNodeCallback(int event, int x, int y, int flags, void* userdata);
+    cv::Mat removeNodes(cv::Mat mapImage, std::vector<Node>& Graph_);
 
 
 
@@ -124,10 +164,13 @@ private:
     nav_msgs::OccupancyGrid SlamMapData;
     nav_msgs::MapMetaData latestMapMetaData_;
 
+    double offestx;
+    double offsety;
+    double offsetyaw;
 
 
     int numberOfPoints_;
 
-    // std::vector<cv::Point> path_points_withoutValidation;
-    // std::vector<cv::Point> path_points;
+    std::vector<cv::Point> path_points_withoutValidation;
+    std::vector<cv::Point> path_points;
 };

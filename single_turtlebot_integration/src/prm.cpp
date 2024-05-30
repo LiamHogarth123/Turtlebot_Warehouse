@@ -22,28 +22,115 @@
 #include <limits>
 #include <tf/tf.h>
 
-//To do list
-// --- Add diagonal criteria to check points
-// --- Add check to see if node edge overlaps another node
-// --- Add check that nodes are not on top of each themselve
-// --- Fix the goal node assignment
-// --- Add multiple different visualisation
+
+// Collision aviodance
+////////////////////////////////////////////////////////////////
+// struct Trajectory {
+//     std::vector<Point> points;
+//     std::vector<double> times;
+// };
+
+// Point interpolatePosition(const Trajectory& traj, double time) {
+//     for (size_t i = 1; i < traj.times.size(); ++i) {
+//         if (time <= traj.times[i]) {
+//             double t1 = traj.times[i - 1];
+//             double t2 = traj.times[i];
+//             double ratio = (time - t1) / (t2 - t1);
+//             Point p1 = traj.points[i - 1];
+//             Point p2 = traj.points[i];
+//             Point interpolated = {
+//                 p1.x + ratio * (p2.x - p1.x),
+//                 p1.y + ratio * (p2.y - p1.y)
+//             };
+//             return interpolated;
+//         }
+//     }
+//     return traj.points.back();
+// }
+
+// bool checkCollision(const Trajectory& traj1, const Trajectory& traj2, double time_step, double collision_distance) {
+//     double start_time = std::min(traj1.times.front(), traj2.times.front());
+//     double end_time = std::max(traj1.times.back(), traj2.times.back());
+
+//     for (double t = start_time; t <= end_time; t += time_step) {
+//         Point pos1 = interpolatePosition(traj1, t);
+//         Point pos2 = interpolatePosition(traj2, t);
+
+//         double distance = std::hypot(pos1.x - pos2.x, pos1.y - pos2.y);
+//         if (distance < collision_distance) {
+//             return true;
+//         }
+//     }
+
+//     return false;
+// }
+
+// int main() {
+//     // Example trajectories
+//     Trajectory traj1 = {{{0, 0}, {1, 1}, {2, 2}}, {0, 1, 2}};
+//     Trajectory traj2 = {{{0, 1}, {1, 2}, {2, 3}}, {0, 1, 2}};
+
+//     double time_step = 0.1;
+//     double collision_distance = 0.5;
+
+//     if (checkCollision(traj1, traj2, time_step, collision_distance)) {
+//         std::cout << "Collision detected!" << std::endl;
+//     } else {
+//         std::cout << "No collision." << std::endl;
+//     }
+
+//     return 0;
+// }
+
+
+bool PRM::checkCollision(const std::vector<geometry_msgs::Point>& traj1, const std::vector<geometry_msgs::Point>& traj2) {
+    // Ensure both trajectories have the same number of points
+    double threshold = 0.45;
+    double Max_size;
+    if (traj1.size() < traj2.size()) {
+        Max_size = traj2.size();
+    }
+
+    for (size_t i = 0; i < Max_size; ++i) {
+        double distance = calculateDistance(traj1[i], traj2[i]);
+        if (distance < threshold) {
+            return true; // Collision detected
+        }
+    }
+    return false; // No collision
+}
+
+
+
+
+// Initialize the static member variable
+std::vector<cv::Point> PRM::polygonPoints;
 
 PRM::PRM() {
+    // std::cout << "PRM constructor called" << std::endl;
 }
+
+void PRM::User_remove_Nodes(){
+    cv::Mat MapImage = Load_Map();
+    MapImage = removeNodes(MapImage, Graph);
+}
+
+
 
 //User Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void PRM::GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_) {
+void PRM::GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_, bool User_controlled) {
     UpdateMapData(map, MapMetaData_);
-
     std::vector<Node> ProbablityRoadMap;
-    ProbablityRoadMap = samplePoints();
+    if (User_controlled){
+        ProbablityRoadMap = samplePointsCV();
+    }
+    else {
+        ProbablityRoadMap = samplePoints();
+    }
     std::vector<Node> ProbablityRoadMap_ = createNodesAndEdges(ProbablityRoadMap);
-    std::vector<int> emptys;
     Graph = ProbablityRoadMap_;
-    // visualise_PRM(Graph, emptys);
 }
 
 
@@ -81,7 +168,6 @@ std::vector<geometry_msgs::Point> PRM::A_star_To_Goal(geometry_msgs::Point start
     DijkstraNodes = findPathAStar(Graph, start_Id, Goal_Id);
     std::cout << DijkstraNodes.size() << "---------------------------" << std::endl;
     std::vector<geometry_msgs::Point> trajectory;
-    show_Prm_with_trajctory(DijkstraNodes);
     
     for (int x = 0; x < DijkstraNodes.size(); x++){
         trajectory.push_back(convertNodeToPoint(Graph.at(DijkstraNodes.at(x))));
@@ -101,6 +187,8 @@ void PRM::UpdateMapData(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMe
 
 
 
+
+
 std::vector<geometry_msgs::Point> PRM::test(){
     
     samplePoints();
@@ -114,21 +202,51 @@ std::vector<geometry_msgs::Point> PRM::test(){
     path = findPathDijkstra(ProbablityRoadMap_, 2, 10);
     // ProbablityRoadMap_ = rotateNodes(ProbablityRoadMap_, latestMapMetaData_.origin.orientation);
     std::cout << "path size" << path.size() << std::endl; 
-    // visualise_PRM(ProbablityRoadMap_, path);
+    visualise_PRM(ProbablityRoadMap_, path);
     std::cout << "start Node -> x = " << ProbablityRoadMap_.at(2).x << " -> Y=" << ProbablityRoadMap_.at(2).y << std::endl;
     std::cout << "end Node -> x = " << ProbablityRoadMap_.at(10).x << " -> Y=" << ProbablityRoadMap_.at(10).y << std::endl;
     std::cout << "Distance between nodes -> " << nodeDistance(ProbablityRoadMap_.at(2), ProbablityRoadMap_.at(10)) << std::endl;
     std::vector<geometry_msgs::Point> trajectory; 
     trajectory = ConvertParthToWorld(path, ProbablityRoadMap_);
-    return trajectory;
 
+    return trajectory;
 }
 
 void PRM::show_Prm(){
+    std::cout << "Show PRM Opens" << std::endl;
     cv::Mat MapImage = Load_Map();
     MapImage = visalise_prm(MapImage, Graph);
     save_map(MapImage);
+    show_map(MapImage);
 }
+
+
+
+
+
+
+
+
+PrmData PRM::ExportPrmData(){
+    PrmData Export;
+    Export.Exported_Graph = Graph;
+    Export.map = SlamMapData;
+    Export.MapMetaData_= latestMapMetaData_;
+    return Export;
+}
+
+
+void PRM::Load_PRM(PrmData Imports){
+    Graph = Imports.Exported_Graph;
+    SlamMapData = Imports.map;
+    latestMapMetaData_ = Imports.MapMetaData_;
+
+}
+
+
+// void setoffset(nav_msgs::odometry start_odom){
+    //do the math
+// }
 
 
 
@@ -497,25 +615,26 @@ cv::Mat PRM::visalise_prm(cv::Mat mapImage, std::vector<Node> Graph_){
 cv::Mat PRM::visalise_PRM_With_Path(std::vector<int> path, cv::Mat mapImage, std::vector<Node> Graph_){
 
    
-for (int x = 1; x < path.size(); x++) { // Start from 1 to avoid out-of-bounds access
-    // std::cout << "STUCK" << x << "of " << path.size()  << std::endl;
-    cv::Point prev;
-    prev.x = Graph_.at(path.at(x - 1)).x;
-    prev.y = Graph_.at(path.at(x - 1)).y;
-    cv::Point temp;
-    temp.x = Graph_.at(path.at(x)).x;
-    temp.y = Graph_.at(path.at(x)).y;
-    cv::line(mapImage, temp, prev, cv::Scalar(0, 0, 255) /*blue*/, 2  /*thickness*/);
-}
-
-for (int x = 0; x < path.size(); x++) {
-    // std::cout << "STUCK" << x << "of " << path.size()  << std::endl;
-    cv::Point temp;
-    temp.x = Graph_.at(path.at(x)).x;
-    temp.y = Graph_.at(path.at(x)).y;
+    for (int x = 0; x < path.size(); x++){
+        // std::cout << "STUCK" << x << "of " << path.size()  << std::endl;ast
+        cv::Point prev;
+        prev.x = Graph_.at(path.at(x-1)).x;
+        prev.y = Graph_.at(path.at(x-1)).y;
+        cv::Point temp;
+        temp.x = Graph_.at(path.at(x)).x;
+        temp.y = Graph_.at(path.at(x)).y;
+        cv::line(mapImage, temp, prev, cv::Scalar(0, 0, 255) /*blue*/, 2  /*thickness*/);
     
-    cv::circle(mapImage, temp, 5, cv::Scalar(255, 0, 0), -1); // Set a visible radius
-}
+    }
+
+    for (int x = 0; x < path.size(); x++){
+        // std::cout << "STUCK" << x << "of " << path.size()  << std::endl;
+        cv::Point temp;
+        temp.x = Graph_.at(path.at(x)).x;
+        temp.y = Graph_.at(path.at(x)).y;
+        
+        cv::circle(mapImage, temp, 0, cv::Scalar(255, 0, 0), -1);
+    }
 
     return mapImage;
 }
@@ -536,13 +655,6 @@ void PRM::save_map(cv::Mat mapImage){
 
 void PRM::visualise_PRM(std::vector<Node> Graph_, std::vector<int> path) {
 
-}
-
-void PRM::show_Prm_with_trajctory(std::vector<int> Node_id){
-    cv::Mat MapImage = Load_Map();
-    MapImage = visalise_prm(MapImage, Graph);
-    MapImage = visalise_PRM_With_Path(Node_id, MapImage, Graph);
-    save_map(MapImage);
 }
 
 
@@ -678,6 +790,10 @@ float PRM::euclideanDistance(const Node& node1, const Node& node2) {
     return sqrt(pow(node1.x - node2.x, 2) + pow(node1.y - node2.y, 2));
 }
 
+double PRM::calculateDistance(const geometry_msgs::Point& p1, const geometry_msgs::Point& p2) {
+    return std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
+}
+
 
 int PRM::setGoalNode(geometry_msgs::Point goal){
      // Convert world coordinates to map coordinates
@@ -788,4 +904,208 @@ bool PRM::newPoint(geometry_msgs::Point point, std::vector<Node> temp) {
         }
     }
     return true;
+}
+
+//Open CV USER DEFINED BACKGROUND REMOVAL
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void PRM::staticRemoveNodeCallback(int event, int x, int y, int flags, void* userdata) {
+    PRM* self = static_cast<PRM*>(userdata);
+    self->removeNodeCallback(event, x, y, flags, userdata);
+}
+
+void PRM::removeNodeCallback(int event, int x, int y, int flags, void*) {
+    if (event == cv::EVENT_LBUTTONDOWN) {
+        // Adjust the click coordinates to account for the zoom factor
+        double zoomFactor = 2.0; // Ensure this matches the zoom factor used in the display function
+        int adjustedX = static_cast<int>(x / zoomFactor);
+        int adjustedY = static_cast<int>(y / zoomFactor);
+
+        // Find and remove nodes that are within a 3x3 area of the clicked point
+        std::vector<size_t> nodesToRemove;
+
+        for (size_t i = 0; i < Graph.size(); ++i) {
+            double dist = cv::norm(cv::Point(adjustedX, adjustedY) - cv::Point(Graph[i].x, Graph[i].y));
+            if (dist <= 3.0) { // 3x3 area threshold
+                nodesToRemove.push_back(i);
+            }
+        }
+
+        for (size_t i = 0; i < nodesToRemove.size(); ++i) {
+            size_t closestNodeIndex = nodesToRemove[i];
+            std::cout << "Removing node at (" << Graph[closestNodeIndex].x << ", " << Graph[closestNodeIndex].y << ")" << std::endl;
+
+            // Remove edges pointing to the deleted node
+            int deletedNodeId = Graph[closestNodeIndex].id;
+            for (auto& node : Graph) {
+                node.edges.erase(std::remove(node.edges.begin(), node.edges.end(), deletedNodeId), node.edges.end());
+            }
+
+            // Set the node coordinates out of bounds to effectively remove it
+            Graph.at(closestNodeIndex).edges.clear();
+            Graph.at(closestNodeIndex).x = 99999999;
+            Graph.at(closestNodeIndex).y = 99999999;
+        }
+    }
+}
+
+cv::Mat PRM::removeNodes(cv::Mat mapImage, std::vector<Node>& Graph_) {
+    // Graph;
+
+    // Set up the window and callback
+    cv::namedWindow("Remove Nodes");
+    cv::resizeWindow("Remove Nodes", 1200, 800);
+    cv::setMouseCallback("Remove Nodes", PRM::staticRemoveNodeCallback, this);
+
+    while (true) {
+        cv::Mat tempImage = visalise_prm(mapImage.clone(), Graph);
+        cv::Mat zoomedImage;
+        double zoomFactor = 2.0; // Adjust this factor to zoom in/out
+        cv::resize(tempImage, zoomedImage, cv::Size(), zoomFactor, zoomFactor, cv::INTER_LINEAR);
+        cv::imshow("Remove Nodes", zoomedImage);
+        int key = cv::waitKey(1);
+        if (key == 27) { // ESC key to exit
+            break;
+        }
+    }
+
+    cv::destroyWindow("Remove Nodes");
+    Graph = Graph_; // Update the original graph with the modified graph
+    return mapImage;
+}
+
+
+
+
+// OPEN CV USER DEFINED BOUNDARIES
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void PRM::staticMouseCallback(int event, int x, int y, int flags, void* userdata) {
+    PRM* self = static_cast<PRM*>(userdata);
+    std::cout << "staticMouseCallback called" << std::endl;
+    self->mouseCallback(event, x, y, flags, userdata);
+}
+
+void PRM::mouseCallback(int event, int x, int y, int flags, void*) {
+    std::cout << "mouseCallback called with event: " << event << ", x: " << x << ", y: " << y << std::endl;
+    if (event == cv::EVENT_LBUTTONDOWN) {
+        polygonPoints.push_back(cv::Point(x, y));
+        std::cout << "Point added: (" << x << ", " << y << ")" << std::endl;
+    } else if (event == cv::EVENT_RBUTTONDOWN) {
+        if (!polygonPoints.empty()) {
+            polygonPoints.pop_back();
+            std::cout << "Last point removed" << std::endl;
+        }
+    }
+}
+
+std::vector<cv::Point> PRM::getUserDefinedPolygon(const std::string& mapImagePath) {
+    cv::Mat image = cv::imread(mapImagePath, cv::IMREAD_GRAYSCALE); // Load as grayscale
+    if (image.empty()) {
+        std::cerr << "Error: Could not load map image." << std::endl;
+        return {};
+    }
+    std::cout << "Map image loaded successfully" << std::endl;
+
+    // Convert grayscale to BGR for drawing
+    cv::Mat colorImage;
+    cv::cvtColor(image, colorImage, cv::COLOR_GRAY2BGR);
+    // cv::flip(colorImage, colorImage, 0);
+    std::cout << "image processed" << std::endl;
+
+    // Set up the window and callback
+    cv::namedWindow("Draw Polygon");
+    std::cout << "window created" << std::endl;
+    cv::setMouseCallback("Draw Polygon", PRM::staticMouseCallback, this);
+    std::cout << "callback created" << std::endl;
+
+    while (true) {
+        cv::Mat tempImage = image.clone();
+        if (polygonPoints.size() > 1) {
+            for (size_t i = 0; i < polygonPoints.size() - 1; ++i) {
+                cv::line(tempImage, polygonPoints[i], polygonPoints[i + 1], cv::Scalar(0, 0, 0), 2);
+            }
+            cv::line(tempImage, polygonPoints.back(), polygonPoints.front(), cv::Scalar(0, 0, 0), 2);
+        }
+
+        cv::imshow("Draw Polygon", tempImage);
+        int key = cv::waitKey(1);
+        if (key == 27) { // ESC key to exit
+            std::cout << "ESC key pressed, exiting polygon drawing" << std::endl;
+            break;
+        }
+    }
+
+    cv::destroyWindow("Draw Polygon");
+    std::cout << "Polygon drawing window destroyed" << std::endl;
+    // Flip the polygon points on both x and y axes
+    std::vector<cv::Point> flippedPolygonPoints;
+    cv::Point center(colorImage.cols / 2, colorImage.rows / 2);
+    for (const auto& point : polygonPoints) {
+        int flippedY = center.y + (center.y - point.y);
+        int flippedX = center.x - (center.x - point.x);
+        
+        
+        // flippedX = point.x;
+        // flippedY = point.y;
+        flippedPolygonPoints.push_back(cv::Point(flippedX, flippedY));
+    }
+    polygonPoints = flippedPolygonPoints;
+    return polygonPoints;
+
+}
+
+bool PRM::isPointInPolygon(const cv::Point& point, const std::vector<cv::Point>& polygon) {
+    bool result = cv::pointPolygonTest(polygon, point, false) >= 0;
+    std::cout << "isPointInPolygon called with point: (" << point.x << ", " << point.y << "), result: " << result << std::endl;
+    return result;
+}
+
+std::vector<Node> PRM::samplePointsCV() {
+    std::cout << "samplePointsCV called" << std::endl;
+
+    // Obtain user-defined polygon
+    std::vector<cv::Point> inclusionPolygon = getUserDefinedPolygon("/home/liam/catkin_ws/src/turtlebot_sims/multi_turtlebot3_fake/maps/map.pgm");
+    std::cout << "User-defined polygon obtained" << std::endl;
+
+    // Graph definition
+    Graph.clear();
+    int id = 0;
+
+    // Random generators
+    std::random_device rd; // Obtain a random number from hardware
+    std::mt19937 eng(rd()); // Seed the generator
+    std::uniform_real_distribution<> distrX(0, latestMapMetaData_.width); // Define the range for x
+    std::uniform_real_distribution<> distrY(0, latestMapMetaData_.height); // Define the range for y
+
+    double Max_y = 0;
+    double min_y = 9999999;
+
+    while (Graph.size() < numberOfPoints_) {
+        geometry_msgs::Point point;
+        point.x = distrX(eng);
+        point.y = distrY(eng);
+        std::cout << "Random point generated: (" << point.x << ", " << point.y << ")" << std::endl;
+
+        cv::Point cvPoint(point.x, point.y);
+
+        if (isPointInPolygon(cvPoint, inclusionPolygon) && ValidPoint(point)) {
+            Node temp;
+            temp.x = point.x;
+            temp.y = point.y;
+            temp.id = id;
+            id++;
+            Graph.push_back(temp);
+            std::cout << "Point added to graph: (" << temp.x << ", " << temp.y << ")" << std::endl;
+
+            if (temp.y > Max_y) {
+                Max_y = temp.y;
+            }
+            if (temp.y < min_y) {
+                min_y = temp.y;
+            }
+        }
+    }
+    std::cout << "Graph generation complete" << std::endl;
+    return Graph;
 }
