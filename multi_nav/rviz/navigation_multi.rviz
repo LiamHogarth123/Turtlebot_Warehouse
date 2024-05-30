@@ -1,0 +1,26 @@
+global_options:
+  frame_name: map
+  background_color: [255, 255, 255]
+
+fixed_frame: map
+
+displays:
+  - name: Map
+    type: rviz/Map
+    topic: /map
+    color_scheme: costmap
+
+  - name: LaserScan
+    type: rviz/LaserScan
+    topic: /tb3_scan
+
+  - name: RobotModel
+    type: rviz/RobotModel
+    robot_description: /$(arg namespace)robot_description
+
+  - name: Path
+    type: rviz/Path
+    topic: /$(arg namespace)move_base/NavfnROS/plan
+
+  - name: Goal
+    type: rviz/PoseGoal

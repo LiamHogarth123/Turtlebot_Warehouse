@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>multi_nav</name>
+  <version>1.2.6</version>
+  <description>
+    The multi_nav provides navigation for multiple TurtleBot3 platforms.
+  </description>
+  <license>Apache 2.0</license>
+  <author email="john.e.hunter-1@student.uts.edu.au">John Hunter</author>
+  <maintainer email="john.e.hunter-1@student.uts.edu.au">John Hunter</maintainer>
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>amcl</exec_depend>
+  <exec_depend>map_server</exec_depend>
+  <exec_depend>move_base</exec_depend>
+  <exec_depend>turtlebot3_bringup</exec_depend>
+</package>

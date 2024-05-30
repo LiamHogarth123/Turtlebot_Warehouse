@@ -1,0 +1,8 @@
+prefix=/home/john/catkin_ws/src/Turtlebot_Warehouse/coord_converter/build/devel
+
+Name: coord_converter
+Description: Description of coord_converter
+Version: 0.0.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

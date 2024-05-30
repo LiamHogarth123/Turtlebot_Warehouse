@@ -208,7 +208,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=mapping_john
+CMAKE_PROJECT_NAME:STATIC=coord_converter
 
 //Value Computed by CMake
 CMAKE_PROJECT_VERSION:STATIC=1.10.0
@@ -396,6 +396,12 @@ catkin_DIR:PATH=/opt/ros/noetic/share/catkin/cmake
 //The directory containing a CMake configuration file for class_loader.
 class_loader_DIR:PATH=/opt/ros/noetic/share/class_loader/cmake
 
+//Value Computed by CMake
+coord_converter_BINARY_DIR:STATIC=/home/john/catkin_ws/src/Turtlebot_Warehouse/coord_converter/build
+
+//Value Computed by CMake
+coord_converter_SOURCE_DIR:STATIC=/home/john/catkin_ws/src/Turtlebot_Warehouse/coord_converter
+
 //The directory containing a CMake configuration file for cpp_common.
 cpp_common_DIR:PATH=/opt/ros/noetic/share/cpp_common/cmake
 
@@ -473,7 +479,7 @@ gtest_main_LIB_DEPENDS:STATIC=general;gtest;
 image_transport_DIR:PATH=/opt/ros/noetic/share/image_transport/cmake
 
 //Path to a library.
-lib:FILEPATH=/opt/ros/noetic/lib/libcv_bridge.so
+lib:FILEPATH=/opt/ros/noetic/lib/libtopic_tools.so
 
 //Value Computed by CMake
 mapping_john_BINARY_DIR:STATIC=/home/john/catkin_ws/src/Turtlebot_Warehouse/coord_converter/build

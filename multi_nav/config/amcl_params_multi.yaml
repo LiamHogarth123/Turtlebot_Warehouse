@@ -1,0 +1,14 @@
+# AMCL parameters
+odom_frame_id: "odom"
+base_frame_id: "base_footprint"
+global_frame_id: "map"
+transform_tolerance: 0.5
+min_particles: 100
+max_particles: 5000
+laser_max_beams: 30
+laser_max_range: 3.5
+update_min_d: 0.2
+update_min_a: 0.1
+resample_interval: 1
+recovery_alpha_slow: 0.0
+recovery_alpha_fast: 0.0

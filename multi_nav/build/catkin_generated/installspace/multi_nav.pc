@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: multi_nav
+Description: Description of multi_nav
+Version: 1.2.6
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
