@@ -29,24 +29,9 @@ int main(int argc, char **argv)
     /** Create node handle*/
     ros::NodeHandle nh;
 
-    // /** Initialise process variable*/
-    // int process;
-
-    // /** Nominate process*/
-    // if (argc > 1)
-    // {
-    //     process = std::stod(argv[1]);
-    //     ROS_INFO("The 'process' argument is %d", process);
-    // }
-    // /** Otherwise warn*/
-    // else
-    // {
-    //     ROS_WARN("No 'process' argument provided!");
-    // }
-
     /** Initialise process*/
     double process;
-    nh.getParam("process",process);
+    nh.getParam("process", process);
 
     std::cout << "process = " << process << std::endl;
 
@@ -63,12 +48,12 @@ int main(int argc, char **argv)
         ROS_INFO("Converted Yaw to Quaternion: [x: %f, y: %f, z: %f, w: %f]",
                  std::get<0>(q), std::get<1>(q),
                  std::get<2>(q), std::get<3>(q));
-        
+
         /** Set params*/
-        nh.setParam("converted_x",std::get<0>(q));
-        nh.setParam("converted_y",std::get<1>(q));
-        nh.setParam("converted_z",std::get<2>(q));
-        nh.setParam("converted_w",std::get<3>(q));
+        nh.setParam("converted_x", std::get<0>(q));
+        nh.setParam("converted_y", std::get<1>(q));
+        nh.setParam("converted_z", std::get<2>(q));
+        nh.setParam("converted_w", std::get<3>(q));
     }
     /** Process 1, convert Quaternion to Yaw only*/
     else if (process > 1 - 1e-2 && process < 1 + 1e-2)
@@ -82,7 +67,7 @@ int main(int argc, char **argv)
         ROS_INFO("Converted Quaternion to Yaw: %f", yaw_q);
 
         /** Set param*/
-        nh.setParam("converted_yaw",yaw_q);
+        nh.setParam("converted_yaw", yaw_q);
     }
     /** Process 2, convert both*/
     else if (process > 2 - 1e-2 && process < 2 + 1e-2)
@@ -93,7 +78,7 @@ int main(int argc, char **argv)
         ROS_INFO("Converted Yaw to Quaternion: [x: %f, y: %f, z: %f, w: %f]",
                  std::get<0>(q), std::get<1>(q),
                  std::get<2>(q), std::get<3>(q));
-        
+
         nh.getParam("quaternion_x", x);
         nh.getParam("quaternion_y", y);
         nh.getParam("quaternion_z", z);
@@ -103,12 +88,11 @@ int main(int argc, char **argv)
         ROS_INFO("Converted Quaternion to Yaw: %f", yaw_q);
 
         /** Set params*/
-        nh.setParam("converted_x",std::get<0>(q));
-        nh.setParam("converted_y",std::get<1>(q));
-        nh.setParam("converted_z",std::get<2>(q));
-        nh.setParam("converted_w",std::get<3>(q));
-        nh.setParam("converted_yaw",yaw_q);
-        
+        nh.setParam("converted_x", std::get<0>(q));
+        nh.setParam("converted_y", std::get<1>(q));
+        nh.setParam("converted_z", std::get<2>(q));
+        nh.setParam("converted_w", std::get<3>(q));
+        nh.setParam("converted_yaw", yaw_q);
     }
 
     ros::spin();

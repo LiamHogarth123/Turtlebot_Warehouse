@@ -27,7 +27,6 @@ void DefaultTurtleBot::Send_cmd_tb1(geometry_msgs::Twist intructions){
 //     return DefaultTurtleBot(name, nh_); // Use the same node handle as the original
 // }
 nav_msgs::Odometry DefaultTurtleBot::GetCurrent_Odom(){
-  
     return Current_Odom;
 }
 
@@ -40,6 +39,19 @@ sensor_msgs::LaserScan DefaultTurtleBot::Getupdated_Lida(){
 
 sensor_msgs::Image DefaultTurtleBot::Getupdated_imageDepth(){
     return updated_imageDepth;
+}
+
+nav_msgs::Odometry DefaultTurtleBot::odomToMap(nav_msgs::Odometry odom, geometry_msgs::Transform map)
+{
+  nav_msgs::Odometry updatedOdom;
+  updatedOdom.pose.pose.position.x = odom.pose.pose.position.x + map.translation.x;
+  updatedOdom.pose.pose.position.y = odom.pose.pose.position.y + map.translation.y;
+  updatedOdom.pose.pose.position.z = odom.pose.pose.position.x;
+  updatedOdom.pose.pose.orientation.x = odom.pose.pose.orientation.x + map.rotation.x;
+  updatedOdom.pose.pose.orientation.y = odom.pose.pose.orientation.y + map.rotation.y;
+  updatedOdom.pose.pose.orientation.z = odom.pose.pose.orientation.z + map.rotation.z;
+  updatedOdom.pose.pose.orientation.w = odom.pose.pose.orientation.w + map.rotation.w;
+  return updatedOdom;
 }
 
 

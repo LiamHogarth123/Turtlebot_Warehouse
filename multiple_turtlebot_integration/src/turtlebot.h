@@ -1,6 +1,7 @@
 
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/Transform.h>
 #include <string>
 #include <mutex>
 
@@ -28,6 +29,14 @@ public:
     sensor_msgs::Image GetCurrentupdated_RGB();
     sensor_msgs::LaserScan Getupdated_Lida();
     sensor_msgs::Image Getupdated_imageDepth();
+
+    /**
+     * @brief Function to incorporate transform into odom reading
+     * @param[in] odom Odometry of TurtleBot
+     * @param[in] map Odometry of Map
+     * @return Converted odometry
+    */
+    nav_msgs::Odometry odomToMap(nav_msgs::Odometry odom, geometry_msgs::Transform map);
     
 
     // void callback(const SomeMessageTypeConstPtr& msg);
