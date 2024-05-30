@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/john/catkin_ws/src/Turtlebot_Warehouse/coord_converter/build/devel/setup.sh

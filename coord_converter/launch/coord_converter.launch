@@ -1,0 +1,17 @@
+<launch>
+    <arg name="process" default="0" />
+    <arg name="yaw" default="0" />
+    <arg name="x" default="0" />
+    <arg name="y" default="0" />
+    <arg name="z" default="0" />
+    <arg name="w" default="1" />
+
+    <node name="coord_converter_method" pkg="coord_converter" type="coord_converter_method" output="screen">
+        <param name="process" value="$(arg process)"/>
+        <param name="yaw" value="$(arg yaw)"/>
+        <param name="x" value="$(arg x)"/>
+        <param name="y" value="$(arg y)"/>
+        <param name="z" value="$(arg z)"/>
+        <param name="w" value="$(arg w)"/>
+    </node>
+</launch>
