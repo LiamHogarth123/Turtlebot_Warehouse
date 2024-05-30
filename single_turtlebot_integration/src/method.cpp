@@ -36,11 +36,17 @@ Method::Method(ros::NodeHandle nh) :
 
   marker_pub = nh.advertise<visualization_msgs::MarkerArray>("visualization_marker_array", 100);
 
+  cmd_velocity_tb1 = nh_.advertise<geometry_msgs::Twist>("cmd_vel",10);
+
+
   
   
 }
 
 
+void Method::Send_cmd_tb1(geometry_msgs::Twist intructions){
+  cmd_velocity_tb1.publish(intructions);
+}
 
 
 
@@ -77,7 +83,7 @@ void Method::separateThread() {
 
   //Liam Map generation
   /////////////////////////////////////////////////////////////////////////
-  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_, false);
+  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_, true);
   prmMap.show_Prm();
   std::vector<geometry_msgs::Point> trajectory;
 

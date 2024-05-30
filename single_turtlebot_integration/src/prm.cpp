@@ -125,12 +125,14 @@ void PRM::GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMeta
     std::vector<Node> ProbablityRoadMap;
     if (User_controlled){
         ProbablityRoadMap = samplePointsCV();
+        
     }
     else {
         ProbablityRoadMap = samplePoints();
     }
     std::vector<Node> ProbablityRoadMap_ = createNodesAndEdges(ProbablityRoadMap);
     Graph = ProbablityRoadMap_;
+    User_remove_Nodes();
 }
 
 

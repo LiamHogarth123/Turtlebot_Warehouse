@@ -39,8 +39,10 @@ public:
   */
   Method(ros::NodeHandle nh);
 
+  void Send_cmd_tb1(geometry_msgs::Twist intructions);
 
-  
+  ros::Publisher cmd_velocity_tb1;
+
 
   void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
 
