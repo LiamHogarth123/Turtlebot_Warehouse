@@ -37,7 +37,7 @@ Method::Method(ros::NodeHandle nh) :
 }
 
 void Method::testPathPlanningControl() {
-  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_);
+  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_, false);
   
   std::vector<geometry_msgs::Point> trajectory;
   geometry_msgs::Point start;
@@ -82,17 +82,17 @@ void Method::seperateThread() {
 
   std::cout << "openning" << std::endl;
  
-  prmMap.UpdateMapData(latestMapData_, latestMapMetaData_);
+  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_, true);
+  
 
-  std::vector<geometry_msgs::Point> trajectory;
-  trajectory = prmMap.test();
-  std::cout << "PRM FINISH" << std::endl;
-  geometry_msgs::Point temp;
-  temp.x = 0;
-  temp.y = 0;
-  trajectory.push_back(temp);
-  publishMarkers(trajectory, marker_pub);
-  std::cout << "visualisation DONE" << std::endl;
+
+  prmMap.show_Prm();
+  
+  prmMap.User_remove_Nodes();
+
+
+  ros::shutdown();
+
 
 }
 

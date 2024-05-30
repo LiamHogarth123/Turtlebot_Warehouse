@@ -56,10 +56,16 @@ public:
 
   void Function(std::vector<geometry_msgs::Point> trajectory , DefaultTurtleBot* turtleboi, Control* Turtle_GPS);
 
+  void Function2(PRM* Trajectory_Planner , DefaultTurtleBot* turtleboi, Control* Turtle_GPS, std::vector<geometry_msgs::Point> Goals);
+
+  
   visualization_msgs::MarkerArray visualiseCones(std::vector<geometry_msgs::Point> cones, visualization_msgs::MarkerArray& markerArray);
   void publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub);
 
   // ros::Publisher marker_pub;
+
+  geometry_msgs::Point findLookAheadPoint(const std::vector<geometry_msgs::Point>& path, const geometry_msgs::Point& current_position, double look_ahead_distance);
+
 
 
 // Prameters for ROS

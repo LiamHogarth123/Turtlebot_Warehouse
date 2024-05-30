@@ -73,6 +73,8 @@ void Method::separateThread() {
   DefaultTurtleBot* tb1 =  new DefaultTurtleBot("tb1", nh_1);
   ros::NodeHandle nh_2;
   DefaultTurtleBot* tb2 =  new DefaultTurtleBot("tb2", nh_2);
+  std::vector<std::thread> threads;
+
   
   
   turtlebots.push_back(tb1);
@@ -138,9 +140,6 @@ void Method::separateThread() {
   }
 
 
-
-
-
   //Liam Map generation
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   prmMap.GeneratePRM(latestMapData_, latestMapMetaData_);
@@ -153,59 +152,96 @@ void Method::separateThread() {
  
 
   
-  //Main loop generation
+  //Synchous coding Main loop generation
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  for (int i = 0; i < largestSize; i++){
+  if (false){
+    for (int i = 0; i < largestSize; i++){
 
-    for (size_t j = 0; j < turtlebots.size(); j++) {
-      std::cout << "index" << j << std::endl;
-      auto& element = turtlebots[j];
-      std::cout << "pointer done" << j << std::endl;
-      goal = RobotGoals.at(j).at(i);
-      std::cout << "goal done" << j << std::endl;
+      for (size_t j = 0; j < turtlebots.size(); j++) {
+        std::cout << "index" << j << std::endl;
+        auto& element = turtlebots[j];
+        std::cout << "pointer done" << j << std::endl;
+        goal = RobotGoals.at(j).at(i);
+        std::cout << "goal done" << j << std::endl;
 
-      odometry_start = element->GetCurrent_Odom();
-      std::cout << "odom done" << j << std::endl;
-      trajectory.at(j) = prmMap.DijkstraToGoal(odometry_start.pose.pose.position, goal);
-    
+        odometry_start = element->GetCurrent_Odom();
+        std::cout << "odom done" << j << std::endl;
+        trajectory.at(j) = prmMap.DijkstraToGoal(odometry_start.pose.pose.position, goal);
+      
 
-    }
-    std::vector<geometry_msgs::Point> combinedPoints;
-    for (const auto& points : trajectory) {
-      // Append each point to the combinedPoints vector
-      for (const auto& point : points) {
-        combinedPoints.push_back(point);
       }
+      std::vector<geometry_msgs::Point> combinedPoints;
+      for (const auto& points : trajectory) {
+        // Append each point to the combinedPoints vector
+        for (const auto& point : points) {
+          combinedPoints.push_back(point);
+        }
+      }
+      publishMarkers(combinedPoints, marker_pub);
+      
+      // Leader_goals = trajectory;
+      goal_index = 0;
+
+      
+
+      //Dan control start
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      std::vector<std::thread> threads;
+      
+
+
+      for (size_t j = 0; j < turtlebots.size(); j++) {
+        threads.emplace_back(&Method::Function, std::ref(*this), trajectory.at(j), std::ref(turtlebots.at(j)), std::ref(Turtle_Controllers.at(j)));
+      }
+      for (auto& thread : threads) {
+        thread.join();
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+      // std::this_thread::sleep_for(std::chrono::milliseconds(5000000));
+
+
+
+
     }
-    publishMarkers(combinedPoints, marker_pub);
-    
-    // Leader_goals = trajectory;
-    goal_index = 0;
+  }
 
-    
+  // Asychous turtlebots
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  else if (true) {
+    PrmData Gernerated_Map = prmMap.ExportPrmData();
 
-    //Dan control start
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::vector<std::thread> threads;
-    
+     // Individuaal Turtlebot PRM;
+    ///////////////////////////////////////////////
+    std::vector<PRM*> Turtle_Maps;
+    for (size_t j = 0; j < turtlebots.size(); j++) {  
+      Turtle_Maps.push_back(new PRM());
+    }
+    for (size_t j = 0; j < turtlebots.size(); j++) {
+      Turtle_Maps.at(j)->Load_PRM(Gernerated_Map);
+    }
+
+
 
 
     for (size_t j = 0; j < turtlebots.size(); j++) {
-      threads.emplace_back(&Method::Function, std::ref(*this), trajectory.at(j), std::ref(turtlebots.at(j)), std::ref(Turtle_Controllers.at(j)));
-    }
+      threads.emplace_back(&Method::Function2, std::ref(*this), std::ref(Turtle_Maps.at(j)), std::ref(turtlebots.at(j)), std::ref(Turtle_Controllers.at(j)), RobotGoals.at(j));
+      }
     for (auto& thread : threads) {
       thread.join();
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-
-    // std::this_thread::sleep_for(std::chrono::milliseconds(5000000));
-
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
 
 
   }
 
+  // Asychous Turtlebot with Trajectory thread
+  else if (false) {
+
+  }
 
  
   for (auto ptr : turtlebots) {
@@ -217,40 +253,121 @@ void Method::separateThread() {
 void Method::Function(std::vector<geometry_msgs::Point> trajectory , DefaultTurtleBot* turtleboi, Control* Turtle_GPS){
   int index = 0;
   bool done = false;
-  
-  while (!done){
-    geometry_msgs::Point targetGoal;
-    nav_msgs::Odometry robot_odom;
-    targetGoal = trajectory.at(index);
-    robot_odom = turtleboi->GetCurrent_Odom();
-    Turtle_GPS->updateGoal(targetGoal, robot_odom);
-    geometry_msgs::Twist botTraj = Turtle_GPS->reachGoal();
+  // t.join();
+ while (!done){
+      geometry_msgs::Point targetGoal;
+      nav_msgs::Odometry robot_odom;
+      targetGoal = trajectory.at(index);
+      robot_odom = turtleboi->GetCurrent_Odom();
+      Turtle_GPS->updateGoal(targetGoal, robot_odom);
+      geometry_msgs::Twist botTraj = Turtle_GPS->reachGoal();
 
-    
-    if (Turtle_GPS->goal_hit(targetGoal, Current_Odom)){
-      std::cout << "goal hit" << std::endl;
       
-      if (index != trajectory.size() - 1){
-  
-        index++;
-  
-      }
-      else{
-        done = true;
-      }
-    }
-    turtleboi->Send_cmd_tb1(botTraj);
+      if (Turtle_GPS->goal_hit(targetGoal, Current_Odom)){
+        std::cout << "goal hit" << std::endl;
+        
+        if (index != trajectory.size() - 1){
     
+          index++;
+    
+        }
+        else{
+          done = true;
+        }
+      }
+      turtleboi->Send_cmd_tb1(botTraj);
+      
+    
+      std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
+}
+
+
+void Method::Function2(PRM* Trajectory_Planner, DefaultTurtleBot* turtleboi, Control* Turtle_GPS, std::vector<geometry_msgs::Point> Goals){
+  for (int i = 0; i < Goals.size(); i++){
+    geometry_msgs::Point Current_Goal = Goals.at(i);
+    geometry_msgs::Point start = turtleboi->GetCurrent_Odom().pose.pose.position;
+    int index = 0;
+    bool done = false;
+    int falsePositiveCheck = 0;
+    int loop_interation = 0;
+
+    std::vector<geometry_msgs::Point> trajectory = Trajectory_Planner->A_star_To_Goal(start, Current_Goal);
+
   
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+    while (!done){
+      geometry_msgs::Point targetGoal;
+      geometry_msgs::Twist botTraj;
+      nav_msgs::Odometry Current_Position= turtleboi->GetCurrent_Odom();
+
+      if (loop_interation < 1) {
+        targetGoal = trajectory.at(loop_interation+1);
+        Turtle_GPS->updateGoal(targetGoal, Current_Position);
+        botTraj = Turtle_GPS->reachGoal();
+
+        if (Turtle_GPS->goal_hit(targetGoal, Current_Position)){
+          loop_interation++;  
+        }
+      }
+      else {
+        targetGoal = findLookAheadPoint(trajectory, Current_Position.pose.pose.position, 1);
+
+        Turtle_GPS->updateGoal(targetGoal, Current_Position);
+        botTraj = Turtle_GPS->reachGoal();
+      
+        if (Turtle_GPS->goal_hit(trajectory.back(), Current_Position)){
+          done = true;
+        }
+      
+      }
+      std::cout << "Bot trajectory: " << botTraj << std::endl;
+      turtleboi->Send_cmd_tb1(botTraj);
+      
+      std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+    } //   std::this_thread::sleep_for(std::chrono::milliseconds(200));
   }
 
-  // t.join();
-
-
+  // // t.join();
  
 }
 
+
+geometry_msgs::Point Method::findLookAheadPoint(const std::vector<geometry_msgs::Point>& path, const geometry_msgs::Point& current_position, double look_ahead_distance) {
+    double cumulative_distance = 0.0;
+    double closest_goal = 9999999;
+    size_t current_gaol_id;
+    geometry_msgs::Point look_ahead_point = path[0];
+
+    for (size_t j = 0; j< path.size(); j++){
+
+      double temp = sqrt(pow(current_position.x - path[j].x, 2) + pow(current_position.y - path[j].y, 2));
+      if (temp < closest_goal){
+        look_ahead_point = path[j];
+        current_gaol_id = j;
+        closest_goal = temp;
+      }
+    }
+
+
+
+  for (size_t i = current_gaol_id; i < path.size() - 1; ++i) {
+    double segment_length = sqrt(pow(path[i+1].x - path[i].x, 2) + pow(path[i+1].y - path[i].y, 2));
+    cumulative_distance += segment_length;
+
+    if (cumulative_distance >= look_ahead_distance) {
+      double overshoot = cumulative_distance - look_ahead_distance;
+      double ratio = (segment_length - overshoot) / segment_length;
+      look_ahead_point.x = path[i].x + ratio * (path[i+1].x - path[i].x);
+      look_ahead_point.y = path[i].y + ratio * (path[i+1].y - path[i].y);
+      return look_ahead_point;
+    }
+  }
+
+  return path.back();
+
+}
 
 
 
