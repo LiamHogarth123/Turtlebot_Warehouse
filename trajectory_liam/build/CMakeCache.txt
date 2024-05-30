@@ -257,7 +257,7 @@ RT_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/librt.so
 SETUPTOOLS_DEB_LAYOUT:BOOL=ON
 
 //Name of the computer/site where compile is being run
-SITE:STRING=ubuntu
+SITE:STRING=liam-MS-7D43
 
 //LSB Distrib tag
 UBUNTU:BOOL=TRUE
@@ -433,9 +433,6 @@ trajectory_liam_readMap_LIB_DEPENDS:STATIC=
 
 //The directory containing a CMake configuration file for xmlrpcpp.
 xmlrpcpp_DIR:PATH=/opt/ros/melodic/share/xmlrpcpp/cmake
-
-//The directory containing a CMake configuration file for yaml-cpp.
-yaml-cpp_DIR:PATH=/usr/local/lib/cmake/yaml-cpp
 
 
 ########################

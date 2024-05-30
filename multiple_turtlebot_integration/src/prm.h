@@ -18,6 +18,13 @@ struct ComparePair {
     }
 };
 
+struct PrmData {
+    std::vector<Node> Exported_Graph;
+    nav_msgs::OccupancyGrid map;
+    nav_msgs::MapMetaData MapMetaData_;
+    
+};
+
 
 class PRM {
 public:
@@ -37,6 +44,13 @@ public:
     std::vector<geometry_msgs::Point> test();
 
     void show_Prm();
+
+    PrmData ExportPrmData();
+
+    void Load_PRM(PrmData Imports);
+
+
+
 
 
 private:

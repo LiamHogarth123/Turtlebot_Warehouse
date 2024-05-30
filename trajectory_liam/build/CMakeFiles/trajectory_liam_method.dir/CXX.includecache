@@ -81,10 +81,12 @@ utility
 -
 opencv2/opencv.hpp
 /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/opencv2/opencv.hpp
-nav_msgs/OccupancyGrid.h
-/home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/nav_msgs/OccupancyGrid.h
 nav_msgs/MapMetaData.h
 /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/nav_msgs/MapMetaData.h
+nav_msgs/Odometry.h
+-
+nav_msgs/OccupancyGrid.h
+-
 
 /home/liam/git/Turtlebot_Warehouse/trajectory_liam/src/readMap.h
 opencv2/core.hpp

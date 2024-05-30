@@ -27,6 +27,7 @@ void DefaultTurtleBot::Send_cmd_tb1(geometry_msgs::Twist intructions){
 //     return DefaultTurtleBot(name, nh_); // Use the same node handle as the original
 // }
 nav_msgs::Odometry DefaultTurtleBot::GetCurrent_Odom(){
+  
     return Current_Odom;
 }
 

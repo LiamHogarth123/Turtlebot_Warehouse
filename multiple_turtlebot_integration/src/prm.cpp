@@ -29,6 +29,8 @@
 // --- Fix the goal node assignment
 // --- Add multiple different visualisation
 
+
+
 PRM::PRM() {
 }
 
@@ -129,6 +131,24 @@ void PRM::show_Prm(){
     save_map(MapImage);
 }
 
+PrmData PRM::ExportPrmData(){
+    
+    PrmData Export;
+
+    Export.Exported_Graph = Graph;
+    Export.map = SlamMapData;
+    Export.MapMetaData_= latestMapMetaData_;
+    
+    return Export;
+}
+
+
+void PRM::Load_PRM(PrmData Imports){
+    Graph = Imports.Exported_Graph;
+    SlamMapData = Imports.map;
+    latestMapMetaData_ = Imports.MapMetaData_;
+
+}
 
 
 
