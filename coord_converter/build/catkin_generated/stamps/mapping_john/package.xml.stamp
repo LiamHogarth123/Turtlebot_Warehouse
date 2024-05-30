@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>coord_converter</name>
+  <name>mapping_john</name>
   <version>0.0.1</version>
   <description>Mapping and Navigation code for Robotics Studio 2</description>
 
