@@ -17,7 +17,7 @@ class Control
     */
     Control();
 
-    void updateControlParam(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom, sensor_msgs::LaserScan temp_lidar);
+    void updateControlParam(geometry_msgs::Point temp_lookahead, double temp_distanceToDestination, nav_msgs::Odometry temp_odom, sensor_msgs::LaserScan temp_lidar);
 
     geometry_msgs::Twist reachGoal();
     
@@ -43,6 +43,7 @@ class Control
     geometry_msgs::Point goal;
     nav_msgs::Odometry odom;
     sensor_msgs::LaserScan lidar;
+    double distanceToDestination;
 
     //Calculation variable declaration
     double Kp_;

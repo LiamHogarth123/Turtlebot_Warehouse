@@ -10,7 +10,7 @@
 #include <sensor_msgs/Image.h>
 
 #include "control.h"
-// #include "sensorprocessing.h"
+#include "sensorprocessing.h"
 #include "prm.h"
 // #include "taskAlloction.h"
 
@@ -22,7 +22,7 @@
 #include "turtlebot.h"
 #include "taskAlloction.h"
 
-// #include "marker_msgs/marker.h"
+#include "marker_msgs/marker.h"
 
 
 
@@ -48,6 +48,12 @@ public:
 
   void mapMetadataCallback(const nav_msgs::MapMetaData::ConstPtr& msg);
 
+  void tagCallback(const marker_msgs::marker::ConstPtr& Msg);
+  void boundaryCallback(const std_msgs::Int16::ConstPtr& Msg);
+
+
+ 
+
   void separateThread();
 
   void turtleMovement();
@@ -61,10 +67,10 @@ public:
   // ros::Publisher marker_pub;
 
 
-  //DAN WEIRD FUNCTIONS
-  bool goalInObstacleCheck();
-  
+  // CONTROL FUNCTIONS
+  // bool goalInObstacleCheck();
   void tagAlignment();
+  double calcDistance(geometry_msgs::Point temp_point1, geometry_msgs::Point temp_point2);
 
 
 
@@ -94,6 +100,8 @@ public:
   std::mutex Lida_locker;
   std::mutex ImageDepth_locker;
   std::mutex goal_lock;
+  std::mutex marker_locker;
+  std::mutex boundary_locker;
 
 //variables for callbacks
   nav_msgs::Odometry Current_Odom;
@@ -113,7 +121,7 @@ public:
 
 //Declaration of class objects
   Control TurtleGPS;
- 
+  Sensorprocessing Lidar;
 
   std::vector<geometry_msgs::Point> Leader_goals;
 
@@ -121,7 +129,7 @@ public:
   bool missionComplete;
 
 
-  // marker_msgs::marker arTag;
+  marker_msgs::marker arTag;
   std_msgs::Int16 boundaryStatus;
 
 

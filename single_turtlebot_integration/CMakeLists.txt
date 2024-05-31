@@ -10,11 +10,11 @@ find_package(catkin REQUIRED COMPONENTS
   rosbag
   roslib
   message_generation
-  # marker_msgs
+  marker_msgs
 )
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
-# find_package(marker_msgs REQUIRED)
+find_package(marker_msgs REQUIRED)
 # find_package(yaml-cpp REQUIRED) # Ensure yaml-cpp is found
 
 # Set compiler flags for deprecation warnings
@@ -30,7 +30,6 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${EIGEN3_INCLUDE_DIR}
   ${OpenCV_INCLUDE_DIRS}
-  
   # ${YAML_CPP_INCLUDE_DIR} # Include the yaml-cpp headers
 )
 

@@ -19,9 +19,9 @@ Control::Control(){
     prev_error_ = 0;
     prev_heading_error_ = 0;
     
-    Kp_ = 0.4;
+    Kp_ = 0.8;
     Ki_ = 0.1;
-    Kd_ = 1.5;
+    Kd_ = 4.5;
 
     Kp_h = 0.5;
     Ki_h = 0.1;
@@ -43,10 +43,11 @@ Control::Control(){
 }
 
 
-void Control::updateControlParam(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom, sensor_msgs::LaserScan temp_lidar){
-    goal = temp_goal;
+void Control::updateControlParam(geometry_msgs::Point temp_lookahead, double temp_distanceToDestination, nav_msgs::Odometry temp_odom, sensor_msgs::LaserScan temp_lidar){
+    goal = temp_lookahead;
     odom = temp_odom;
     lidar = temp_lidar;
+    distanceToDestination = temp_distanceToDestination;
 }
 
 
@@ -59,27 +60,27 @@ geometry_msgs::Twist Control::reachGoal(){
     // calculating velocity commands to reach goal
     double velocityX = velocityPID();
     double velocityZ = steeringPID();
-
+    
     // Object avoidence
     double obstacleMidpoint = collisionDetection();
     double avoidanceFactor = -0.1; // the value determining the rate of avoidance (lower is faster rate of change)
-    // if (obstacleMidpoint > 0) {
-    //     std::cout << obstacleMidpoint << std::endl;
-    //     // std::cout << "avoiding object on left" << std::endl;
-    //     velocityZ = avoidanceFactor/pow(obstacleMidpoint+0.23,2); 
-    //     if (velocityZ < -maxVelz) {
-    //         velocityZ = -maxVelz;
-    //     }
-    //     // velocityX = velocityX * 0.5;
-    // } else if (obstacleMidpoint < 0) {
-    //     // std::cout << obstacleMidpoint << std::endl;
-    //     std::cout << "avoiding object on right" << std::endl;
-    //     velocityZ = avoidanceFactor/-pow(obstacleMidpoint-0.23,2);
-    //     if (velocityZ > maxVelz) {
-    //         velocityZ = maxVelz;
-    //     }
-    //     // velocityX = velocityX * 0.5;
-    // }
+    if (obstacleMidpoint > 0) {
+        std::cout << obstacleMidpoint << std::endl;
+        std::cout << "avoiding object on left" << std::endl;
+        velocityZ = avoidanceFactor/pow(obstacleMidpoint+0.23,2); 
+        if (velocityZ < -maxVelz) {
+            velocityZ = -maxVelz;
+        }
+        // velocityX = velocityX * 0.5;
+    } else if (obstacleMidpoint < 0) {
+        // std::cout << obstacleMidpoint << std::endl;
+        std::cout << "avoiding object on right" << std::endl;
+        velocityZ = avoidanceFactor/-pow(obstacleMidpoint-0.23,2);
+        if (velocityZ > maxVelz) {
+            velocityZ = maxVelz;
+        }
+        // velocityX = velocityX * 0.5;
+    }
 
     // setting final velocity commands
     cmd_vel.linear.x = velocityX;
@@ -122,14 +123,14 @@ double Control::velocityPID(){
 
     // Calculate control command
     double control_command = Kp_ * error + Ki_ * integral_ + Kd_ * derivative;
-    control_command *= 0.15; //scaling down
+    control_command *= 0.2; //scaling down
 
     // Update previous error and integral
     prev_error_ = error;  
 
-    if (control_command > maxVelx){
-        control_command = maxVelx;
-    }
+    // if (control_command > maxVelx){
+    //     control_command = maxVelx;
+    // }
 
     // Goal hit reset
     if (fabs(distanceToGoal()) < toleranceDistance){
@@ -141,6 +142,11 @@ double Control::velocityPID(){
         control_command = maxVelx;
     }
 
+    // slow down xVel when reaching goal
+    if (distanceToDestination < 0.5){
+        control_command *= 0.8;
+    }
+    
     return control_command;
 }
 
@@ -204,9 +210,8 @@ double Control::collisionDetection() {
     double obstacleMidpoint = ObjectDetection.findObstacle();
 
     // if obstacle == 0 then does nothing
-
     if (obstacleMidpoint != 0) {
-        integral_ = 0;
+        // integral_ = 0;
         heading_integral_ = 0;
     }
 
@@ -218,8 +223,8 @@ double Control::collisionDetection() {
 bool Control::goal_hit(geometry_msgs::Point temp_goal, nav_msgs::Odometry temp_odom){
     
     if (distanceToGoal() <= toleranceDistance) {
-        
-        integral_ = 0; //reset PID integral 
+        //reset PID integral 
+        integral_ = 0; 
         heading_integral_ = 0;
         return true;
     }
