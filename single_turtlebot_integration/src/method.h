@@ -12,7 +12,6 @@
 #include "control.h"
 #include "sensorprocessing.h"
 #include "prm.h"
-// #include "taskAlloction.h"
 
 #include <ros/package.h>
 
@@ -104,12 +103,6 @@ public:
   std::mutex boundary_locker;
 
 //variables for callbacks
-  nav_msgs::Odometry Current_Odom;
-  nav_msgs::Odometry guider_Odom;
-  sensor_msgs::Image updated_RGB;
-  sensor_msgs::LaserScan updated_Lida;
-  sensor_msgs::Image updated_imageDepth;
-
   DefaultTurtleBot* tb1; 
 
 //Geometry variable to do with movenment;

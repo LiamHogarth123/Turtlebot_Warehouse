@@ -9,7 +9,6 @@
 #include <fstream>
 #include "nav_msgs/OccupancyGrid.h"
 #include "nav_msgs/MapMetaData.h"
-// #include "taskAlloction.h"
 // #include <conio.h> // For _kbhit() and _getch()
 
 
@@ -114,8 +113,8 @@ void Method::separateThread() {
 
       std::cout << "Enter y-coordinate: ";
       std::cin >> goal.y;
-      start.x = Current_Odom.pose.pose.position.x;
-      start.y = Current_Odom.pose.pose.position.y; 
+      start.x = tb1->GetCurrent_Odom().pose.pose.position.x;
+      start.y = tb1->GetCurrent_Odom().pose.pose.position.y; 
 
       
       trajectory = prmMap.A_star_To_Goal(start, goal);
@@ -135,7 +134,7 @@ void Method::separateThread() {
 
         if (loop_interation < 1) {
           targetGoal = Leader_goals.at(loop_interation+1);
-          TurtleGPS.updateControlParam(targetGoal, calcDistance(tb1->GetCurrent_Odom().pose.pose.position, Leader_goals.back()), tb1->GetCurrent_Odom(), updated_Lida);
+          TurtleGPS.updateControlParam(targetGoal, calcDistance(tb1->GetCurrent_Odom().pose.pose.position, Leader_goals.back()), tb1->GetCurrent_Odom(), tb1->Getupdated_Lida());
           botTraj = TurtleGPS.reachGoal();
 
           if (TurtleGPS.goal_hit(targetGoal, tb1->GetCurrent_Odom())){
@@ -243,10 +242,10 @@ void Method::separateThread() {
 
         if (loop_interation < 1) {
           targetGoal = Leader_goals.at(loop_interation+1);
-          TurtleGPS.updateControlParam(targetGoal, calcDistance(Current_Odom.pose.pose.position, Leader_goals.back()), tb1->GetCurrent_Odom(), updated_Lida);
+          TurtleGPS.updateControlParam(targetGoal, calcDistance(tb1->GetCurrent_Odom().pose.pose.position, Leader_goals.back()), tb1->GetCurrent_Odom(), tb1->Getupdated_Lida());
           botTraj = TurtleGPS.reachGoal();
 
-          if (TurtleGPS.goal_hit(targetGoal, Current_Odom)){
+          if (TurtleGPS.goal_hit(targetGoal, tb1->GetCurrent_Odom())){
             loop_interation++;  
           }
         }
@@ -254,7 +253,7 @@ void Method::separateThread() {
 
           targetGoal = findLookAheadPoint(Leader_goals, tb1->GetCurrent_Odom().pose.pose.position, 0.5);
 
-          TurtleGPS.updateControlParam(targetGoal,calcDistance(Current_Odom.pose.pose.position, Leader_goals.back()) , tb1->GetCurrent_Odom(), tb1->Getupdated_Lida());
+          TurtleGPS.updateControlParam(targetGoal,calcDistance(tb1->GetCurrent_Odom().pose.pose.position, Leader_goals.back()) , tb1->GetCurrent_Odom(), tb1->Getupdated_Lida());
           botTraj = TurtleGPS.reachGoal();
         
           if (TurtleGPS.goal_hit(Leader_goals.back(), tb1->GetCurrent_Odom())){
@@ -361,7 +360,7 @@ void Method::tagAlignment(){
   // velocity variables
   geometry_msgs::Twist rotation;
   rotation.linear.z = 0;
-  double angle = TurtleGPS.angleToGoal(Current_Odom, tagPosition); // heading angle to goal
+  double angle = TurtleGPS.angleToGoal(tb1->GetCurrent_Odom(), tagPosition); // heading angle to goal
   
   // searches array to find the target tag and gets the index
   auto it = std::find(arTag.ids.data.begin(), arTag.ids.data.end(), tagID);
@@ -413,7 +412,7 @@ void Method::tagAlignment(){
 // bool Method::goalInObstacleCheck() { // doesnt work if there is only 1 goal and it is inside an object
 
 //   geometry_msgs::Point currentGoal = Leader_goals.at(goal_index);
-//   geometry_msgs::Point currentPos = Current_Odom.pose.pose.position;
+//   geometry_msgs::Point currentPos = tb1->GetCurrent_Odom().pose.pose.position;
 //   geometry_msgs::Point referenceGoal;
 
 //   if (goal_index != Leader_goals.size() - 1) {                              // for cases when there is a next goal
