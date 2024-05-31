@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC  -Wno-deprecated -Wdeprecated-declarations -g  -shared -Wl,-soname,libsingle_turtlebot_integration_prm.so -o devel/lib/libsingle_turtlebot_integration_prm.so CMakeFiles/single_turtlebot_integration_prm.dir/src/prm.cpp.o 

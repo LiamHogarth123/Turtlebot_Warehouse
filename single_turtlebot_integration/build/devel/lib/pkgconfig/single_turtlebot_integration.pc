@@ -1,8 +1,0 @@
-prefix=/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration/build/devel
-
-Name: single_turtlebot_integration
-Description: Description of single_turtlebot_integration
-Version: 0.0.1
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
