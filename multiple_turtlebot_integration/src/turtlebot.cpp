@@ -4,18 +4,19 @@
 #include "turtlebot.h"
 
 
-DefaultTurtleBot::DefaultTurtleBot(const std::string& name, const ros::NodeHandle& nh) : namespace_(name) {
-    // Create publishers and subscribers with namespaced topics/services
-    cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>(namespace_ + "/cmd_vel", 10);
-    // some_subscriber_ = nh_.subscribe(namespace_ + "/some_topic", 10, &TurtleBot::callback, this);
+DefaultTurtleBot::DefaultTurtleBot(const std::string& name, const ros::NodeHandle& nh, geometry_msgs::Transform map_Offset)  : namespace_(name),  map(map_Offset) {  // Create publishers and subscribers with namespaced topics/services
+    
 
-    sub1_ = nh_.subscribe(namespace_ + "/odom", 1000, &DefaultTurtleBot::odomCallback,this);
+  cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>(namespace_ + "/cmd_vel", 10);
+  // some_subscriber_ = nh_.subscribe(namespace_ + "/some_topic", 10, &TurtleBot::callback, this);
 
-    sub2_ = nh_.subscribe(namespace_ + "/scan", 10, &DefaultTurtleBot::LidaCallback,this);
+  sub1_ = nh_.subscribe(namespace_ + "/odom", 1000, &DefaultTurtleBot::odomCallback,this);
 
-    sub3_ = nh_.subscribe(namespace_ + "/camera/rgb/image_raw", 1000, &DefaultTurtleBot::RGBCallback, this);
+  sub2_ = nh_.subscribe(namespace_ + "/scan", 10, &DefaultTurtleBot::LidaCallback,this);
 
-    sub4_ = nh_.subscribe(namespace_ + "/camera/depth/image_raw", 1000, &DefaultTurtleBot::ImageDepthCallback, this);
+  sub3_ = nh_.subscribe(namespace_ + "/camera/rgb/image_raw", 1000, &DefaultTurtleBot::RGBCallback, this);
+
+  sub4_ = nh_.subscribe(namespace_ + "/camera/depth/image_raw", 1000, &DefaultTurtleBot::ImageDepthCallback, this);
 
 }
 

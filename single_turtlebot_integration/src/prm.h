@@ -32,9 +32,6 @@ class PRM {
 public:
     PRM(); 
 
-    
-
-
     //User Functions
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
@@ -53,8 +50,6 @@ public:
     PrmData ExportPrmData();
 
     void Load_PRM(PrmData Imports);
-
-    
 
     void User_remove_Nodes();
 
@@ -130,20 +125,28 @@ private:
 
     void save_map(cv::Mat mapImage);
 
+
     //OPEN CV Define load area 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     static void staticMouseCallback(int event, int x, int y, int flags, void* userdata);
+
     void mouseCallback(int event, int x, int y, int flags, void* userdata);
+    
     std::vector<cv::Point> getUserDefinedPolygon(const std::string& mapImagePath);
+    
     bool isPointInPolygon(const cv::Point& point, const std::vector<cv::Point>& polygon);
+    
     std::vector<Node> samplePointsCV();
+    
     static std::vector<cv::Point> polygonPoints;
 
 
     //User Removal of nodes
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     static void staticRemoveNodeCallback(int event, int x, int y, int flags, void* userdata);
+
     void removeNodeCallback(int event, int x, int y, int flags, void* userdata);
+    
     cv::Mat removeNodes(cv::Mat mapImage, std::vector<Node>& Graph_);
 
 

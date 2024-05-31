@@ -69,10 +69,36 @@ void Method::separateThread() {
   int numTurtlebot = 2;
   std::vector<DefaultTurtleBot*> turtlebots;
   
+  geometry_msgs::Transform map1;
+  geometry_msgs::Transform map2;
+
+  // Initialize translation to zero
+    map2.translation.x = 0.0;
+    map2.translation.y = 0.0;
+    map2.translation.z = 0.0;
+
+    // Initialize rotation to zero (quaternion zero initialization means no rotation)
+    map2.rotation.x = 0.0;
+    map2.rotation.y = 0.0;
+    map2.rotation.z = 0.0;
+    map2.rotation.w = 1.0; 
+
+    // Initialize translation to zero
+    map1.translation.x = 0.0;
+    map1.translation.y = 0.0;
+    map1.translation.z = 0.0;
+
+    // Initialize rotation to zero (quaternion zero initialization means no rotation)
+    map1.rotation.x = 0.0;
+    map1.rotation.y = 0.0;
+    map1.rotation.z = 0.0;
+    map1.rotation.w = 1.0; 
+  
+
   ros::NodeHandle nh_1;
-  DefaultTurtleBot* tb1 =  new DefaultTurtleBot("tb1", nh_1);
+  DefaultTurtleBot* tb1 =  new DefaultTurtleBot("tb1", nh_1, map1);
   ros::NodeHandle nh_2;
-  DefaultTurtleBot* tb2 =  new DefaultTurtleBot("tb2", nh_2);
+  DefaultTurtleBot* tb2 =  new DefaultTurtleBot("tb2", nh_2, map2);
   std::vector<std::thread> threads;
 
   
@@ -310,6 +336,7 @@ void Method::Function2(PRM* Trajectory_Planner, DefaultTurtleBot* turtleboi, Con
           loop_interation++;  
         }
       }
+
       else {
         targetGoal = findLookAheadPoint(trajectory, Current_Position.pose.pose.position, 1);
 
@@ -325,6 +352,7 @@ void Method::Function2(PRM* Trajectory_Planner, DefaultTurtleBot* turtleboi, Con
       turtleboi->Send_cmd_tb1(botTraj);
       
       std::this_thread::sleep_for(std::chrono::milliseconds(200));
+      // cout << "hi";
 
     } //   std::this_thread::sleep_for(std::chrono::milliseconds(200));
   }
@@ -332,7 +360,6 @@ void Method::Function2(PRM* Trajectory_Planner, DefaultTurtleBot* turtleboi, Con
   // // t.join();
  
 }
-
 
 geometry_msgs::Point Method::findLookAheadPoint(const std::vector<geometry_msgs::Point>& path, const geometry_msgs::Point& current_position, double look_ahead_distance) {
     double cumulative_distance = 0.0;
@@ -361,6 +388,7 @@ geometry_msgs::Point Method::findLookAheadPoint(const std::vector<geometry_msgs:
       double ratio = (segment_length - overshoot) / segment_length;
       look_ahead_point.x = path[i].x + ratio * (path[i+1].x - path[i].x);
       look_ahead_point.y = path[i].y + ratio * (path[i+1].y - path[i].y);
+      
       return look_ahead_point;
     }
   }

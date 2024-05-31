@@ -9,6 +9,7 @@
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration/build/devel:$CMAKE_PREFIX_PATH"
 export LD_LIBRARY_PATH="/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration/build/devel/lib:$LD_LIBRARY_PATH"
+export PATH='/opt/ros/melodic/bin:/home/liam/.local/bin:/home/liam/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'
 export PKG_CONFIG_PATH="/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration/build/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration/build'
 export ROSLISP_PACKAGE_DIRECTORIES="/home/liam/git/Turtlebot_Warehouse/single_turtlebot_integration/build/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"

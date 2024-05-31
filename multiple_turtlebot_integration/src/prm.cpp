@@ -1,11 +1,3 @@
-// 1. Add start configuration cstart to R(N,E)
-// 2. Loop
-// 3. Randomly Select New Node c to expand
-// 4. Randomly Generate new Node c’ from c
-// 5. If edge e from c to c’ is collision-free
-// 6. Add (c’, e) to R
-// 7. If c’ belongs to endgame region, return path
-// 8. Return if stopping criteria is met
 
 #include <vector>
 #include <utility> // for std::pair
@@ -95,7 +87,7 @@ std::vector<geometry_msgs::Point> PRM::A_star_To_Goal(geometry_msgs::Point start
 void PRM::UpdateMapData(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_) {
     std::cout << "PRM map data openning" << std::endl;
     SlamMapData = map;
-    numberOfPoints_ = 9000;
+    numberOfPoints_ = 1000;
     latestMapMetaData_ = MapMetaData_;
 }
 

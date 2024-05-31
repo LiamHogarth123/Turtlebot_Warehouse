@@ -42,6 +42,9 @@ sensor_msgs::Image DefaultTurtleBot::Getupdated_imageDepth(){
     return updated_imageDepth;
 }
 
+double DefaultTurtleBot::GetCurrentSpeed(){
+  return current_speed_;
+}
 
 //callbacks
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,6 +52,9 @@ sensor_msgs::Image DefaultTurtleBot::Getupdated_imageDepth(){
 void DefaultTurtleBot::odomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg){
   std::unique_lock<std::mutex> lck3 (odom_locker);
   Current_Odom = *odomMsg;
+  current_speed_ = std::sqrt(std::pow(odomMsg->twist.twist.linear.x, 2) +
+                               std::pow(odomMsg->twist.twist.linear.y, 2) +
+                               std::pow(odomMsg->twist.twist.linear.z, 2));
 }
 
 void  DefaultTurtleBot::RGBCallback(const sensor_msgs::Image::ConstPtr& Msg){

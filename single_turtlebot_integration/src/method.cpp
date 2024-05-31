@@ -18,25 +18,29 @@ Method::Method(ros::NodeHandle nh) :
 
 {
 
-  teleop_mode = false;
-
+  //set default variables to be empty. 
+ 
   goal_index = 0;
 
   missionComplete = false;
 
+
+
+
+
+  // Map ros topics
+  //////////////////////////////////////////////////////////////////////////////////////////////
   pub_ = nh_.advertise<visualization_msgs::MarkerArray>("/visualization_marker_array",3,false);
 
   single_marker_pub_ = nh.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
-
-  // Map ros topics
   mapSub = nh_.subscribe("/map", 1000, &Method::mapCallback, this);
   
   mapMetadataSub = nh_.subscribe("/map_metadata", 1000, &Method::mapMetadataCallback, this);
 
   marker_pub = nh.advertise<visualization_msgs::MarkerArray>("visualization_marker_array", 100);
 
-  cmd_velocity_tb1 = nh_.advertise<geometry_msgs::Twist>("cmd_vel",10);
+  cmd_velocity_tb12 = nh_.advertise<geometry_msgs::Twist>("cmd_vel",10);
 
 
   
@@ -44,8 +48,8 @@ Method::Method(ros::NodeHandle nh) :
 }
 
 
-void Method::Send_cmd_tb1(geometry_msgs::Twist intructions){
-  cmd_velocity_tb1.publish(intructions);
+void Method::Send_cmd_tb12(geometry_msgs::Twist intructions){
+  cmd_velocity_tb12.publish(intructions);
 }
 
 
@@ -97,6 +101,9 @@ void Method::separateThread() {
   int input;
   std::cout << "UserDefined Goals (1) or constant goals (2)";
   std::cin >> input;
+
+  // USER INPUT GOALS
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////
   if (input == 1){
 
     while (true){
@@ -117,7 +124,7 @@ void Method::separateThread() {
 
 
       //Dan control start
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      ////////////////////
       
       int falsePositiveCheck = 0;
       int loop_interation = 0;
@@ -155,22 +162,33 @@ void Method::separateThread() {
         
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-          // Checks for boundary and kills program if detected
-        if (boundaryStatus.data == 1){ // blue detected
-          falsePositiveCheck++;
-          if (falsePositiveCheck > 3) {
-            std::cout << "Boundary Detected!! Seek Operator Assistance" << std::endl;
-            break;
-          }
-        } else { // red = 2, nothing = 0
-          falsePositiveCheck = 0;
-        }
 
+        // // Checks for boundary and kills program if detected
+        // if (boundaryStatus.data == 1){ // blue detected
+        //   falsePositiveCheck++;
+        //   if (falsePositiveCheck > 3) {
+        //     std::cout << "Boundary Detected!! Seek Operator Assistance" << std::endl;
+        //     break;
+        //   }
+        // } else { // red = 2, nothing = 0
+        //   falsePositiveCheck = 0;
+        // }
 
       }
-      
-      if (false){
-        tagAlignment();
+
+      // if (false){
+      //   tagAlignment();
+      // }
+
+      if (tb1->GetCurrentSpeed() > 0.1){
+        geometry_msgs::Twist zero_vel;
+        zero_vel.linear.x = 0.0;
+        zero_vel.linear.y = 0.0;
+        zero_vel.linear.z = 0.0;
+        zero_vel.angular.x = 0.0;
+        zero_vel.angular.y = 0.0;
+        zero_vel.angular.z = 0.0;
+        tb1->Send_cmd_tb1(zero_vel);
       }
 
 
@@ -184,6 +202,10 @@ void Method::separateThread() {
       }
     }
   }
+  
+  // TASK ALLOCATION GOALS
+  ///////////////////////////////////////////////////////////////////////////////////////
+  
   else {
     double goal_list_index = 0;
 
@@ -235,14 +257,21 @@ void Method::separateThread() {
         
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-          // Checks for boundary and kills program if detected
-       
-
+        
       }
       
+      if (tb1->GetCurrentSpeed() > 0){
+        geometry_msgs::Twist zero_vel;
+        zero_vel.linear.x = 0.0;
+        zero_vel.linear.y = 0.0;
+        zero_vel.linear.z = 0.0;
+        zero_vel.angular.x = 0.0;
+        zero_vel.angular.y = 0.0;
+        zero_vel.angular.z = 0.0;
+        tb1->Send_cmd_tb1(zero_vel);
+      }
 
-
-
+    
       missionComplete = false;
       goal_index = 0;
       goal_list_index++;
@@ -418,27 +447,6 @@ void Method::turtleMovement(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Publishing functions 
-///////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 //callbacks
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -455,6 +463,11 @@ void Method::mapMetadataCallback(const nav_msgs::MapMetaData::ConstPtr& msg) {
 }
 
 
+
+
+
+// Publishing functions 
+///////////////////////////////////////////////////////////////////////////////////////////
 
 
 void Method::publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub) {

@@ -28,6 +28,7 @@ public:
     sensor_msgs::Image GetCurrentupdated_RGB();
     sensor_msgs::LaserScan Getupdated_Lida();
     sensor_msgs::Image Getupdated_imageDepth();
+    double GetCurrentSpeed();
     
 
     // void callback(const SomeMessageTypeConstPtr& msg);
@@ -55,6 +56,8 @@ private:
     sensor_msgs::Image updated_RGB;
     sensor_msgs::LaserScan updated_Lida;
     sensor_msgs::Image updated_imageDepth;
+
+    double current_speed_;
 
 
 };

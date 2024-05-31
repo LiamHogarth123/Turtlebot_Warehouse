@@ -39,7 +39,7 @@ public:
   */
   Method(ros::NodeHandle nh);
 
-  void Send_cmd_tb1(geometry_msgs::Twist intructions);
+  void Send_cmd_tb12(geometry_msgs::Twist intructions);
 
   ros::Publisher cmd_velocity_tb1;
 
@@ -72,7 +72,7 @@ public:
 
 // Prameters for ROS
   ros::NodeHandle nh_;
-  ros::Publisher cmd_velocity_tb1;
+  ros::Publisher cmd_velocity_tb12;
   ros::Publisher cmd_velocity_tb2;
   ros::Publisher pub_;
   ros::Publisher single_marker_pub_;

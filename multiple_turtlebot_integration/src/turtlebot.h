@@ -13,7 +13,7 @@
 class DefaultTurtleBot {
 public:
 public:
-    DefaultTurtleBot(const std::string& namespace_prefix, const ros::NodeHandle& nh);
+    DefaultTurtleBot(const std::string& namespace_prefix, const ros::NodeHandle& nh,  geometry_msgs::Transform map_Offset);
     // DefaultTurtleBot cloneWithNamespace(const std::string& name) const;
     void Send_cmd_tb1(geometry_msgs::Twist intructions);
     void odomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg);
