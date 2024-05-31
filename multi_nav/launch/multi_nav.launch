@@ -20,7 +20,7 @@
     <!-- Transform between map and robot's starting position -->
     <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom" args="$(arg x) $(arg y) 0 $(arg yaw) 0 0 $(arg tb)/map $(arg tb)/odom" /> -->
 
-    <node pkg="tf2_ros" type="static_transform_publisher" name="ns_scan_to_scan" args="0 0 0 0 0 0 $(arg tb)/base_scan base_scan" />
+    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="ns_scan_to_scan" args="0 0 0 0 0 0 $(arg tb)/base_scan base_scan" /> -->
 
     <!-- Turtlebot3 -->
     <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
@@ -90,7 +90,8 @@
     
     <!-- Rviz -->
     <group if="$(arg open_rviz)"> 
-      <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find multi_nav)/rviz/turtlebot3_navigation_$(arg tb).rviz"/>
+      <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find multi_nav)/rviz/turtlebot3_$(arg tb).rviz"/>
+      <!-- <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find multi_nav)/rviz/turtlebot3_navigation_$(arg tb).rviz"/> -->
             <param name="tf_prefix" value="$(arg tb)"/>
     </group>
   </group>
