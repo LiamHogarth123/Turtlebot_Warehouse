@@ -25,7 +25,8 @@ Method::Method(ros::NodeHandle nh) :
   missionComplete = false;
 
 
-
+  ros::NodeHandle nh_1;
+  tb1 =  new DefaultTurtleBot("", nh_1);
 
 
   // Map ros topics
@@ -62,8 +63,7 @@ void Method::separateThread() {
 
   //Create turtlebot
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ros::NodeHandle nh_1;
-  DefaultTurtleBot* tb1 =  new DefaultTurtleBot("", nh_1);
+
   
 
 
@@ -155,7 +155,7 @@ void Method::separateThread() {
             botTraj.linear.z = 0;
             // adjust TurtleBot to be on top of last goal
             botTraj.linear.x = 0.10;
-            Send_cmd_tb1(botTraj);
+            tb1->Send_cmd_tb1(botTraj);
             std::cout << "Sleeping for 1000ms to adjust position..." << std::endl;
             std::this_thread::sleep_for(std::chrono::milliseconds(3000));
             botTraj.linear.x = 0;
@@ -252,9 +252,9 @@ void Method::separateThread() {
         }
         else {
 
-          targetGoal = findLookAheadPoint(Leader_goals, calcDistance(Current_Odom.pose.pose.position, Leader_goals.back()), tb1->GetCurrent_Odom().pose.pose.position, 0.5);
+          targetGoal = findLookAheadPoint(Leader_goals, tb1->GetCurrent_Odom().pose.pose.position, 0.5);
 
-          TurtleGPS.updateControlParam(targetGoal, tb1->GetCurrent_Odom(), tb1->Getupdated_Lida());
+          TurtleGPS.updateControlParam(targetGoal,calcDistance(Current_Odom.pose.pose.position, Leader_goals.back()) , tb1->GetCurrent_Odom(), tb1->Getupdated_Lida());
           botTraj = TurtleGPS.reachGoal();
         
           if (TurtleGPS.goal_hit(Leader_goals.back(), tb1->GetCurrent_Odom())){
@@ -263,7 +263,7 @@ void Method::separateThread() {
             botTraj.linear.z = 0;
             // adjust TurtleBot to be on top of last goal
             botTraj.linear.x = 0.10;
-            Send_cmd_tb1(botTraj);
+            tb1->Send_cmd_tb1(botTraj);
             std::cout << "Sleeping for 1000ms to adjust position..." << std::endl;
             std::this_thread::sleep_for(std::chrono::milliseconds(3000));
             botTraj.linear.x = 0;
@@ -394,7 +394,7 @@ void Method::tagAlignment(){
     }
   }
   
-  Send_cmd_tb1(rotation);
+  tb1->Send_cmd_tb1(rotation);
 
 }
 

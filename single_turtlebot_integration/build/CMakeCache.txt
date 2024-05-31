@@ -362,6 +362,9 @@ gtest_main_LIB_DEPENDS:STATIC=general;-lpthread;general;gtest;
 //Path to a library.
 lib:FILEPATH=/opt/ros/melodic/lib/libtopic_tools.so
 
+//The directory containing a CMake configuration file for marker_msgs.
+marker_msgs_DIR:PATH=/home/liam/catkin_ws/devel/share/marker_msgs/cmake
+
 //The directory containing a CMake configuration file for message_generation.
 message_generation_DIR:PATH=/opt/ros/melodic/share/message_generation/cmake
 

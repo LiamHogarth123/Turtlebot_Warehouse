@@ -110,6 +110,7 @@ public:
   sensor_msgs::LaserScan updated_Lida;
   sensor_msgs::Image updated_imageDepth;
 
+  DefaultTurtleBot* tb1; 
 
 //Geometry variable to do with movenment;
   geometry_msgs::Point goal;
