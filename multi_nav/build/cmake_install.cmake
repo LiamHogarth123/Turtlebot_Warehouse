@@ -149,6 +149,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/maps"
     "/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/param"
     "/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/rviz"
+    "/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/src"
     )
 endif()
 

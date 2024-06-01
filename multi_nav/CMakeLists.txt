@@ -7,7 +7,13 @@ project(multi_nav)
 ################################################################################
 # Find catkin packages and libraries for catkin and system dependencies
 ################################################################################
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  tf
+  visualization_msgs
+  geometry_msgs
+  std_msgs
+)
 
 ################################################################################
 # Setup for python modules and scripts
@@ -26,6 +32,24 @@ find_package(catkin REQUIRED)
 ################################################################################
 catkin_package()
 
+include_directories(
+  include
+  src
+  ${catkin_INCLUDE_DIRS}
+)
+
+add_executable(global_position2 src/global_position2.cpp)
+
+target_link_libraries(global_position2
+  ${catkin_LIBRARIES}
+)
+
+add_executable(global_position3 src/global_position3.cpp)
+
+target_link_libraries(global_position3
+  ${catkin_LIBRARIES}
+)
+
 ################################################################################
 # Build
 ################################################################################
@@ -33,7 +57,7 @@ catkin_package()
 ################################################################################
 # Install
 ################################################################################
-install(DIRECTORY launch maps param rviz
+install(DIRECTORY launch maps param rviz src
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 

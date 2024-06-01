@@ -21,10 +21,13 @@
     <!-- Launch an AMCL node -->
     <node pkg="amcl" type="amcl" name="amcl">
       <rosparam file="$(find multi_nav)/param/amcl.yaml" command="load" />
-      <param name="odom_frame_id"             value="$(arg tb0)/odom"/>
-      <param name="base_frame_id"             value="$(arg tb0)/base_footprint"/>
-      <param name="global_frame_id" value="map"/>
-      <param name="use_map_topic" value="true" />
+      <param name="initial_pose_x"    value="0.0"/>
+      <param name="initial_pose_y"    value="0.0"/>
+      <param name="initial_pose_a"    value="0.0"/>
+      <param name="odom_frame_id"     value="$(arg tb0)/odom"/>
+      <param name="base_frame_id"     value="$(arg tb0)/base_footprint"/>
+      <param name="global_frame_id"   value="map"/>
+      <param name="use_map_topic"     value="true" />
     </node>
   </group>
 
@@ -38,12 +41,21 @@
     <!-- Launch an AMCL node -->
     <node pkg="amcl" type="amcl" name="amcl">
       <rosparam file="$(find multi_nav)/param/amcl.yaml" command="load" />
-      <param name="odom_frame_id"             value="$(arg tb1)/odom"/>
-      <param name="base_frame_id"             value="$(arg tb1)/base_footprint"/>
-      <param name="global_frame_id" value="map"/>
-      <param name="use_map_topic" value="true" />
+      <param name="initial_pose_x"    value="1.0"/>
+      <param name="initial_pose_y"    value="0.5"/>
+      <param name="initial_pose_a"    value="0.0"/>
+      <param name="odom_frame_id"     value="$(arg tb1)/odom"/>
+      <param name="base_frame_id"     value="$(arg tb1)/base_footprint"/>
+      <param name="global_frame_id"   value="map"/>
+      <param name="use_map_topic"     value="true" />
     </node>
   </group>
+
+  <!-- Launch global position node -->
+  <node name="global_position2" pkg="multi_nav" type="global_position2" output="screen">
+        <param name="tb3_0" value="$(arg tb0)" />
+        <param name="tb3_1" value="$(arg tb1)" />
+    </node>
 
   <!-- Launch a move_base node -->
   <include file="$(find multi_nav)/launch/includes/move_base2.launch">

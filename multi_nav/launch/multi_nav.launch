@@ -69,6 +69,7 @@
       <param name="base_frame_id"             value="$(arg tb)/base_footprint"/>
 
       <remap from="map" to="/$(arg tb)/map"/>
+      <!-- <param name="use_map_topic" value="true" /> -->
     </node>
 
     <!-- Move Base -->
