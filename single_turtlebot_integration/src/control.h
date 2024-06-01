@@ -65,6 +65,7 @@ class Control
 
     double maxIntegral;
     double maxHeadingIntegral;
+    double integralResetCount;
 
     std::vector<double> xPlot;
     std::vector<double> zPlot;

@@ -35,6 +35,7 @@ Control::Control(){
 
     integral_ = 0;
     heading_integral_ = 0;
+    integralResetCount = 15;
 
     prevOdom.pose.pose.position.x = 0;
     prevOdom.pose.pose.position.y = 0;
@@ -54,16 +55,19 @@ void Control::updateControlParam(geometry_msgs::Point temp_lookahead, double tem
 geometry_msgs::Twist Control::reachGoal(){
   
 
-    //// Create and publish Twist message for velocity control
+    // Create and publish Twist message for velocity control
     geometry_msgs::Twist cmd_vel;
-
-    // calculating velocity commands to reach goal
+    
+    //// CALCULATING VELOCITY COMMAND USING PID TO REACH GOAL ////
     double velocityX = velocityPID();
     double velocityZ = steeringPID();
     
-    // Object avoidence
+    //// OBJECT AVOIDANCE ////
     double obstacleMidpoint = collisionDetection();
     double avoidanceFactor = -0.1; // the value determining the rate of avoidance (lower is faster rate of change)
+    integralResetCount++; // for integral reset at initial object detection
+
+
     if (obstacleMidpoint > 0) {
         std::cout << obstacleMidpoint << std::endl;
         std::cout << "avoiding object on left" << std::endl;
@@ -71,7 +75,11 @@ geometry_msgs::Twist Control::reachGoal(){
         if (velocityZ < -maxVelz) {
             velocityZ = -maxVelz;
         }
-        // velocityX = velocityX * 0.5;
+        if (integralResetCount > 15){ // if object first detected then slows down by resetting integral so it builds back up speed
+            integral_ = 0;
+        }
+        integralResetCount = 0;
+        // velocityX *= 0.5;
     } else if (obstacleMidpoint < 0) {
         // std::cout << obstacleMidpoint << std::endl;
         std::cout << "avoiding object on right" << std::endl;
@@ -79,10 +87,14 @@ geometry_msgs::Twist Control::reachGoal(){
         if (velocityZ > maxVelz) {
             velocityZ = maxVelz;
         }
-        // velocityX = velocityX * 0.5;
+        if (integralResetCount > 15){
+            integral_ = 0;
+        }
+        integralResetCount = 0;
+        // velocityX *= 0.5;
     }
-
-    // setting final velocity commands
+    
+    //// SETTING FINAL VEL COMMANDS ////
     cmd_vel.linear.x = velocityX;
     cmd_vel.angular.z = velocityZ;
 
