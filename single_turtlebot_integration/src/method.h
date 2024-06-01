@@ -68,7 +68,7 @@ public:
 
   // CONTROL FUNCTIONS
   // bool goalInObstacleCheck();
-  bool tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag);
+  bool tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal);
   double calcDistance(geometry_msgs::Point temp_point1, geometry_msgs::Point temp_point2);
 
 

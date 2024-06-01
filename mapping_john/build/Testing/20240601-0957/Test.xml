@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Site BuildName="(empty)"
-	BuildStamp="20240601-0159-Experimental"
+	BuildStamp="20240601-0957-Experimental"
 	Name="SkyNetGDN"
 	Generator="ctest-3.16.3"
 	CompilerName="/usr/bin/c++"
@@ -21,14 +21,14 @@
 	TotalVirtualMemory="2047"
 	TotalPhysicalMemory="15578"
 	LogicalProcessorsPerPhysical="2"
-	ProcessorClockFrequency="2695.29"
+	ProcessorClockFrequency="3067.44"
 	>
 	<Testing>
-		<StartDateTime>Jun 01 20:13 AEST</StartDateTime>
-		<StartTestTime>1717236810</StartTestTime>
+		<StartDateTime>Jun 01 19:57 AEST</StartDateTime>
+		<StartTestTime>1717235876</StartTestTime>
 		<TestList/>
-		<EndDateTime>Jun 01 20:13 AEST</EndDateTime>
-		<EndTestTime>1717236810</EndTestTime>
+		<EndDateTime>Jun 01 19:57 AEST</EndDateTime>
+		<EndTestTime>1717235876</EndTestTime>
 		<ElapsedMinutes>0</ElapsedMinutes>
 	</Testing>
 </Site>
