@@ -74,7 +74,7 @@ void Method::separateThread() {
   std::cout << "Task allocation next state" << std::endl;
   TA.SetGoals();
   TA.SetTurtlebotPositions(roboPos);
-  std::vector<std::vector<geometry_msgs::Point>> RobotGoals;
+  std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> RobotGoals;
   RobotGoals = TA.taskAllocation();
 
 
@@ -187,7 +187,7 @@ void Method::separateThread() {
       }
 
       
-      tagAlignment();
+      // tagAlignment();
       
 
       while (tb1->GetCurrentSpeed() > 0){
@@ -221,10 +221,10 @@ void Method::separateThread() {
   else {
     double goal_list_index = 0;
 
-    while (goal_list_index < RobotGoals.at(0).size()){
+    while (goal_list_index < RobotGoals[0].size()){
 
       start = tb1->GetCurrent_Odom().pose.pose.position;
-      goal = RobotGoals.at(0).at(goal_list_index);
+      goal = RobotGoals[0][goal_list_index].second;
 
       trajectory = prmMap.A_star_To_Goal(start, goal);
       publishMarkers(trajectory, marker_pub);
@@ -293,8 +293,17 @@ void Method::separateThread() {
         
       }
 
+      int count = 0;
+      while (tagAlignment(RobotGoals[0][goal_list_index]) == false){
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+        count++;
+        if (count == 17){ //roughly looks 200degrees turning towards the tag
+          std::cout << "Could not find Tag: " << RobotGoals[0][goal_list_index].first << std::endl;
+          break;
+        }
+      }
+      
 
-      // tagAlignment();
       
       if (tb1->GetCurrentSpeed() > 0){
         geometry_msgs::Twist zero_vel;
@@ -335,28 +344,11 @@ void Method::separateThread() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void Method::tagAlignment(){
+bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag){
   
   // current tag info
-  int tagID;
-  geometry_msgs::Point tagPosition;
+  int tagID = temp_tag.first;
+  geometry_msgs::Point tagPosition = temp_tag.second;
   // velocity variables
   geometry_msgs::Twist rotation;
   rotation.linear.z = 0;
@@ -380,20 +372,24 @@ void Method::tagAlignment(){
       rotation.linear.z = yawControl;
       } else{
         rotation.linear.z = 0;
+        tb1->Send_cmd_tb1(rotation);
+        return true;
       }
     } 
   } else {
     // The value was not found in the array        
     // rotates until tag detected
     if (angle > 0){
-      rotation.linear.z = 0.5;
+      rotation.linear.z = 1;
       
     } else if (angle < 0){
-      rotation.linear.z = -0.5;
+      rotation.linear.z = -1;
     }
   }
   
   tb1->Send_cmd_tb1(rotation);
+
+  return false;;
 
 }
 
