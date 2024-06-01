@@ -1,0 +1,12 @@
+# ninja log v5
+1	39	1717219973	CMakeFiles/rtest.dir/test/test_constants.cpp.o	dbb82d51c7bd8fd2
+1	1399	1717219974	CMakeFiles/map_server_image_loader.dir/src/image_loader.cpp.o	c1deb79b724837aa
+1401	1551	1717219974	devel/lib/libmap_server_image_loader.so	ab7502bcc36569d1
+2	2483	1717219975	CMakeFiles/map_server-map_saver.dir/src/map_saver.cpp.o	f8ba51d8464122b0
+2484	2688	1717219975	devel/lib/map_server2/map_saver	1e3f89e230b933b7
+0	3356	1717219976	CMakeFiles/rtest.dir/test/rtest.cpp.o	92c844d8bd3d9647
+6	3692	1717219976	gtest/googlemock/gtest/CMakeFiles/gtest.dir/src/gtest-all.cc.o	ceaa467ede7676ff
+3692	3790	1717219976	gtest/googlemock/gtest/libgtest.so	f2dfe9c90b42770a
+5	3844	1717219976	CMakeFiles/map_server.dir/src/main.cpp.o	1fbba3d36d43a64f
+3790	3969	1717219976	devel/lib/map_server2/rtest	7dcf666b2ede4b0e
+3845	4060	1717219977	devel/lib/map_server2/map_server	fdab74b5fa6ad8f9

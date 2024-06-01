@@ -6,7 +6,6 @@
   <arg name="tb0" default="tb3_0"/>
   <arg name="tb1" default="tb3_1"/>
   <arg name="tb2" default="tb3_2"/>
-  <arg name="urdf_file" default="$(find xacro)/xacro --inorder '$(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro'" />
 
   <!-- Map Server -->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)">
@@ -14,116 +13,62 @@
   </node>
 
   <group ns="$(arg tb0)">
-    <!-- Map server -->
-    <!-- <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)">
-      <param name="frame_id" value="$(arg tb0)/map"/>
-    </node> -->
-
-    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_ns_map" args="0 0 0 0 0 0 map $(arg tb0)/map" /> -->
-
-    <!-- Transform between map and robot's starting position -->
-    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom" args="$(arg x) $(arg y) 0 $(arg yaw) 0 0 $(arg tb0)/map $(arg tb0)/odom" /> -->
-
-    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="ns_scan_to_scan" args="0 0 0 0 0 0 $(arg tb0)/base_scan base_scan" /> -->
-
     <!-- Launch Turtlebot3 -->
-    <!-- <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
+    <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
       <arg name="model" value="$(arg model)" />
       <arg name="multi_robot_name" value="$(arg tb0)" />
-    </include> -->
-
-    <param name="robot_description" command="$(arg urdf_file)" />
-    
-    <!-- Robot State Publisher -->
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="50.0" />
-      <param name="tf_prefix" value="$(arg tb0)"/>
-    </node>
+    </include>
 
     <!-- Launch an AMCL node -->
     <node pkg="amcl" type="amcl" name="amcl">
       <rosparam file="$(find multi_nav)/param/amcl.yaml" command="load" />
-      <param name="odom_frame_id"             value="$(arg tb0)/odom"/>
-      <param name="base_frame_id"             value="$(arg tb0)/base_footprint"/>
-      <param name="global_frame_id" value="map"/>
-      <!-- <remap from="scan" to="$(arg tb0)/scan"/> -->
-      <!-- <remap from="map" to="/map"/> -->
+      <param name="initial_pose_x"    value="0.0"/>
+      <param name="initial_pose_y"    value="0.0"/>
+      <param name="initial_pose_a"    value="0.0"/>
+      <param name="odom_frame_id"     value="$(arg tb0)/odom"/>
+      <param name="base_frame_id"     value="$(arg tb0)/base_footprint"/>
+      <param name="global_frame_id"   value="map"/>
+      <param name="use_map_topic"     value="true" />
     </node>
   </group>
 
   <group ns="$(arg tb1)">
-    <!-- Map server -->
-    <!-- <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)">
-      <param name="frame_id" value="$(arg tb1)/map"/>
-    </node> -->
-
-    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_ns_map" args="0 0 0 0 0 0 map $(arg tb1)/map" /> -->
-
-    <!-- Transform between map and robot's starting position -->
-    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom" args="$(arg x) $(arg y) 0 $(arg yaw) 0 0 $(arg tb1)/map $(arg tb1)/odom" /> -->
-
-    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="ns_scan_to_scan" args="0 0 0 0 0 0 $(arg tb1)/base_scan base_scan" /> -->
-
     <!-- Launch Turtlebot3 -->
-    <!-- <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
+    <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
       <arg name="model" value="$(arg model)" />
       <arg name="multi_robot_name" value="$(arg tb1)" />
-    </include> -->
-
-    <param name="robot_description" command="$(arg urdf_file)" />
-    
-    <!-- Robot State Publisher -->
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="50.0" />
-      <param name="tf_prefix" value="$(arg tb1)"/>
-    </node>
+    </include>
 
     <!-- Launch an AMCL node -->
     <node pkg="amcl" type="amcl" name="amcl">
       <rosparam file="$(find multi_nav)/param/amcl.yaml" command="load" />
+      <param name="initial_pose_x"    value="1.0"/>
+      <param name="initial_pose_y"    value="0.5"/>
+      <param name="initial_pose_a"    value="0.0"/>
       <param name="odom_frame_id"             value="$(arg tb1)/odom"/>
       <param name="base_frame_id"             value="$(arg tb1)/base_footprint"/>
       <param name="global_frame_id" value="map"/>
-      <!-- <remap from="scan" to="$(arg tb1)/scan"/> -->
-      <!-- <remap from="map" to="/map"/> -->
+      <param name="use_map_topic" value="true" />
     </node>
   </group>
 
   <group ns="$(arg tb2)">
-    <!-- Map server -->
-    <!-- <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)">
-      <param name="frame_id" value="$(arg tb2)/map"/>
-    </node> -->
-
-    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_ns_map" args="0 0 0 0 0 0 map $(arg tb2)/map" /> -->
-
-    <!-- Transform between map and robot's starting position -->
-    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_odom" args="$(arg x) $(arg y) 0 $(arg yaw) 0 0 $(arg tb2)/map $(arg tb2)/odom" /> -->
-
-    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="ns_scan_to_scan" args="0 0 0 0 0 0 $(arg tb2)/base_scan base_scan" /> -->
-
     <!-- Launch Turtlebot3 -->
-    <!-- <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
+    <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
       <arg name="model" value="$(arg model)" />
       <arg name="multi_robot_name" value="$(arg tb2)" />
-    </include> -->
-
-    <param name="robot_description" command="$(arg urdf_file)" />
-    
-    <!-- Robot State Publisher -->
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-      <param name="publish_frequency" type="double" value="50.0" />
-      <param name="tf_prefix" value="$(arg tb2)"/>
-    </node>
+    </include>
 
     <!-- Launch an AMCL node -->
     <node pkg="amcl" type="amcl" name="amcl">
       <rosparam file="$(find multi_nav)/param/amcl.yaml" command="load" />
-      <param name="odom_frame_id"             value="$(arg tb2)/odom"/>
-      <param name="base_frame_id"             value="$(arg tb2)/base_footprint"/>
-      <param name="global_frame_id" value="map"/>
-      <!-- <remap from="scan" to="$(arg tb2)/scan"/> -->
-      <!-- <remap from="map" to="/map"/> -->
+      <param name="initial_pose_x"    value="2.0"/>
+      <param name="initial_pose_y"    value="0.0"/>
+      <param name="initial_pose_a"    value="0.0"/>
+      <param name="odom_frame_id"     value="$(arg tb2)/odom"/>
+      <param name="base_frame_id"     value="$(arg tb2)/base_footprint"/>
+      <param name="global_frame_id"   value="map"/>
+      <param name="use_map_topic"     value="true" />
     </node>
   </group>
 

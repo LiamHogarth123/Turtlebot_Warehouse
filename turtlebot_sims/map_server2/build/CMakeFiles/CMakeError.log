@@ -1,0 +1,41 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/ninja" "cmTC_2a639"
+[1/2] Building C object CMakeFiles/cmTC_2a639.dir/CheckSymbolExists.c.o
+[2/2] Linking C executable cmTC_2a639
+FAILED: cmTC_2a639 
+: && /usr/bin/cc   -rdynamic CMakeFiles/cmTC_2a639.dir/CheckSymbolExists.c.o  -o cmTC_2a639   && :
+CMakeFiles/cmTC_2a639.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x1b): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.
+
+File /home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/ninja" "cmTC_f3da8"
+[1/2] Building C object CMakeFiles/cmTC_f3da8.dir/CheckFunctionExists.c.o
+[2/2] Linking C executable cmTC_f3da8
+FAILED: cmTC_f3da8 
+: && /usr/bin/cc -DCHECK_FUNCTION_EXISTS=pthread_create  -rdynamic CMakeFiles/cmTC_f3da8.dir/CheckFunctionExists.c.o  -o cmTC_f3da8  -lpthreads && :
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.
+
+
