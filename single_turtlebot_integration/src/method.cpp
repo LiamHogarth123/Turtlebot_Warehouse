@@ -86,7 +86,7 @@ void Method::separateThread() {
 
   //Liam Map generation
   /////////////////////////////////////////////////////////////////////////
-  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_, true);
+  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_);
   prmMap.show_Prm();
   std::vector<geometry_msgs::Point> trajectory;
 
@@ -97,7 +97,7 @@ void Method::separateThread() {
 
 
   char v;
-  int input;
+  int input = 1;
   std::cout << "UserDefined Goals (1) or constant goals (2)";
   std::cin >> input;
 
@@ -151,7 +151,7 @@ void Method::separateThread() {
           if (TurtleGPS.goal_hit(Leader_goals.back(), tb1->GetCurrent_Odom())){
             // end of goals reached
             missionComplete = true;
-            botTraj.linear.z = 0;
+            botTraj.angular.z = 0;
             // adjust TurtleBot to be on top of last goal
             botTraj.linear.x = 0.10;
             tb1->Send_cmd_tb1(botTraj);
@@ -259,7 +259,7 @@ void Method::separateThread() {
           if (TurtleGPS.goal_hit(Leader_goals.back(), tb1->GetCurrent_Odom())){
             // end of goals reached
             missionComplete = true;
-            botTraj.linear.z = 0;
+            botTraj.angular.z = 0;
             // adjust TurtleBot to be on top of last goal
             botTraj.linear.x = 0.10;
             tb1->Send_cmd_tb1(botTraj);
@@ -293,16 +293,19 @@ void Method::separateThread() {
         
       }
 
-      int count = 0;
-      while (tagAlignment(RobotGoals[0][goal_list_index]) == false){
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-        count++;
-        if (count == 17){ //roughly looks 200degrees turning towards the tag
-          std::cout << "Could not find Tag: " << RobotGoals[0][goal_list_index].first << std::endl;
-          break;
+      // if the current goal is not the last goal, then execute
+      if (goal_list_index < RobotGoals[0].size() - 1){
+        int count = 0;
+        double angleToGoal = TurtleGPS.angleToGoal(tb1->GetCurrent_Odom(), RobotGoals[0][goal_list_index].second);
+        while (tagAlignment(RobotGoals[0][goal_list_index], angleToGoal) == false){
+          std::this_thread::sleep_for(std::chrono::milliseconds(200));
+          count++;
+          if (count == 10){ // roughly looks 60degrees turning in the direction of the tag
+            std::cout << "Could not find Tag: " << RobotGoals[0][goal_list_index].first << std::endl;
+            break;
+          }
         }
       }
-      
 
       
       if (tb1->GetCurrentSpeed() > 0){
@@ -344,15 +347,15 @@ void Method::separateThread() {
 
 
 
-bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag){
+bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal){
   
   // current tag info
   int tagID = temp_tag.first;
   geometry_msgs::Point tagPosition = temp_tag.second;
   // velocity variables
   geometry_msgs::Twist rotation;
-  rotation.linear.z = 0;
-  double angle = TurtleGPS.angleToGoal(tb1->GetCurrent_Odom(), tagPosition); // heading angle to goal
+  rotation.angular.z = 0;
+  double angle = temp_angleToGoal; // heading angle to goal used to turn in the optimal direction of the goal
   
   // searches array to find the target tag and gets the index
   auto it = std::find(arTag.ids.data.begin(), arTag.ids.data.end(), tagID);
@@ -369,24 +372,24 @@ bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag){
       // simple proportional control
       float yawControl = 0.1 * yawError;
 
-      rotation.linear.z = yawControl;
+      rotation.angular.z = yawControl;
       } else{
-        rotation.linear.z = 0;
+        rotation.angular.z = 0;
         tb1->Send_cmd_tb1(rotation);
         return true;
       }
     } 
   } else {
     // The value was not found in the array        
-    // rotates until tag detected
+    // rotates in the tags direction until tag detected
     if (angle > 0){
-      rotation.linear.z = 1;
+      rotation.angular.z = 0.5;
       
     } else if (angle < 0){
-      rotation.linear.z = -1;
+      rotation.angular.z = -0.5;
     }
   }
-  
+  std::cout << "sending rotation: " << rotation.angular.z << std::endl;
   tb1->Send_cmd_tb1(rotation);
 
   return false;;
