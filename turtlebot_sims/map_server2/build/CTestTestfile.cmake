@@ -1,0 +1,9 @@
+# CMake generated Testfile for 
+# Source directory: /home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2
+# Build directory: /home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2/build
+# 
+# This file includes the relevant testing commands required for 
+# testing this directory and lists subdirectories to be tested as well.
+add_test(_ctest_map_server2_gtest_map_server2_utest "/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2/build/catkin_generated/env_cached.sh" "/usr/bin/python2" "/opt/ros/melodic/share/catkin/cmake/test/run_tests.py" "/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2/build/test_results/map_server2/gtest-map_server2_utest.xml" "--return-code" "/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2/build/devel/lib/map_server2/map_server2_utest --gtest_output=xml:/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2/build/test_results/map_server2/gtest-map_server2_utest.xml")
+add_test(_ctest_map_server2_rostest_test_rtest.xml "/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2/build/catkin_generated/env_cached.sh" "/usr/bin/python2" "/opt/ros/melodic/share/catkin/cmake/test/run_tests.py" "/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2/build/test_results/map_server2/rostest-test_rtest.xml" "--return-code" "/usr/bin/python2 /opt/ros/melodic/share/rostest/cmake/../../../bin/rostest --pkgdir=/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2 --package=map_server2 --results-filename test_rtest.xml --results-base-dir \"/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2/build/test_results\" /home/liam/git/Turtlebot_Warehouse/turtlebot_sims/multi_turtlebot3_fake/map_server2/test/rtest.xml ")
+subdirs("gtest")
