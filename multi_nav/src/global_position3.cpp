@@ -10,9 +10,9 @@ public:
     GetGlobalPosition3()
     {
         ros::NodeHandle nh;
-        nh.getParam("tb3_0", tb3_0);
-        nh.getParam("tb3_1", tb3_1);
-        nh.getParam("tb3_2", tb3_2);
+        nh.getParam("/global_position3/tb0", tb3_0);
+        nh.getParam("/global_position3/tb1", tb3_1);
+        nh.getParam("/global_position3/tb2", tb3_2);
 
         pose_marker_pub_1 = nh.advertise<visualization_msgs::Marker>("/" + tb3_0 + "/marker/position", 10);
         pose_marker_pub_2 = nh.advertise<visualization_msgs::Marker>("/" + tb3_1 + "/marker/position", 10);

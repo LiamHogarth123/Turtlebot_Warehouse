@@ -53,9 +53,9 @@
 
   <!-- Launch global position node -->
   <node name="global_position2" pkg="multi_nav" type="global_position2" output="screen">
-        <param name="tb3_0" value="$(arg tb0)" />
-        <param name="tb3_1" value="$(arg tb1)" />
-    </node>
+        <param name="tb0" value="$(arg tb0)" />
+        <param name="tb1" value="$(arg tb1)" />
+  </node>
 
   <!-- Launch a move_base node -->
   <include file="$(find multi_nav)/launch/includes/move_base2.launch">

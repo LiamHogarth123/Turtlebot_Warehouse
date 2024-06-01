@@ -561,30 +561,30 @@ Visualization Manager:
         {}
       Queue Size: 100
       Value: true
-    # - Class: rviz/Marker
-    #   Enabled: true
-    #   Marker Topic: /marker/tb3_0/position
-    #   Name: Marker
-    #   Namespaces:
-    #     points: true
-    #   Queue Size: 100
-    #   Value: true
-    # - Class: rviz/Marker
-    #   Enabled: true
-    #   Marker Topic: /marker/tb3_1/position
-    #   Name: Marker
-    #   Namespaces:
-    #     {}
-    #   Queue Size: 100
-    #   Value: true
-    # - Class: rviz/Marker
-    #   Enabled: true
-    #   Marker Topic: /marker/tb3_2/position
-    #   Name: Marker
-    #   Namespaces:
-    #     {}
-    #   Queue Size: 100
-    #   Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /tb3_0/marker/position
+      Name: Marker
+      Namespaces:
+        points: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /tb3_1/marker/position
+      Name: Marker
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /tb3_2/marker/position
+      Name: Marker
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
