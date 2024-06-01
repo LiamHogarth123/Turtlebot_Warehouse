@@ -1,0 +1,30 @@
+<launch>
+    <!-- Arguments -->
+    <arg name="tb"/>
+    <arg name="move_forward_only" default="false"/>
+
+    <group ns="$(arg tb)">
+        <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+        <rosparam file="$(find multi_nav)/param/costmap_common_params_waffle_pi.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find multi_nav)/param/costmap_common_params_waffle_pi.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find multi_nav)/param/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find multi_nav)/param/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find multi_nav)/param/move_base_params.yaml" command="load" />
+        <rosparam file="$(find multi_nav)/param/dwa_local_planner_params_waffle_pi.yaml" command="load" />
+
+        <param name="global_costmap/scan/sensor_frame" value="$(arg tb)/base_scan"/>
+        <param name="global_costmap/obstacle_layer/scan/sensor_frame" value="$(arg tb)/base_scan"/>
+        <param name="global_costmap/global_frame" value="map"/>
+        <param name="global_costmap/robot_base_frame" value="$(arg tb)/base_footprint"/>
+        <param name="local_costmap/scan/sensor_frame" value="$(arg tb)/base_scan"/>
+        <param name="local_costmap/obstacle_layer/scan/sensor_frame" value="$(arg tb)/base_scan"/>
+        <param name="local_costmap/global_frame" value="$(arg tb)/odom"/>
+        <param name="local_costmap/robot_base_frame" value="$(arg tb)/base_footprint"/>
+
+        <remap from="map" to="/map"/>
+        <param name="DWAPlannerROS/min_vel_x" value="0.0" if="$(arg move_forward_only)" />
+        </node>
+    </group>
+  
+</launch>
