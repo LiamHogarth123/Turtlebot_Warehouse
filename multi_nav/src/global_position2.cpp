@@ -13,8 +13,8 @@ public:
         nh.getParam("tb3_0", tb3_0);
         nh.getParam("tb3_1", tb3_1);
 
-        pose_marker_pub_1 = nh.advertise<visualization_msgs::Marker>(tb3_0 + "/marker/position", 10);
-        pose_marker_pub_2 = nh.advertise<visualization_msgs::Marker>(tb3_1 + "/marker/position", 10);
+        pose_marker_pub_1 = nh.advertise<visualization_msgs::Marker>("/" + tb3_0 + "/marker/position", 10);
+        pose_marker_pub_2 = nh.advertise<visualization_msgs::Marker>("/" + tb3_1 + "/marker/position", 10);
 
         position_marker_1();
         position_marker_2();
