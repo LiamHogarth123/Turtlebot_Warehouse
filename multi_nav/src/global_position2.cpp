@@ -106,8 +106,8 @@ private:
     {
         try
         {
-            listener.waitForTransform("map", target_frame, ros::Time(0), ros::Duration(3.0));
-            listener.lookupTransform("map", target_frame, ros::Time(0), transform);
+            listener.waitForTransform("/map", target_frame, ros::Time(0), ros::Duration(3.0));
+            listener.lookupTransform("/map", target_frame, ros::Time(0), transform);
             return true;
         }
         catch (tf::TransformException &ex)

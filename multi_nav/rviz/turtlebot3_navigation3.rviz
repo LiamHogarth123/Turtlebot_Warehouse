@@ -496,8 +496,8 @@ Visualization Manager:
       Shaft Length: 1
       Shaft Radius: 0.05000000074505806
       Shape: Arrow
-      # Topic: /tb3_0/move_base/current_goal
-      Topic: /tb3_0/move_base_simple/goal
+      Topic: /tb3_0/move_base/current_goal
+      # Topic: /tb3_0/move_base_simple/goal
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -513,8 +513,8 @@ Visualization Manager:
       Shaft Length: 1
       Shaft Radius: 0.05000000074505806
       Shape: Arrow
-      # Topic: /tb3_1/move_base/current_goal
-      Topic: /tb3_1/move_base_simple/goal
+      Topic: /tb3_1/move_base/current_goal
+      # Topic: /tb3_1/move_base_simple/goal
       Unreliable: false
       Value: true
     - Alpha: 1
@@ -530,14 +530,14 @@ Visualization Manager:
       Shaft Length: 1
       Shaft Radius: 0.05000000074505806
       Shape: Arrow
-      # Topic: /tb3_2/move_base/current_goal
-      Topic: /tb3_2/move_base_simple/goal
+      Topic: /tb3_2/move_base/current_goal
+      # Topic: /tb3_2/move_base_simple/goal
       Unreliable: false
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      # Marker Topic: /marker/tb3_0/gpp
-      Marker Topic: /tb3_0/visualization_marker
+      Marker Topic: /tb3_0/marker/gpp
+      # Marker Topic: /tb3_0/visualization_marker
       Name: Marker
       Namespaces:
         {}
@@ -545,8 +545,8 @@ Visualization Manager:
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      # Marker Topic: /marker/tb3_1/gpp
-      Marker Topic: /tb3_1/visualization_marker
+      Marker Topic: /tb3_1/marker/gpp
+      # Marker Topic: /tb3_1/visualization_marker
       Name: Marker
       Namespaces:
         {}
@@ -554,8 +554,8 @@ Visualization Manager:
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      # Marker Topic: /marker/tb3_2/gpp
-      Marker Topic: /tb3_2/visualization_marker
+      Marker Topic: /tb3_2/marker/gpp
+      # Marker Topic: /tb3_2/visualization_marker
       Name: Marker
       Namespaces:
         {}

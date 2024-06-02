@@ -2566,6 +2566,18 @@
 			"value" : "/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav"
 		},
 		{
+			"name" : "nav_msgs_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for nav_msgs."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/opt/ros/noetic/share/nav_msgs/cmake"
+		},
+		{
 			"name" : "rosconsole_DIR",
 			"properties" : 
 			[
