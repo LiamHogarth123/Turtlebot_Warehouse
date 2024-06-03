@@ -45,30 +45,38 @@ sensor_msgs::Image DefaultTurtleBot::Getupdated_imageDepth(){
 }
 
 void DefaultTurtleBot::updateOdomWithTransform() {
-  // tf::StampedTransform transform;
-  // try {
-  //   listener_.lookupTransform("/map", namespace_ + "/odom", ros::Time(0), transform);
-  //   transformed_Odom = Current_Odom;
+  tf::StampedTransform transform;
+  try {
+    listener_.lookupTransform("/map", namespace_ + "/odom", ros::Time(0), transform);
+    transformed_Odom = Current_Odom;
 
-  //   // Apply the transformation to the odometry
-  //   tf::Vector3 new_origin = transform.getOrigin();
-  //   tf::Quaternion new_rotation = transform.getRotation();
+    // Apply the transformation to the odometry
+    tf::Vector3 new_origin = transform.getOrigin();
+    tf::Quaternion new_rotation = transform.getRotation();
 
-  //   transformed_Odom.pose.pose.position.x += new_origin.x();
-  //   transformed_Odom.pose.pose.position.y += new_origin.y();
-  //   transformed_Odom.pose.pose.position.z += new_origin.z();
-  //   transformed_Odom.pose.pose.orientation.x += new_rotation.x();
-  //   transformed_Odom.pose.pose.orientation.y += new_rotation.y();
-  //   transformed_Odom.pose.pose.orientation.z += new_rotation.z();
-  //   transformed_Odom.pose.pose.orientation.w += new_rotation.w();
-  // } catch (tf::TransformException &ex) {
-  //   ROS_WARN("%s", ex.what());
-  // }
+    transformed_Odom.pose.pose.position.x += new_origin.x();
+    transformed_Odom.pose.pose.position.y += new_origin.y();
+    transformed_Odom.pose.pose.position.z += new_origin.z();
+    transformed_Odom.pose.pose.orientation.x += new_rotation.x();
+    transformed_Odom.pose.pose.orientation.y += new_rotation.y();
+    transformed_Odom.pose.pose.orientation.z += new_rotation.z();
+    transformed_Odom.pose.pose.orientation.w += new_rotation.w();
+  } catch (tf::TransformException &ex) {
+    ROS_WARN("%s", ex.what());
+  }
 }
 
 double DefaultTurtleBot::GetCurrentSpeed(){
   return current_speed_;
 }
+
+std_msgs::Int16 DefaultTurtleBot::getBoundaryStatus(){
+  return boundaryStatus;
+}
+
+marker_msgs::marker DefaultTurtleBot::getARtag(){
+  return arTag;
+}  
 
 
 //callbacks
@@ -96,7 +104,12 @@ void DefaultTurtleBot::ImageDepthCallback(const sensor_msgs::Image::ConstPtr& Ms
   updated_imageDepth = *Msg;
 }
 
-void DefaultTurtleBot::guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg){
-  std::unique_lock<std::mutex> lck3 (odom_locker2);
-  guider_Odom = *odomMsg;
+void DefaultTurtleBot::boundaryCallback(const std_msgs::Int16::ConstPtr& Msg){
+  std::unique_lock<std::mutex> lck3 (boundary_locker);
+  boundaryStatus = *Msg;
+}
+
+void DefaultTurtleBot::tagCallback(const marker_msgs::marker::ConstPtr& Msg){
+  std::unique_lock<std::mutex> lck3 (marker_locker);
+  arTag = *Msg;
 }

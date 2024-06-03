@@ -10,9 +10,12 @@
 #include <random> // for std::random_device, std::mt19937
 #include <algorithm> // for std::shuffle
 
+
 TaskAlloction::TaskAlloction()
 {
     robotPositions.clear();
+    itemLocations.clear();
+
   
 }
 
@@ -33,8 +36,27 @@ void TaskAlloction::SetTurtlebotPositions(const std::vector<geometry_msgs::Point
     // robotPositions.push_back(robot2Pos);
 }
 
-void TaskAlloction::SetGoals(const std::vector<std::pair<int, geometry_msgs::Point>> goals){
-    itemLocations = goals;
+void TaskAlloction::SetGoals(std::vector<int> temp_goalIds){
+    SetGoals(); // loads all goal locations
+    std::vector<int> goalIds = temp_goalIds;
+    std::vector<std::pair<int, geometry_msgs::Point>> filteredLocations;
+
+        // Iterate through itemLocations
+        for (const auto& location : itemLocations) {
+            // Check if the index is in goalIds
+            if (std::find(goalIds.begin(), goalIds.end(), location.first) != goalIds.end()) {
+                // If it is, add it to the filteredLocations vector
+                filteredLocations.push_back(location);
+            }
+        }
+    itemLocations = filteredLocations;
+
+    // std::cout << "Item Location IDs:" << std::endl;
+    // for (const auto& location : itemLocations) {
+    //     std::cout << "ID: " << location.first << std::endl;
+    // }
+
+    randomiseGoals = false;
 }
 
 void TaskAlloction::SetGoals(){
@@ -67,7 +89,7 @@ void TaskAlloction::SetGoals(){
     item1.x = -3.2544;
     item1.y = 3.5730;
     item1.z = 0.0;
-
+    
     item2.x = -2.7472;
     item2.y = 3.5726;
     item2.z = 0.0;
@@ -79,7 +101,7 @@ void TaskAlloction::SetGoals(){
     item4.x = -0.7855;
     item4.y = 3.6251;
     item4.z = 0.0;
-
+    
     item5.x = 0.7801;
     item5.y = 3.7118;
     item5.z = 0.0;
@@ -145,101 +167,43 @@ void TaskAlloction::SetGoals(){
     item20.z = 0.0;   
 
   
-    itemLocations.push_back({1, item1});
-    itemLocations.push_back({2, item2});
-    itemLocations.push_back({3, item3});
-    itemLocations.push_back({4, item4});
-    itemLocations.push_back({5, item5});
-    itemLocations.push_back({6, item6});
-    itemLocations.push_back({7, item7});
-    itemLocations.push_back({8, item8});
-    itemLocations.push_back({9, item9});
-    itemLocations.push_back({10, item10});
-    itemLocations.push_back({11, item11});
-    itemLocations.push_back({12, item12});
-    itemLocations.push_back({13, item13});
-    itemLocations.push_back({14, item14});
-    itemLocations.push_back({15, item15});
-    itemLocations.push_back({16, item16});
-    itemLocations.push_back({17, item17});
-    itemLocations.push_back({18, item18});
-    itemLocations.push_back({19, item19});
-    itemLocations.push_back({20, item20});
-}
+    itemLocations.push_back(location1 = {1, item1});
+    itemLocations.push_back(location2 = {2, item2});
+    itemLocations.push_back(location3 = {3, item3});
+    itemLocations.push_back(location4 = {4, item4});
+    itemLocations.push_back(location5 = {5, item5});
+    itemLocations.push_back(location6 = {6, item6});
+    itemLocations.push_back(location7 = {7, item7});
+    itemLocations.push_back(location8 = {8, item8});
+    itemLocations.push_back(location9 = {9, item9});
+    itemLocations.push_back(location10 = {10, item10});
+    itemLocations.push_back(location11 = {11, item11});
+    itemLocations.push_back(location12 = {12, item12});
+    itemLocations.push_back(location13 = {13, item13});
+    itemLocations.push_back(location14 = {14, item14});
+    itemLocations.push_back(location15 = {15, item15});
+    itemLocations.push_back(location16 = {16, item16});
+    itemLocations.push_back(location17 = {17, item17});
+    itemLocations.push_back(location18 = {18, item18});
+    itemLocations.push_back(location19 = {19, item19});
+    itemLocations.push_back(location20 = {20, item20});
 
-std::vector<geometry_msgs::Point> TaskAlloction::Set_Delievery_goals(int num_robots) {
-    std::vector<geometry_msgs::Point> deliveryLocations;
-
-    // Define the default delivery location
-    geometry_msgs::Point defaultDeliveryLocation;
-    defaultDeliveryLocation.x = 0;
-    defaultDeliveryLocation.y = 0;
-
-    // Define offsets
-    double lateralOffset = 0.6; // Offset to the left and right
-    double forwardOffset = 1.0; // Forward offset for the next set of robots
-
-    for (int i = 0; i < num_robots; ++i) {
-        geometry_msgs::Point location;
-
-        if (i == 0) {
-            // First robot's delivery location is at the default location
-            location = defaultDeliveryLocation;
-        } else {
-            int set = i / 3; // Determine which set of 3 the robot belongs to
-            int position = i % 3; // Determine the position within the set
-
-            // Set the y coordinate based on the set number and forwardOffset
-            location.x = set * forwardOffset;
-
-            // Set the x coordinate based on the position within the set
-            if (position == 0) {
-                location.y = 0.0; // Center
-            } else if (position == 1) {
-                location.y = -lateralOffset; // Left
-            } else if (position == 2) {
-                location.y = lateralOffset; // Right
-            }
-        }
-
-        deliveryLocations.push_back(location);
-    }
-
-    return deliveryLocations;
+    randomiseGoals = true;
 }
 
 
 std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> TaskAlloction::taskAllocation(){
    
 
-    
-    
 
-    // Store item locations in the vector
-    
-   
-     // randomly select the goals
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::shuffle(itemLocations.begin(), itemLocations.end(), gen);
-    // Select the first 6 locations
-    itemLocations.resize(6); 
-
-
-
-    // // initial robot positions
-    // std::vector<geometry_msgs::Point> robotPositions;
-    // geometry_msgs::Point robot1Pos;
-    // robot1Pos.x = 0.0;
-    // robot1Pos.y = 0.0;
-    // robot1Pos.z = 0.0;
-    // robotPositions.push_back(robot1Pos);
-
-    // geometry_msgs::Point robot2Pos;
-    // robot2Pos.x = 0.5;
-    // robot2Pos.y = 1.25;
-    // robot2Pos.z = 0.0;
-    // robotPositions.push_back(robot2Pos);
+    if (randomiseGoals){
+        // randomly select the goals
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::shuffle(itemLocations.begin(), itemLocations.end(), gen);
+        // Select the first 6 locations
+        itemLocations.resize(6); 
+    } 
 
     // Set number of robots
     const int numRobots = robotPositions.size();
@@ -296,14 +260,7 @@ std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> TaskAlloction::ta
         allocatedPoints[i].push_back({-1, deliveryLocation.at(i)}); // Use the ID:'-1' to indicate the drop-off location
         // std::cout << "Robot " << i + 1 << " visited drop-off location: (" << deliveryLocation.at(i).x << ", " << deliveryLocation.at(i).y << ", " << deliveryLocation.at(i).z << ")" << std::endl;
     }
-    //  for (size_t i = 0; i < RobotGoals.size(); ++i) {
-    // std::cout << "Vector " << i << ":\n";
-    //   for (size_t j = 0; j < RobotGoals[i].size(); ++j) {
-    //     std::cout << "Index " << j << ": ";
-    //     std::cout << "x = " << RobotGoals[i][j].x << ", y = " << RobotGoals[i][j].y << std::endl;
-    //   }
-    //     std::cout << std::endl;
-    // }
+  
 
 
     return allocatedPoints;
@@ -316,3 +273,44 @@ double TaskAlloction::calculateDistance(const geometry_msgs::Point& p1, const ge
 
 
 
+
+std::vector<geometry_msgs::Point> TaskAlloction::Set_Delievery_goals(int num_robots) {
+    std::vector<geometry_msgs::Point> deliveryLocations;
+
+    // Define the default delivery location
+    geometry_msgs::Point defaultDeliveryLocation;
+    defaultDeliveryLocation.x = 0;
+    defaultDeliveryLocation.y = 0;
+
+    // Define offsets
+    double lateralOffset = 0.6; // Offset to the left and right
+    double forwardOffset = 1.0; // Forward offset for the next set of robots
+
+    for (int i = 0; i < num_robots; ++i) {
+        geometry_msgs::Point location;
+
+        if (i == 0) {
+            // First robot's delivery location is at the default location
+            location = defaultDeliveryLocation;
+        } else {
+            int set = i / 3; // Determine which set of 3 the robot belongs to
+            int position = i % 3; // Determine the position within the set
+
+            // Set the y coordinate based on the set number and forwardOffset
+            location.x = set * forwardOffset;
+
+            // Set the x coordinate based on the position within the set
+            if (position == 0) {
+                location.y = 0.0; // Center
+            } else if (position == 1) {
+                location.y = -lateralOffset; // Left
+            } else if (position == 2) {
+                location.y = lateralOffset; // Right
+            }
+        }
+
+        deliveryLocations.push_back(location);
+    }
+
+    return deliveryLocations;
+}

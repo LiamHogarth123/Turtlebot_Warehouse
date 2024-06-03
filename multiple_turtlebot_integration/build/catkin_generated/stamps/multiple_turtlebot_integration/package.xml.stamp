@@ -1,16 +1,15 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>multiple_turtlebot_integration</name>
   <version>0.0.1</version>
   <description>TurtleBot code for sensors and control</description>
 
   <maintainer email="liam.hogarth@student.uts.edu.au">Liam Hogarth</maintainer>
-
   <license>MIT</license>
-
-  <author email="liam.hogarth@student.uts.edu.au">Liam hogarth</author>
+  <author email="liam.hogarth@student.uts.edu.au">Liam Hogarth</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+  
   <build_depend>roscpp</build_depend>
   <build_depend>sensor_msgs</build_depend>
   <build_depend>std_msgs</build_depend>
@@ -18,14 +17,17 @@
   <build_depend>rosbag</build_depend>
   <build_depend>roslib</build_depend>
   <build_depend>geometry_msgs</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>marker_msgs</build_depend>
+  <build_depend>message_generation</build_depend>
 
-  <run_depend>roscpp</run_depend>
-  <run_depend>sensor_msgs</run_depend>
-  <run_depend>std_msgs</run_depend>
-  <run_depend>nav_msgs</run_depend>
-  <run_depend>rosbag</run_depend>
-  <run_depend>roslib</run_depend>
-  <run_depend>message_runtime</run_depend>
-
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>rosbag</exec_depend>
+  <exec_depend>roslib</exec_depend>
+  <exec_depend>message_runtime</exec_depend>
+  <exec_depend>tf</exec_depend>
+  <exec_depend>marker_msgs</exec_depend>
 </package>
-

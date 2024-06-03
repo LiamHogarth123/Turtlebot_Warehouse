@@ -35,7 +35,7 @@ public:
     //User Functions
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    void GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_, bool User_controlled);
+    void GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_, bool User_controlled, bool edit);
 
     std::vector<geometry_msgs::Point> DijkstraToGoal(geometry_msgs::Point start, geometry_msgs::Point goal);
 

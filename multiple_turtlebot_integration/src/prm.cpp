@@ -69,7 +69,7 @@ void PRM::User_remove_Nodes(){
 //User Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void PRM::GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_, bool User_controlled) {
+void PRM::GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_, bool User_controlled, bool edit) {
     UpdateMapData(map, MapMetaData_);
     std::vector<Node> ProbablityRoadMap;
     if (User_controlled){
@@ -81,7 +81,9 @@ void PRM::GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMeta
     }
     std::vector<Node> ProbablityRoadMap_ = createNodesAndEdges(ProbablityRoadMap);
     Graph = ProbablityRoadMap_;
-    User_remove_Nodes();
+    if (edit){
+        User_remove_Nodes();
+    }
 }
 
 
@@ -1065,7 +1067,7 @@ void PRM::removeNodeCallback(int event, int x, int y, int flags, void*) {
 
         for (size_t i = 0; i < nodesToRemove.size(); ++i) {
             size_t closestNodeIndex = nodesToRemove[i];
-            std::cout << "Removing node at (" << Graph[closestNodeIndex].x << ", " << Graph[closestNodeIndex].y << ")" << std::endl;
+            // std::cout << "Removing node at (" << Graph[closestNodeIndex].x << ", " << Graph[closestNodeIndex].y << ")" << std::endl;
 
             // Remove edges pointing to the deleted node
             int deletedNodeId = Graph[closestNodeIndex].id;

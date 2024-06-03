@@ -118,7 +118,7 @@ void Method::separateThread() {
   numTurtlebot = turtlebots.size();
 
 
-  std::cout << "Turtlebot Created" << std::endl;
+  std::cout << "Turtlebot Created-----------------" << std::endl;
 
   //Automtic turtlebot creation and data collection
   ////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,12 +149,12 @@ void Method::separateThread() {
 
   //Store turtlebot positions
   ///////////////////////////////////////////////////////////////////////////////////////
-  std::cout << "setting positions" << std::endl;
+  // std::cout << "setting positions" << std::endl;
   std::vector<geometry_msgs::Point> RobotPos;
   for (auto& element : turtlebots) {
     nav_msgs::Odometry temp;
     temp = element->GetCurrent_Odom();
-      std::cout << "stuck" << std::endl;
+      // std::cout << "stuck" << std::endl;
     RobotPos.push_back(temp.pose.pose.position);
   }
 
@@ -164,13 +164,13 @@ void Method::separateThread() {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
   // std::vector<geometry_msgs::Point> RobotPos;
-  std::cout << "Task allocation next state" << std::endl;
+  std::cout << "Task allocation------------------------------" << std::endl;
   TA.SetGoals();
   TA.SetTurtlebotPositions(RobotPos);
   std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> RobotGoals;
   RobotGoals = TA.taskAllocation();
 
-   std::cout << "here allocation next state" << std::endl;
+  //  std::cout << "here allocation next state" << std::endl;
   size_t largestSize = 0;
   for (const auto& vec : RobotGoals) {
     if (vec.size() > largestSize) {
@@ -182,22 +182,36 @@ void Method::separateThread() {
   //Liam Map generation
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // char user_input;
-  // bool map_choice;
+  char user_input;
+  bool map_choice;
+  bool edit;
+ 
+  std::cout << "Configuring PRM-----------------------------------";
+  std::cout << "Would you like a custom map or predefined map Y/N";
+  std::cin >> user_input;
 
-  // std::cout << "Would you like a custom map or predefined map Y/N";
-  // std::cin >> user_input;
+  if (user_input == 'y' || user_input == 'Y') {
+      map_choice = true;
+    } else if (user_input == 'n' || user_input == 'N') {
+      map_choice = false;
+    } else {
+      std::cout << "invalid input deflaut being used" << std::endl;
+      map_choice = false;
+    }
 
-  // if (user_input == 'y' || user_input == 'Y') {
-  //     map_choice = true;
-  //   } else if (user_input == 'n' || user_input == 'N') {
-  //     map_choice = false;
-  //   } else {
-  //     std::cout << "invalid input deflaut being used" << std::endl;
-  //     map_choice = false;
-  //   }
+  std::cout << "Would you like to manually edit the PRM";
+  std::cin >> user_input;
 
-  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_, false);
+  if (user_input == 'y' || user_input == 'Y') {
+      edit = true;
+    } else if (user_input == 'n' || user_input == 'N') {
+      edit = false;
+    } else {
+      std::cout << "invalid input deflaut being used" << std::endl;
+      edit = false;
+    }
+
+  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_, map_choice, edit);
   // std::vector<geometry_msgs::Point> trajectory;
   std::vector<std::vector<geometry_msgs::Point>> trajectory(numTurtlebot);
   geometry_msgs::Point goal;
@@ -208,13 +222,26 @@ void Method::separateThread() {
   //path aviodance initalisation
   /////////////////////////////////////////
   path_avoidance_ path_checker;
+  bool Synchronous;
+  std::cout << "system Ready" << std::endl;
+  std::cout << "Would you like to run Synchronous turtlebot movement (y)? or Asynchronous (N) ";
+  std::cout << "Note Asynchronous is more efficieny has higher risk of collision";
+  std::cin >> user_input;
 
+  if (user_input == 'y' || user_input == 'Y') {
+      Synchronous = true;
+    } else if (user_input == 'n' || user_input == 'N') {
+      Synchronous = false;
+    } else {
+      std::cout << "invalid input deflaut being used" << std::endl;
+      Synchronous = true;
+    }
 
 
   
   //Synchous coding Main loop generation
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  if (true){
+  if (Synchronous){
     for (int i = 0; i < largestSize; i++){
 
       for (size_t j = 0; j < turtlebots.size(); j++) {
@@ -247,25 +274,18 @@ void Method::separateThread() {
 
       path_checker.Update_paths(trajectory);
       
-
-      while (path_checker.find_collisions(collided_points)) {
-        
+      int max_iterations = 100;  // Maximum number of iterations to prevent infinite loop
+      int iteration_count = 0;
+      while (path_checker.find_collisions(collided_points) && iteration_count < max_iterations) {
+        iteration_count++;
+        // visualisation
         visualization_msgs::MarkerArray tempory = publishMarkers(path_checker.get_all_interpolated_points(), marker_pub);
         publishCollisons(collided_points, marker_pub, tempory);
         tempory.markers.clear();
 
         //Regenerate Path withouut collisions
         std::vector<std::pair<int, geometry_msgs::Point>> robot_with_collisiosn = path_checker.GetCollisionsWithId();
-        // // std::cout << "Collision Points Vector:" << std::endl;
-        // for (const auto& collision : robot_with_collisiosn) {
-        //   int robot_id = collision.first;
-        //   double x = collision.second.x;
-        //   double y = collision.second.y;
-        //   // std::cout << "Robot ID: " << robot_id << " | Collision Point: (" << x << ", " << y << ")" << std::endl;
-        // }
-
-
-        std::cout << "size -----> " << robot_with_collisiosn.size() << std::endl;
+        // std::cout << "size -----> " << robot_with_collisiosn.size() << std::endl;
         CollisionMap collision_map;
         processCollisions(robot_with_collisiosn, collision_map);
         
@@ -288,9 +308,6 @@ void Method::separateThread() {
                     collision_points_for_robot.push_back(col.second);
                 }
             }
-
-            
-
             // Recalculate trajectory
             geometry_msgs::Point start = trajectory[robot_to_replan].front();
             geometry_msgs::Point goal = trajectory[robot_to_replan].back();
@@ -301,16 +318,10 @@ void Method::separateThread() {
       }
 
 
-
-      std::cout << "done visualising" << std::endl;
-
-
-
       // Leader_goals = trajectory;
       goal_index = 0;
 
       
-
       //Dan control start
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -369,11 +380,11 @@ void Method::separateThread() {
   // Asychous Turtlebot with Trajectory thread
   else if (false) {
 
-  }
+  // }
 
  
-  for (auto ptr : turtlebots) {
-    delete ptr;
+  // for (auto ptr : turtlebots) {
+  //   delete ptr;
   }
 }
 
@@ -388,6 +399,7 @@ void Method::Function(std::vector<geometry_msgs::Point> trajectory , DefaultTurt
   geometry_msgs::Twist botTraj;
   int falsePositiveCheck;
   // t.join();
+
  while (!done){
     
     
@@ -431,17 +443,23 @@ void Method::Function(std::vector<geometry_msgs::Point> trajectory , DefaultTurt
 
 
     // Checks for boundary and kills program if detected
-    if (boundaryStatus.data == 1){ // blue detected
+    if (turtleboi->getBoundaryStatus().data == 1){ // blue detected
       falsePositiveCheck++;
       if (falsePositiveCheck > 3) {
         std::cout << "Boundary Detected!! Seek Operator Assistance" << std::endl;
+        while (turtleboi->GetCurrentSpeed() > 0){
+          turtleboi->Send_cmd_tb1(zero_vel);
+        }
+
         break;
       }
     } else { // red = 2, nothing = 0
       falsePositiveCheck = 0;
     }
 
-    // std::cout << botTraj.linear.x << std::endl;
+
+    //if all good
+    ///////////////////////////////////////////////////////////////////////////////////////////
     turtleboi->Send_cmd_tb1(botTraj);
   
     // std::cout << "Look-Ahead Point: (" << targetGoal.x << ", " << targetGoal.y << ")" << std::endl;
@@ -450,6 +468,21 @@ void Method::Function(std::vector<geometry_msgs::Point> trajectory , DefaultTurt
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
   }
+
+  // AR tag finding
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // if (goal_list_index < RobotGoals[0].size() - 1){
+  //   int count = 0;
+  //   while (tagAlignment(RobotGoals[0][goal_list_index], Turtle_GPS->angleToGoal(turtleboi->GetCurrent_Odom(), RobotGoals[0][goal_list_index].second)) == false){
+  //     std::this_thread::sleep_for(std::chrono::milliseconds(200));
+  //     count++;
+  //     if (count == 20){ // roughly looks 86degrees turning in the direction of the tag
+  //       std::cout << "Could not find Tag: " << RobotGoals[0][goal_list_index].first << std::endl;
+  //       break;
+  //     }
+  //   }
+  // }
+
 
 
   while (turtleboi->GetCurrentSpeed() > 0){
@@ -588,8 +621,8 @@ void Method::turtleMovement(){
 
 
 bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal, DefaultTurtleBot* tb1){
-  
   // current tag info
+  marker_msgs::marker arTag = tb1->getARtag();
   int tagID = temp_tag.first;
   geometry_msgs::Point tagPosition = temp_tag.second;
   // velocity variables
@@ -616,25 +649,31 @@ bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double 
       } else{
         rotation.angular.z = 0;
         tb1->Send_cmd_tb1(rotation);
+        std::cout << "Found and Confirmed AR Tag: " << tagID << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
         return true;
       }
     } 
   } else {
     // The value was not found in the array        
-    // rotates in the tags direction until tag detected
-    if (angle > 0){
-      rotation.angular.z = 0.5;
+    // rotates using simple proportional control in the tags direction until tag detected
+    float yawControl = 0;
+    if (abs(angle) > 0.1){
+      yawControl = 0.1 * angle;
+      rotation.angular.z = yawControl;
       
-    } else if (angle < 0){
-      rotation.angular.z = -0.5;
-    }
+    } 
   }
   std::cout << "sending rotation: " << rotation.angular.z << std::endl;
   tb1->Send_cmd_tb1(rotation);
 
-  return false;;
+  return false;
 
 }
+
+
+// bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal){
+  
 
 
 

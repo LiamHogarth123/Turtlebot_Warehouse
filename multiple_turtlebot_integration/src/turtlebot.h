@@ -5,9 +5,13 @@
 #include <string>
 #include <mutex>
 #include <tf/transform_listener.h>
+
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/LaserScan.h>
 #include <sensor_msgs/Image.h>
+#include "marker_msgs/marker.h"
+#include "std_msgs/Int16.h"
+
 
 #include <cmath>
 
@@ -26,6 +30,9 @@ public:
     sensor_msgs::LaserScan Getupdated_Lida();
     sensor_msgs::Image Getupdated_imageDepth();
     double GetCurrentSpeed();
+    marker_msgs::marker getARtag();
+    std_msgs::Int16 getBoundaryStatus();
+    
 
 
     /**
@@ -46,7 +53,8 @@ private:
     void LidaCallback(const sensor_msgs::LaserScan::ConstPtr& Msg);
     void RGBCallback(const sensor_msgs::Image::ConstPtr& Msg);
     void ImageDepthCallback(const sensor_msgs::Image::ConstPtr& Msg);
-    void guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg);
+    void tagCallback(const marker_msgs::marker::ConstPtr& Msg);
+    void boundaryCallback(const std_msgs::Int16::ConstPtr& Msg);
     void updateOdomWithTransform();
 
 
@@ -70,6 +78,8 @@ private:
     std::mutex RGB_locker;
     std::mutex Lida_locker;
     std::mutex ImageDepth_locker;
+    std::mutex marker_locker;
+    std::mutex boundary_locker;
 
     tf::TransformListener listener_;
 
@@ -80,6 +90,8 @@ private:
     sensor_msgs::Image updated_RGB;
     sensor_msgs::LaserScan updated_Lida;
     sensor_msgs::Image updated_imageDepth;
+    marker_msgs::marker arTag;
+    std_msgs::Int16 boundaryStatus;
     double current_speed_;
 
 
