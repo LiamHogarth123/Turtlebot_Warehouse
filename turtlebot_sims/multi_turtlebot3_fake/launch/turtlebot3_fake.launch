@@ -1,5 +1,14 @@
 <launch>
+  
+
+
+    <node name="map_server2" pkg="map_server2" type="map_server2" args="$(find map_server2)/maps/map.yaml" output="screen"/>
+    <node name="map_server1" pkg="map_server" type="map_server" args="$(find map_server2)/maps/map.yaml" output="screen"/>
+
+
+
   <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+
 
   <param name="tb3_model" value="$(arg model)"/>
 

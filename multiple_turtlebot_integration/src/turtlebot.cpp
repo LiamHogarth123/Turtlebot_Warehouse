@@ -28,8 +28,9 @@ void DefaultTurtleBot::Send_cmd_tb1(geometry_msgs::Twist intructions){
 //     return DefaultTurtleBot(name, nh_); // Use the same node handle as the original
 // }
 nav_msgs::Odometry DefaultTurtleBot::GetCurrent_Odom(){
-    nav_msgs::Odometry updatedOdom = DefaultTurtleBot::odomToMap(Current_Odom);
-    return updatedOdom;
+  updateOdomWithTransform();
+  // return transformed_Odom; .
+  return Current_Odom;
 }
 
 sensor_msgs::Image DefaultTurtleBot::GetCurrentupdated_RGB(){
@@ -43,17 +44,30 @@ sensor_msgs::Image DefaultTurtleBot::Getupdated_imageDepth(){
     return updated_imageDepth;
 }
 
-nav_msgs::Odometry DefaultTurtleBot::odomToMap(nav_msgs::Odometry odom)
-{
-  nav_msgs::Odometry updatedOdom;
-  updatedOdom.pose.pose.position.x = odom.pose.pose.position.x + map.translation.x;
-  updatedOdom.pose.pose.position.y = odom.pose.pose.position.y + map.translation.y;
-  updatedOdom.pose.pose.position.z = odom.pose.pose.position.x;
-  updatedOdom.pose.pose.orientation.x = odom.pose.pose.orientation.x + map.rotation.x;
-  updatedOdom.pose.pose.orientation.y = odom.pose.pose.orientation.y + map.rotation.y;
-  updatedOdom.pose.pose.orientation.z = odom.pose.pose.orientation.z + map.rotation.z;
-  updatedOdom.pose.pose.orientation.w = odom.pose.pose.orientation.w + map.rotation.w;
-  return updatedOdom;
+void DefaultTurtleBot::updateOdomWithTransform() {
+  // tf::StampedTransform transform;
+  // try {
+  //   listener_.lookupTransform("/map", namespace_ + "/odom", ros::Time(0), transform);
+  //   transformed_Odom = Current_Odom;
+
+  //   // Apply the transformation to the odometry
+  //   tf::Vector3 new_origin = transform.getOrigin();
+  //   tf::Quaternion new_rotation = transform.getRotation();
+
+  //   transformed_Odom.pose.pose.position.x += new_origin.x();
+  //   transformed_Odom.pose.pose.position.y += new_origin.y();
+  //   transformed_Odom.pose.pose.position.z += new_origin.z();
+  //   transformed_Odom.pose.pose.orientation.x += new_rotation.x();
+  //   transformed_Odom.pose.pose.orientation.y += new_rotation.y();
+  //   transformed_Odom.pose.pose.orientation.z += new_rotation.z();
+  //   transformed_Odom.pose.pose.orientation.w += new_rotation.w();
+  // } catch (tf::TransformException &ex) {
+  //   ROS_WARN("%s", ex.what());
+  // }
+}
+
+double DefaultTurtleBot::GetCurrentSpeed(){
+  return current_speed_;
 }
 
 
@@ -63,6 +77,7 @@ nav_msgs::Odometry DefaultTurtleBot::odomToMap(nav_msgs::Odometry odom)
 void DefaultTurtleBot::odomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg){
   std::unique_lock<std::mutex> lck3 (odom_locker);
   Current_Odom = *odomMsg;
+  current_speed_ = std::sqrt(std::pow(odomMsg->twist.twist.linear.x, 2) + std::pow(odomMsg->twist.twist.linear.y, 2) + std::pow(odomMsg->twist.twist.linear.z, 2));
 }
 
 void  DefaultTurtleBot::RGBCallback(const sensor_msgs::Image::ConstPtr& Msg){

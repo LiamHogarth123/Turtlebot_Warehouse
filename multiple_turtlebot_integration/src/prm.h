@@ -1,9 +1,11 @@
 #include <vector>
 #include <utility> // for std::pair
 #include "opencv2/opencv.hpp"
-#include "nav_msgs/OccupancyGrid.h"
-#include "nav_msgs/MapMetaData.h"
 
+#include "nav_msgs/MapMetaData.h"
+#include <nav_msgs/Odometry.h>
+#include <nav_msgs/OccupancyGrid.h>
+#include <unordered_set>
 
 struct Node {
     int id;
@@ -33,7 +35,7 @@ public:
     //User Functions
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    void GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_);
+    void GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_, bool User_controlled);
 
     std::vector<geometry_msgs::Point> DijkstraToGoal(geometry_msgs::Point start, geometry_msgs::Point goal);
 
@@ -49,11 +51,23 @@ public:
 
     void Load_PRM(PrmData Imports);
 
+    void User_remove_Nodes();
+
+    bool checkCollision(const std::vector<geometry_msgs::Point>& traj1, const std::vector<geometry_msgs::Point>& traj2);
+
+    // void setoffset(nav_msgs::Odometry start_odom);
+
+
 
 private:
     // Gemerating the PRM Functions
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     std::vector<Node> samplePoints();
+
+    bool isPointInLShape(const cv::Point& point);
+    
+    std::vector<cv::Point> LPoints;
+
 
     bool ValidPoint(geometry_msgs::Point point);
 
@@ -76,6 +90,8 @@ private:
     float nodeDistance(const Node& a, const Node& b);
 
     float euclideanDistance(const Node& node1, const Node& node2);
+
+    double calculateDistance(const geometry_msgs::Point& p1, const geometry_msgs::Point& p2);
     
     int setGoalNode(geometry_msgs::Point goal);
     
@@ -88,15 +104,24 @@ private:
 
     bool newPoint(geometry_msgs::Point point, std::vector<Node> temp);
 
+    geometry_msgs::Point convertPointToNodeCordinate(geometry_msgs::Point temp);
+
+    cv::Point convertPointToNodeCordinate(cv::Point temp);
+
 
     // Path finding
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     std::vector<int> findPathAStar(const std::vector<Node>& graph, int startId, int targetId);
 
+    std::vector<int> findPathAStarWithBlackList(const std::vector<Node>& graph, int startId, int targetId, const std::unordered_set<int>& blacklist);
+
+
     std::vector<int> findPathDijkstra(const std::vector<Node>& graph, int startId, int targetId);
 
     void findPath(int startNodeId, int goalNodeId);
+
+    std::vector<int> GenerateBlackList(std::vector<geometry_msgs::Point> CollisonPoints);
 
 
     // Visualisation Functions
@@ -113,6 +138,30 @@ private:
     void show_map(cv::Mat mapImage);
 
     void save_map(cv::Mat mapImage);
+
+
+    //OPEN CV Define load area 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    static void staticMouseCallback(int event, int x, int y, int flags, void* userdata);
+
+    void mouseCallback(int event, int x, int y, int flags, void* userdata);
+    
+    std::vector<cv::Point> getUserDefinedPolygon(const std::string& mapImagePath);
+    
+    bool isPointInPolygon(const cv::Point& point, const std::vector<cv::Point>& polygon);
+    
+    std::vector<Node> samplePointsCV();
+    
+    static std::vector<cv::Point> polygonPoints;
+
+
+    //User Removal of nodes
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    static void staticRemoveNodeCallback(int event, int x, int y, int flags, void* userdata);
+
+    void removeNodeCallback(int event, int x, int y, int flags, void* userdata);
+    
+    cv::Mat removeNodes(cv::Mat mapImage, std::vector<Node>& Graph_);
 
 
 
@@ -132,9 +181,14 @@ private:
     nav_msgs::OccupancyGrid SlamMapData;
     nav_msgs::MapMetaData latestMapMetaData_;
 
+    double offestx;
+    double offsety;
+    double offsetyaw;
 
 
     int numberOfPoints_;
+
+
 
     std::vector<cv::Point> path_points_withoutValidation;
     std::vector<cv::Point> path_points;

@@ -25,20 +25,12 @@ Method::Method(ros::NodeHandle nh) :
 
   pub_ = nh_.advertise<visualization_msgs::MarkerArray>("/visualization_marker_array",3,false);
 
-// Robot 1 -----------------------------------------------------
-  sub1_ = nh_.subscribe("/odom", 1000, &Method::odomCallback,this);
-
-  sub2_ = nh_.subscribe("/scan", 10, &Method::LidaCallback,this);
-
-  sub3_ = nh_.subscribe("/camera/rgb/image_raw", 1000, &Method::RGBCallback, this);
-
-  sub4_ = nh_.subscribe("/camera/depth/image_raw", 1000, &Method::ImageDepthCallback, this);
 
   cmd_velocity_tb1 = nh_.advertise<geometry_msgs::Twist>("/cmd_vel",10);
 
   // Robot 2 guider ---------------------
 
-  sub5_ = nh_.subscribe("tb3_1/odom", 1000, &Method::guiderOdomCallback,this);
+
 
   cmd_velocity_tb2 = nh.advertise<geometry_msgs::Twist>("tb3_1/cmd_vel",10);
 
@@ -49,6 +41,15 @@ Method::Method(ros::NodeHandle nh) :
   mapMetadataSub = nh_.subscribe("/map_metadata", 1000, &Method::mapMetadataCallback, this);
 
   marker_pub = nh.advertise<visualization_msgs::MarkerArray>("visualization_marker_array", 100);
+
+
+ 
+    zero_vel.linear.x = 0.0;
+    zero_vel.linear.y = 0.0;
+    zero_vel.linear.z = 0.0;
+    zero_vel.angular.x = 0.0;
+    zero_vel.angular.y = 0.0;
+    zero_vel.angular.z = 0.0;
 
   
   
@@ -69,13 +70,16 @@ void Method::separateThread() {
   int numTurtlebot = 2;
   std::vector<DefaultTurtleBot*> turtlebots;
   
+
+  // MAnualy adding transform from odom to map
   geometry_msgs::Transform map1;
   geometry_msgs::Transform map2;
 
+
   // Initialize translation to zero
-    map2.translation.x = 0.0;
-    map2.translation.y = 0.0;
-    map2.translation.z = 0.0;
+  map2.translation.x = 0.0;
+  map2.translation.y = 0.0;
+  map2.translation.z = 0.0;
 
     // Initialize rotation to zero (quaternion zero initialization means no rotation)
     map2.rotation.x = 0.0;
@@ -95,32 +99,26 @@ void Method::separateThread() {
     map1.rotation.w = 1.0; 
   
 
+
+
   ros::NodeHandle nh_1;
-  DefaultTurtleBot* tb1 =  new DefaultTurtleBot("tb1", nh_1, map1);
+  DefaultTurtleBot* tb1 =  new DefaultTurtleBot("tb3_0", nh_1, map1);
   ros::NodeHandle nh_2;
-  DefaultTurtleBot* tb2 =  new DefaultTurtleBot("tb2", nh_2, map2);
+  DefaultTurtleBot* tb2 =  new DefaultTurtleBot("tb3_1", nh_2, map2);
+  ros::NodeHandle nh_3;
+  DefaultTurtleBot* tb3 =  new DefaultTurtleBot("tb3_2", nh_3, map2);
   std::vector<std::thread> threads;
 
   
   
   turtlebots.push_back(tb1);
   turtlebots.push_back(tb2);
+  turtlebots.push_back(tb3);
+
+  numTurtlebot = turtlebots.size();
+
 
   std::cout << "Turtlebot Created" << std::endl;
-
-  //CREATING GPS
-  /////////////////////////////////////////////////////////////////////////////////////////////
-
-  // Control TurtleGPS;
-  std::vector<Control*> Turtle_Controllers;
-  for (size_t j = 0; j < turtlebots.size(); j++) {  
-    Turtle_Controllers.push_back(new Control());
-  }
-  Finished.clear();
-  for (size_t k = 0; k < turtlebots.size(); k++){
-    Finished.push_back(false);
-  }
-
 
   //Automtic turtlebot creation and data collection
   ////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,6 +130,21 @@ void Method::separateThread() {
   // }
 
 
+
+  //CREATING GPS
+  /////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Control TurtleGPS;
+  std::vector<Control*> Turtle_Controllers;
+  for (size_t j = 0; j < turtlebots.size(); j++) {  
+    Turtle_Controllers.push_back(new Control());
+  }
+
+  //misson completed boolean vector
+  Finished.clear();
+  for (size_t k = 0; k < turtlebots.size(); k++){
+    Finished.push_back(false);
+  }
 
 
   //Store turtlebot positions
@@ -154,7 +167,7 @@ void Method::separateThread() {
   std::cout << "Task allocation next state" << std::endl;
   TA.SetGoals();
   TA.SetTurtlebotPositions(RobotPos);
-  std::vector<std::vector<geometry_msgs::Point>> RobotGoals;
+  std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> RobotGoals;
   RobotGoals = TA.taskAllocation();
 
    std::cout << "here allocation next state" << std::endl;
@@ -168,7 +181,7 @@ void Method::separateThread() {
 
   //Liam Map generation
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_);
+  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_, false);
   // std::vector<geometry_msgs::Point> trajectory;
   std::vector<std::vector<geometry_msgs::Point>> trajectory(numTurtlebot);
   geometry_msgs::Point goal;
@@ -176,26 +189,32 @@ void Method::separateThread() {
   nav_msgs::Odometry odometry_start;
 
  
+  //path aviodance initalisation
+  /////////////////////////////////////////
+  path_avoidance_ path_checker;
+
+
 
   
   //Synchous coding Main loop generation
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  if (false){
+  if (true){
     for (int i = 0; i < largestSize; i++){
 
       for (size_t j = 0; j < turtlebots.size(); j++) {
         std::cout << "index" << j << std::endl;
         auto& element = turtlebots[j];
         std::cout << "pointer done" << j << std::endl;
-        goal = RobotGoals.at(j).at(i);
+        goal = RobotGoals.at(j).at(i).second;
         std::cout << "goal done" << j << std::endl;
 
         odometry_start = element->GetCurrent_Odom();
         std::cout << "odom done" << j << std::endl;
-        trajectory.at(j) = prmMap.DijkstraToGoal(odometry_start.pose.pose.position, goal);
+        trajectory.at(j) = prmMap.A_star_To_Goal(odometry_start.pose.pose.position, goal);
       
 
       }
+      
       std::vector<geometry_msgs::Point> combinedPoints;
       for (const auto& points : trajectory) {
         // Append each point to the combinedPoints vector
@@ -203,8 +222,24 @@ void Method::separateThread() {
           combinedPoints.push_back(point);
         }
       }
-      publishMarkers(combinedPoints, marker_pub);
+      // visualization_msgs::MarkerArray tempory = publishMarkers(combinedPoints, marker_pub);
       
+      std::vector<geometry_msgs::Point> collided_points;
+      
+      path_checker.Update_paths(trajectory);
+
+   
+
+      visualization_msgs::MarkerArray tempory = publishMarkers(path_checker.get_all_interpolated_points(), marker_pub);
+
+      if (path_checker.find_collisions(collided_points)){
+        publishCollisons(collided_points, marker_pub, tempory);
+      }
+
+      std::cout << "done visualising" << std::endl;
+
+
+
       // Leader_goals = trajectory;
       goal_index = 0;
 
@@ -219,6 +254,7 @@ void Method::separateThread() {
 
       for (size_t j = 0; j < turtlebots.size(); j++) {
         threads.emplace_back(&Method::Function, std::ref(*this), trajectory.at(j), std::ref(turtlebots.at(j)), std::ref(Turtle_Controllers.at(j)));
+        
       }
       for (auto& thread : threads) {
         thread.join();
@@ -277,89 +313,303 @@ void Method::separateThread() {
 
 
 void Method::Function(std::vector<geometry_msgs::Point> trajectory , DefaultTurtleBot* turtleboi, Control* Turtle_GPS){
+  
+
+  geometry_msgs::Point targetGoal;
+  int loop_interation =0;
   int index = 0;
   bool done = false;
+  geometry_msgs::Twist botTraj;
+  int falsePositiveCheck;
   // t.join();
  while (!done){
-      geometry_msgs::Point targetGoal;
-      nav_msgs::Odometry robot_odom;
-      targetGoal = trajectory.at(index);
-      robot_odom = turtleboi->GetCurrent_Odom();
-      Turtle_GPS->updateGoal(targetGoal, robot_odom);
-      geometry_msgs::Twist botTraj = Turtle_GPS->reachGoal();
+    
+    
 
-      
-      if (Turtle_GPS->goal_hit(targetGoal, Current_Odom)){
-        std::cout << "goal hit" << std::endl;
-        
-        if (index != trajectory.size() - 1){
+  // goes to first goal way point to allign itself
+  if (loop_interation < 1) {
+    targetGoal = trajectory.at(loop_interation+1);
+    Turtle_GPS->updateControlParam(targetGoal, calcDistance(turtleboi->GetCurrent_Odom().pose.pose.position, trajectory.back()), turtleboi->GetCurrent_Odom(), turtleboi->Getupdated_Lida());
+    botTraj = Turtle_GPS->reachGoal();
     
-          index++;
-    
-        }
-        else{
-          done = true;
-        }
-      }
-      turtleboi->Send_cmd_tb1(botTraj);
-      
-    
-      std::this_thread::sleep_for(std::chrono::milliseconds(200));
+  }
+  else {
+
+    targetGoal = findLookAheadPoint(trajectory, turtleboi->GetCurrent_Odom().pose.pose.position, 0.5);
+    Turtle_GPS->updateControlParam(targetGoal, calcDistance(turtleboi->GetCurrent_Odom().pose.pose.position, trajectory.back()), turtleboi->GetCurrent_Odom(), turtleboi->Getupdated_Lida());
+    botTraj = Turtle_GPS->reachGoal();
+
+  }
+
+  if (Turtle_GPS->goal_hit(targetGoal, turtleboi->GetCurrent_Odom())){
+      loop_interation++;  
     }
+
+  if (Turtle_GPS->goal_hit(trajectory.back(), turtleboi->GetCurrent_Odom())){
+      // end of goals reached
+      missionComplete = true;
+      done = true;
+      botTraj.angular.z = 0;
+      // adjust TurtleBot to be on top of last goal
+      botTraj.linear.x = 0.10;
+      turtleboi->Send_cmd_tb1(botTraj);
+      std::cout << "Sleeping for 1000ms to adjust position..." << std::endl;
+      std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+      botTraj.linear.x = 0;
+      std::cout << "Goal Reached!!!!!!!!" << std::endl;
+    }
+
+
+
+
+
+
+    // Checks for boundary and kills program if detected
+    if (boundaryStatus.data == 1){ // blue detected
+      falsePositiveCheck++;
+      if (falsePositiveCheck > 3) {
+        std::cout << "Boundary Detected!! Seek Operator Assistance" << std::endl;
+        break;
+      }
+    } else { // red = 2, nothing = 0
+      falsePositiveCheck = 0;
+    }
+
+    // std::cout << botTraj.linear.x << std::endl;
+    turtleboi->Send_cmd_tb1(botTraj);
+  
+    // std::cout << "Look-Ahead Point: (" << targetGoal.x << ", " << targetGoal.y << ")" << std::endl;
+    // publishLookAheadMarker(targetGoal);
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+  }
+
+
+  while (turtleboi->GetCurrentSpeed() > 0){
+    turtleboi->Send_cmd_tb1(zero_vel);
+  }
+
+  // Tag Allignment
+  // tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal, turtleboi);
+  //while (turtleboi->GetCurrentSpeed() > 0){
+  //   turtleboi->Send_cmd_tb1(zero_vel);
+  // }
+
+
+  missionComplete = false;
+  goal_index = 0;
+
+
 }
 
 
-void Method::Function2(PRM* Trajectory_Planner, DefaultTurtleBot* turtleboi, Control* Turtle_GPS, std::vector<geometry_msgs::Point> Goals){
+void Method::Function2(PRM* Trajectory_Planner, DefaultTurtleBot* turtleboi, Control* Turtle_GPS, std::vector<std::pair<int, geometry_msgs::Point>> Goals){
   for (int i = 0; i < Goals.size(); i++){
-    geometry_msgs::Point Current_Goal = Goals.at(i);
+    geometry_msgs::Point Current_Goal = Goals.at(i).second;
     geometry_msgs::Point start = turtleboi->GetCurrent_Odom().pose.pose.position;
     int index = 0;
     bool done = false;
     int falsePositiveCheck = 0;
     int loop_interation = 0;
+    geometry_msgs::Point targetGoal;
+    geometry_msgs::Twist botTraj;
+
+
 
     std::vector<geometry_msgs::Point> trajectory = Trajectory_Planner->A_star_To_Goal(start, Current_Goal);
 
   
 
     while (!done){
-      geometry_msgs::Point targetGoal;
-      geometry_msgs::Twist botTraj;
-      nav_msgs::Odometry Current_Position= turtleboi->GetCurrent_Odom();
-
+      // goes to first goal way point to allign itself
       if (loop_interation < 1) {
         targetGoal = trajectory.at(loop_interation+1);
-        Turtle_GPS->updateGoal(targetGoal, Current_Position);
+        Turtle_GPS->updateControlParam(targetGoal, calcDistance(turtleboi->GetCurrent_Odom().pose.pose.position, trajectory.back()), turtleboi->GetCurrent_Odom(), turtleboi->Getupdated_Lida());
+        botTraj = Turtle_GPS->reachGoal();
+        
+      }
+      else {
+
+        targetGoal = findLookAheadPoint(trajectory, turtleboi->GetCurrent_Odom().pose.pose.position, 0.5);
+        Turtle_GPS->updateControlParam(targetGoal, calcDistance(turtleboi->GetCurrent_Odom().pose.pose.position, trajectory.back()), turtleboi->GetCurrent_Odom(), turtleboi->Getupdated_Lida());
         botTraj = Turtle_GPS->reachGoal();
 
-        if (Turtle_GPS->goal_hit(targetGoal, Current_Position)){
+      }
+
+      if (Turtle_GPS->goal_hit(targetGoal, turtleboi->GetCurrent_Odom())){
           loop_interation++;  
         }
+
+      if (Turtle_GPS->goal_hit(trajectory.back(), turtleboi->GetCurrent_Odom())){
+        // end of goals reached
+        missionComplete = true;
+        done = true;
+        botTraj.angular.z = 0;
+        // adjust TurtleBot to be on top of last goal
+        botTraj.linear.x = 0.10;
+        turtleboi->Send_cmd_tb1(botTraj);
+        std::cout << "Sleeping for 1000ms to adjust position..." << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+        botTraj.linear.x = 0;
+        std::cout << "Goal Reached!!!!!!!!" << std::endl;
       }
 
-      else {
-        targetGoal = findLookAheadPoint(trajectory, Current_Position.pose.pose.position, 1);
 
-        Turtle_GPS->updateGoal(targetGoal, Current_Position);
-        botTraj = Turtle_GPS->reachGoal();
-      
-        if (Turtle_GPS->goal_hit(trajectory.back(), Current_Position)){
-          done = true;
+
+
+
+
+      // Checks for boundary and kills program if detected
+      if (boundaryStatus.data == 1){ // blue detected
+        falsePositiveCheck++;
+        if (falsePositiveCheck > 3) {
+          std::cout << "Boundary Detected!! Seek Operator Assistance" << std::endl;
+          break;
         }
-      
+      } else { // red = 2, nothing = 0
+        falsePositiveCheck = 0;
       }
-      std::cout << "Bot trajectory: " << botTraj << std::endl;
+
+      std::cout << botTraj.linear.x << std::endl;
       turtleboi->Send_cmd_tb1(botTraj);
+    
+      // std::cout << "Look-Ahead Point: (" << targetGoal.x << ", " << targetGoal.y << ")" << std::endl;
+      // publishLookAheadMarker(targetGoal);
       
       std::this_thread::sleep_for(std::chrono::milliseconds(200));
-      // cout << "hi";
 
-    } //   std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
+
+
+    while (turtleboi->GetCurrentSpeed() > 0){
+      turtleboi->Send_cmd_tb1(zero_vel);
+    }
+
+    // Tag Allignment
+    // tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal, turtleboi);
+    //while (turtleboi->GetCurrentSpeed() > 0){
+    //   turtleboi->Send_cmd_tb1(zero_vel);
+    // }
+
+
+    missionComplete = false;
+    goal_index = 0;
   }
 
   // // t.join();
  
 }
+
+
+
+
+
+
+void Method::turtleMovement(){
+
+    
+}
+
+
+
+
+// High level functions DefaultTurtleBot* tb1
+//////////////////////////////////////////////////
+
+
+
+
+
+bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal, DefaultTurtleBot* tb1){
+  
+  // current tag info
+  int tagID = temp_tag.first;
+  geometry_msgs::Point tagPosition = temp_tag.second;
+  // velocity variables
+  geometry_msgs::Twist rotation;
+  rotation.angular.z = 0;
+  double angle = temp_angleToGoal; // heading angle to goal used to turn in the optimal direction of the goal
+  
+  // searches array to find the target tag and gets the index
+  auto it = std::find(arTag.ids.data.begin(), arTag.ids.data.end(), tagID);
+
+  if (it != arTag.ids.data.end()) {
+    // The value was found, output the index
+    int index = std::distance(arTag.ids.data.begin(), it);
+
+    // Gets the associated yaw
+    if (index < arTag.yaws.data.size()) {
+      float yawError = arTag.yaws.data[index];
+      
+      if (fabs(yawError) > 0.05){ // within tolerance
+      // simple proportional control
+      float yawControl = 0.1 * yawError;
+
+      rotation.angular.z = yawControl;
+      } else{
+        rotation.angular.z = 0;
+        tb1->Send_cmd_tb1(rotation);
+        return true;
+      }
+    } 
+  } else {
+    // The value was not found in the array        
+    // rotates in the tags direction until tag detected
+    if (angle > 0){
+      rotation.angular.z = 0.5;
+      
+    } else if (angle < 0){
+      rotation.angular.z = -0.5;
+    }
+  }
+  std::cout << "sending rotation: " << rotation.angular.z << std::endl;
+  tb1->Send_cmd_tb1(rotation);
+
+  return false;;
+
+}
+
+
+
+
+
+
+
+
+
+
+//High levl functions
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// bool Method::goalInObstacleCheck() { // doesnt work if there is only 1 goal and it is inside an object
+
+//   geometry_msgs::Point currentGoal = Leader_goals.at(goal_index);
+//   geometry_msgs::Point currentPos = tb1->GetCurrent_Odom().pose.pose.position;
+//   geometry_msgs::Point referenceGoal;
+
+//   if (goal_index != Leader_goals.size() - 1) {                              // for cases when there is a next goal
+//     geometry_msgs::Point referenceGoal = Leader_goals.at(goal_index + 1);
+//   } else if (Leader_goals.size() != 1) {                                    // for cases when it is the last goal and there is a previous goal
+//     geometry_msgs::Point referenceGoal = Leader_goals.at(goal_index - 1);
+//   }
+
+//   // cosine rule
+//   double a = hypot(referenceGoal.x - currentPos.x, referenceGoal.y - currentPos.y); // distance between next goal and bot
+//   double b = hypot(currentGoal.x - currentPos.x, currentGoal.y - currentPos.y); // distance between current goal and bot
+//   double c = hypot(referenceGoal.x - currentGoal.x, referenceGoal.y - currentGoal.y); // distance between goals
+
+//   double A = (acos((b*b + c*c - a*a) / (2 * b * c))) * 180.0 / M_PI; // cosine rule for angle in degrees
+
+//   if (A < 100 && A > 80) {   // checks if the bot is directly next to the current goal with reference to the next goal
+//     return true;
+//   }
+
+//   return false;
+// }
+
+
+
 
 geometry_msgs::Point Method::findLookAheadPoint(const std::vector<geometry_msgs::Point>& path, const geometry_msgs::Point& current_position, double look_ahead_distance) {
     double cumulative_distance = 0.0;
@@ -367,9 +617,10 @@ geometry_msgs::Point Method::findLookAheadPoint(const std::vector<geometry_msgs:
     size_t current_gaol_id;
     geometry_msgs::Point look_ahead_point = path[0];
 
+    // Find the closest point on the path to the current position (could be in front or behind the TB)
     for (size_t j = 0; j< path.size(); j++){
-
-      double temp = sqrt(pow(current_position.x - path[j].x, 2) + pow(current_position.y - path[j].y, 2));
+      
+      double temp = calcDistance(path[j], current_position);
       if (temp < closest_goal){
         look_ahead_point = path[j];
         current_gaol_id = j;
@@ -377,18 +628,34 @@ geometry_msgs::Point Method::findLookAheadPoint(const std::vector<geometry_msgs:
       }
     }
 
+    // // Checks if the lookahead is inside object
+    // if (goalInObstacleCheck()){
+    //   current_gaol_id++;
+    //   look_ahead_point = path[current_gaol_id];
+    // }
+  
+  // Ensure that the current goal / closest point is the one in front of the TB
+  double p1_p2 = calcDistance(path[current_gaol_id], path[current_gaol_id + 1]); // between current(p1) and next(p2) points
+  double p1_p3 = calcDistance(path[current_gaol_id], current_position); // between current point(p1) and current pos(p3)
+  double p2_p3 = calcDistance(path[current_gaol_id + 1], current_position); // between next point(p2) and current pos(p3)
+  // Determine if goal is behind TB (which is bad)
+    if (p1_p2 >= p2_p3 && p1_p2 >= p1_p3){ // current pos is middle point so current point is behind the TB, thus we must increment to the next point
+      current_gaol_id++;
+      look_ahead_point = path[current_gaol_id];
+    }
 
-
+  // Calculate cumulative distance along the path starting from the current position
+  double distanceToNextPoint = calcDistance(current_position, path[current_gaol_id]);
+  cumulative_distance += distanceToNextPoint; 
   for (size_t i = current_gaol_id; i < path.size() - 1; ++i) {
-    double segment_length = sqrt(pow(path[i+1].x - path[i].x, 2) + pow(path[i+1].y - path[i].y, 2));
+    double segment_length = calcDistance(path[i], path[i+1]);
     cumulative_distance += segment_length;
-
+    // sets lookahead point
     if (cumulative_distance >= look_ahead_distance) {
       double overshoot = cumulative_distance - look_ahead_distance;
       double ratio = (segment_length - overshoot) / segment_length;
       look_ahead_point.x = path[i].x + ratio * (path[i+1].x - path[i].x);
       look_ahead_point.y = path[i].y + ratio * (path[i+1].y - path[i].y);
-      
       return look_ahead_point;
     }
   }
@@ -399,10 +666,12 @@ geometry_msgs::Point Method::findLookAheadPoint(const std::vector<geometry_msgs:
 
 
 
-void Method::turtleMovement(){
-
-    
+double Method::calcDistance(geometry_msgs::Point temp_point1, geometry_msgs::Point temp_point2){
+  return sqrt(pow(temp_point2.x - temp_point1.x, 2) + pow(temp_point2.y - temp_point1.y, 2));
 }
+
+
+
 
 
 // Publishing functions 
@@ -420,31 +689,6 @@ void Method::Send_cmd_tb2(geometry_msgs::Twist intructions){
 //callbacks
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-void Method::odomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg){
-  std::unique_lock<std::mutex> lck3 (odom_locker);
-  Current_Odom = *odomMsg;
-}
-
-void  Method::RGBCallback(const sensor_msgs::Image::ConstPtr& Msg){
-  std::unique_lock<std::mutex> lck3 (RGB_locker);
-  updated_RGB = *Msg;
-
-}
-
-void Method::LidaCallback(const sensor_msgs::LaserScan::ConstPtr& Msg){
-  std::unique_lock<std::mutex> lck3 (Lida_locker);
-  updated_Lida = *Msg;
-}
-
-void Method::ImageDepthCallback(const sensor_msgs::Image::ConstPtr& Msg){
-  std::unique_lock<std::mutex> lck3 (ImageDepth_locker);
-  updated_imageDepth = *Msg;
-}
-
-void Method::guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg){
-  std::unique_lock<std::mutex> lck3 (odom_locker2);
-  guider_Odom = *odomMsg;
-}
 
 void Method::mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg) {
   ROS_INFO("Received map with resolution %f meters/pixel", msg->info.resolution);
@@ -460,66 +704,11 @@ void Method::mapMetadataCallback(const nav_msgs::MapMetaData::ConstPtr& msg) {
 
 
 
-visualization_msgs::MarkerArray Method::visualiseCones(std::vector<geometry_msgs::Point> cones, visualization_msgs::MarkerArray& markerArray) {
-
-    unsigned int ct=0;
-
-    for (auto pt:cones){
-        visualization_msgs::Marker marker;
-
-        //We need to set the frame
-        // Set the frame ID and time stamp.
-        marker.header.frame_id = "odom";
-        //single_marker_person.header.stamp = ros::Time();
-        marker.header.stamp = ros::Time();
-        //We set lifetime (it will dissapear in this many seconds)
-        marker.lifetime = ros::Duration(10000); //zero is forever
-
-        // Set the namespace and id for this marker.  This serves to create a unique ID
-        // Any marker sent with the same namespace and id will overwrite the old one
-        marker.ns = "cones"; //This is namespace, markers can be in diofferent namespace  --------- cones , road
-        marker.id = ct++; // We need to keep incrementing markers to send others ... so THINK, where do you store a vaiable if you need to keep incrementing it
-
-        // The marker type
-        marker.type = visualization_msgs::Marker::CYLINDER;
-
-        // Set the marker action.  Options are ADD and DELETE (we ADD it to the screen)
-        marker.action = visualization_msgs::Marker::ADD;
-
-        marker.pose.position.x = pt.x;
-        marker.pose.position.y = pt.y;
-        marker.pose.position.z = pt.z + 0.1; //0.1 z-offset given 0.2 z-scale
 
 
-        //Orientation, we are not going to orientate it, for a quaternion it needs 0,0,0,1
-        marker.pose.orientation.x = 0.0;
-        marker.pose.orientation.y = 0.0;
-        marker.pose.orientation.z = 0.0;
-        marker.pose.orientation.w = 1.0;
-
-
-        // Set the scale of the marker -- 1m side
-        marker.scale.x = 0.1;
-        marker.scale.y = 0.1;
-        marker.scale.z = 0.2;
-
-        //Let's send a marker with color (green for reachable, red for now)
-        std_msgs::ColorRGBA color;
-        color.a=0.7;//a is alpha - transparency 0.5 is 50%;
-        color.r=1.0;
-        color.g=0;
-        color.b=0;
-
-        marker.color = color;
-
-        markerArray.markers.push_back(marker);
-    }
-    return markerArray;
-}
-
-void Method::publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub) {
+visualization_msgs::MarkerArray Method::publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub) {
   visualization_msgs::MarkerArray markerArray;
-  int id = 0; // Unique ID for each marker
+  id = 0; // Unique ID for each marker
 
   for (const auto& node : nodes) {
       visualization_msgs::Marker marker;
@@ -535,9 +724,9 @@ void Method::publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros:
       marker.pose.position.z = 0; // Assuming a flat map, set z to 0
       marker.pose.orientation.w = 1.0;
 
-      marker.scale.x = 0.2; // Specify the size of the individual markers
-      marker.scale.y = 0.2;
-      marker.scale.z = 0.2; // Add z dimension for SPHERE, CUBE, etc.
+      marker.scale.x = 0.1; // Specify the size of the individual markers
+      marker.scale.y = 0.1;
+      marker.scale.z = 0.1; // Add z dimension for SPHERE, CUBE, etc.
 
       marker.color.r = 1.0; // Color: Red
       marker.color.g = 0.0;
@@ -545,13 +734,50 @@ void Method::publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros:
       marker.color.a = 1.0; // Alpha (transparency)
 
       markerArray.markers.push_back(marker); // Add the marker to the array
-      std::cout << "marker created" << std::endl;
-      std::cout << "tesrt" << std::endl;
-      std::cout << "tesrt" << std::endl;  
+
   }
   
-  marker_pub.publish(markerArray); // Publish the entire array
+  marker_pub.publish(markerArray); // Publish the entire array]
+  return markerArray;
+
 }
+
+void Method::publishCollisons(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub, visualization_msgs::MarkerArray trajectory_makers) {
+  
+  for (const auto& node : nodes) {
+      visualization_msgs::Marker marker;
+      marker.header.frame_id = "odom"; // or your relevant frame
+      marker.header.stamp = ros::Time::now();
+      marker.ns = "nodes";
+      marker.id = id++; // Assign and increment the unique ID
+      marker.type = visualization_msgs::Marker::SPHERE; // Use SPHERE, CUBE, etc., as preferred
+      marker.action = visualization_msgs::Marker::ADD;
+      
+      marker.pose.position.x = node.x;
+      marker.pose.position.y = node.y;
+      marker.pose.position.z = 0; // Assuming a flat map, set z to 0
+      marker.pose.orientation.w = 1.0;
+
+      marker.scale.x = 0.3; // Specify the size of the individual markers
+      marker.scale.y = 0.3;
+      marker.scale.z = 0.3; // Add z dimension for SPHERE, CUBE, etc.
+
+      marker.color.r = 0.0; // Color: Red
+      marker.color.g = 0.0;
+      marker.color.b = 1.0;
+      marker.color.a = 1.0; // Alpha (transparency)
+
+      trajectory_makers.markers.push_back(marker); // Add the marker to the array
+  
+  }
+  
+  marker_pub.publish(trajectory_makers); // Publish the entire array]
+ 
+
+}
+
+
+
 
 // #include "method.h"
 // #include <iostream>

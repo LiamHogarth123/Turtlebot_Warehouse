@@ -13,11 +13,16 @@
 #include "prm.h"
 #include "taskAlloction.h"
 #include "turtlebot.h"
-// #include "taskAlloction.h"
+#include "path_avoidance.h"
 
 #include <ros/package.h>
 
 #include "visualization_msgs/MarkerArray.h"
+
+
+#include "std_msgs/Int16.h"
+#include "marker_msgs/marker.h"
+
 
 
 /**
@@ -34,12 +39,7 @@ public:
   Method(ros::NodeHandle nh);
 
 
-  void odomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg);
-  void LidaCallback(const sensor_msgs::LaserScan::ConstPtr& Msg);
-  void RGBCallback(const sensor_msgs::Image::ConstPtr& Msg);
-  void ImageDepthCallback(const sensor_msgs::Image::ConstPtr& Msg);
-  void guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg);
-
+  
   void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
   void mapMetadataCallback(const nav_msgs::MapMetaData::ConstPtr& msg);
 
@@ -56,15 +56,25 @@ public:
 
   void Function(std::vector<geometry_msgs::Point> trajectory , DefaultTurtleBot* turtleboi, Control* Turtle_GPS);
 
-  void Function2(PRM* Trajectory_Planner , DefaultTurtleBot* turtleboi, Control* Turtle_GPS, std::vector<geometry_msgs::Point> Goals);
+  void Function2(PRM* Trajectory_Planner, DefaultTurtleBot* turtleboi, Control* Turtle_GPS, std::vector<std::pair<int, geometry_msgs::Point>> Goals);
 
   
-  visualization_msgs::MarkerArray visualiseCones(std::vector<geometry_msgs::Point> cones, visualization_msgs::MarkerArray& markerArray);
-  void publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub);
+  visualization_msgs::MarkerArray publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub);
+  void publishCollisons(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub, visualization_msgs::MarkerArray trajectory_makers);
+
 
   // ros::Publisher marker_pub;
 
   geometry_msgs::Point findLookAheadPoint(const std::vector<geometry_msgs::Point>& path, const geometry_msgs::Point& current_position, double look_ahead_distance);
+
+
+
+  bool tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal, DefaultTurtleBot* tb1);
+  double calcDistance(geometry_msgs::Point temp_point1, geometry_msgs::Point temp_point2);
+
+
+  //visualisation variable
+  int id;
 
 
 
@@ -117,6 +127,12 @@ public:
 
   bool teleop_mode;
   bool missionComplete;
+
+  marker_msgs::marker arTag;
+  std_msgs::Int16 boundaryStatus;
+
+
+   geometry_msgs::Twist zero_vel;
 
 
 

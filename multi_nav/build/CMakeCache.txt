@@ -478,6 +478,9 @@ multi_nav_BINARY_DIR:STATIC=/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_n
 //Value Computed by CMake
 multi_nav_SOURCE_DIR:STATIC=/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav
 
+//The directory containing a CMake configuration file for nav_msgs.
+nav_msgs_DIR:PATH=/opt/ros/noetic/share/nav_msgs/cmake
+
 //The directory containing a CMake configuration file for rosconsole.
 rosconsole_DIR:PATH=/opt/ros/noetic/share/rosconsole/cmake
 

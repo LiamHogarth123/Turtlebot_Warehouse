@@ -4,24 +4,20 @@
 #include <geometry_msgs/Transform.h>
 #include <string>
 #include <mutex>
-
+#include <tf/transform_listener.h>
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/LaserScan.h>
 #include <sensor_msgs/Image.h>
 
+#include <cmath>
 
 class DefaultTurtleBot {
 public:
-public:
+
     DefaultTurtleBot(const std::string& namespace_prefix, const ros::NodeHandle& nh,  geometry_msgs::Transform map_Offset);
     // DefaultTurtleBot cloneWithNamespace(const std::string& name) const;
     void Send_cmd_tb1(geometry_msgs::Twist intructions);
-    void odomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg);
-    void LidaCallback(const sensor_msgs::LaserScan::ConstPtr& Msg);
-    void RGBCallback(const sensor_msgs::Image::ConstPtr& Msg);
-    void ImageDepthCallback(const sensor_msgs::Image::ConstPtr& Msg);
-    void guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg);
-
+   
     DefaultTurtleBot(const DefaultTurtleBot&) = delete;
     DefaultTurtleBot& operator=(const DefaultTurtleBot&) = delete;
 
@@ -29,6 +25,8 @@ public:
     sensor_msgs::Image GetCurrentupdated_RGB();
     sensor_msgs::LaserScan Getupdated_Lida();
     sensor_msgs::Image Getupdated_imageDepth();
+    double GetCurrentSpeed();
+
 
     /**
      * @brief Function to incorporate transform into odom reading
@@ -42,6 +40,19 @@ public:
     
 
     // void callback(const SomeMessageTypeConstPtr& msg);
+
+private:
+    void odomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg);
+    void LidaCallback(const sensor_msgs::LaserScan::ConstPtr& Msg);
+    void RGBCallback(const sensor_msgs::Image::ConstPtr& Msg);
+    void ImageDepthCallback(const sensor_msgs::Image::ConstPtr& Msg);
+    void guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg);
+    void updateOdomWithTransform();
+
+
+
+
+
 
 private:
     ros::NodeHandle nh_;
@@ -60,12 +71,18 @@ private:
     std::mutex Lida_locker;
     std::mutex ImageDepth_locker;
 
+    tf::TransformListener listener_;
+
     //variables for callbacks
     nav_msgs::Odometry Current_Odom;
+    nav_msgs::Odometry transformed_Odom;
     nav_msgs::Odometry guider_Odom;
     sensor_msgs::Image updated_RGB;
     sensor_msgs::LaserScan updated_Lida;
     sensor_msgs::Image updated_imageDepth;
+    double current_speed_;
+
+
 
 
 };
