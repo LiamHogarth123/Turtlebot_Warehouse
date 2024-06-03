@@ -274,9 +274,9 @@ std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> TaskAlloction::ta
 
         // Print allocated points for each robot
         for (int i = 0; i < numRobots; ++i) {
-            std::cout << "Robot " << i + 1 << " allocated points:" << std::endl;
+            // std::cout << "Robot " << i + 1 << " allocated points:" << std::endl;
             for (const auto& point : allocatedPoints[i]) {
-                std::cout << "Point: (" << point.second.x << ", " << point.second.y << ", " << point.second.z << ")" << std::endl;
+                // std::cout << "Point: (" << point.second.x << ", " << point.second.y << ", " << point.second.z << ")" << std::endl;
             }
         }
 
@@ -286,7 +286,7 @@ std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> TaskAlloction::ta
                 robotPositions[i] = allocatedPoints[i][0].second;
                 // Clear the allocated points for the robot
                 // allocatedPoints[i].clear();
-                std::cout << "Robot " << i + 1 << " position after goal: (" << robotPositions[i].x << ", " << robotPositions[i].y << ", " << robotPositions[i].z << ")" << std::endl;
+                // std::cout << "Robot " << i + 1 << " position after goal: (" << robotPositions[i].x << ", " << robotPositions[i].y << ", " << robotPositions[i].z << ")" << std::endl;
             }
         }
     }
@@ -294,7 +294,7 @@ std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> TaskAlloction::ta
     // Visit drop-off location after completing item collections
     for (int i = 0; i < numRobots; ++i) {
         allocatedPoints[i].push_back({-1, deliveryLocation.at(i)}); // Use the ID:'-1' to indicate the drop-off location
-        std::cout << "Robot " << i + 1 << " visited drop-off location: (" << deliveryLocation.at(i).x << ", " << deliveryLocation.at(i).y << ", " << deliveryLocation.at(i).z << ")" << std::endl;
+        // std::cout << "Robot " << i + 1 << " visited drop-off location: (" << deliveryLocation.at(i).x << ", " << deliveryLocation.at(i).y << ", " << deliveryLocation.at(i).z << ")" << std::endl;
     }
     //  for (size_t i = 0; i < RobotGoals.size(); ++i) {
     // std::cout << "Vector " << i << ":\n";

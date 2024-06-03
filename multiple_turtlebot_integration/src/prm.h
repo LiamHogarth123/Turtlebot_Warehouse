@@ -41,6 +41,9 @@ public:
 
     std::vector<geometry_msgs::Point> A_star_To_Goal(geometry_msgs::Point start, geometry_msgs::Point goal);
 
+    std::vector<geometry_msgs::Point> A_star_To_Goal_With_Blacklist(geometry_msgs::Point start, geometry_msgs::Point goal, std::vector<geometry_msgs::Point> CollisonPoints);
+
+
     void UpdateMapData(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_);
 
     std::vector<geometry_msgs::Point> test();
@@ -78,6 +81,8 @@ private:
     bool ValidPointForPath(int x1, int y1);
 
     std::vector<Node> createNodesAndEdges(std::vector<Node> Graph_);
+
+
 
     
 
@@ -121,7 +126,12 @@ private:
 
     void findPath(int startNodeId, int goalNodeId);
 
-    std::vector<int> GenerateBlackList(std::vector<geometry_msgs::Point> CollisonPoints);
+    std::unordered_set<int> GenerateBlackList(std::vector<geometry_msgs::Point> CollisonPoints);
+
+    int findClosestNode(const geometry_msgs::Point& point);
+
+    std::vector<int> getNodesInArea(int nodeId, int areaSize);
+
 
 
     // Visualisation Functions

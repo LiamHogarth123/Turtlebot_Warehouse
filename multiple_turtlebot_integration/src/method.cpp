@@ -181,6 +181,22 @@ void Method::separateThread() {
 
   //Liam Map generation
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // char user_input;
+  // bool map_choice;
+
+  // std::cout << "Would you like a custom map or predefined map Y/N";
+  // std::cin >> user_input;
+
+  // if (user_input == 'y' || user_input == 'Y') {
+  //     map_choice = true;
+  //   } else if (user_input == 'n' || user_input == 'N') {
+  //     map_choice = false;
+  //   } else {
+  //     std::cout << "invalid input deflaut being used" << std::endl;
+  //     map_choice = false;
+  //   }
+
   prmMap.GeneratePRM(latestMapData_, latestMapMetaData_, false);
   // std::vector<geometry_msgs::Point> trajectory;
   std::vector<std::vector<geometry_msgs::Point>> trajectory(numTurtlebot);
@@ -202,14 +218,14 @@ void Method::separateThread() {
     for (int i = 0; i < largestSize; i++){
 
       for (size_t j = 0; j < turtlebots.size(); j++) {
-        std::cout << "index" << j << std::endl;
+        // std::cout << "index" << j << std::endl;
         auto& element = turtlebots[j];
-        std::cout << "pointer done" << j << std::endl;
+        // std::cout << "pointer done" << j << std::endl;
         goal = RobotGoals.at(j).at(i).second;
-        std::cout << "goal done" << j << std::endl;
+        // std::cout << "goal done" << j << std::endl;
 
         odometry_start = element->GetCurrent_Odom();
-        std::cout << "odom done" << j << std::endl;
+        // std::cout << "odom done" << j << std::endl;
         trajectory.at(j) = prmMap.A_star_To_Goal(odometry_start.pose.pose.position, goal);
       
 
@@ -222,19 +238,69 @@ void Method::separateThread() {
           combinedPoints.push_back(point);
         }
       }
-      // visualization_msgs::MarkerArray tempory = publishMarkers(combinedPoints, marker_pub);
+ 
       
+      // Path planning collison avoidance
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       std::vector<geometry_msgs::Point> collided_points;
       
+
       path_checker.Update_paths(trajectory);
+      
 
-   
-
-      visualization_msgs::MarkerArray tempory = publishMarkers(path_checker.get_all_interpolated_points(), marker_pub);
-
-      if (path_checker.find_collisions(collided_points)){
+      while (path_checker.find_collisions(collided_points)) {
+        
+        visualization_msgs::MarkerArray tempory = publishMarkers(path_checker.get_all_interpolated_points(), marker_pub);
         publishCollisons(collided_points, marker_pub, tempory);
+        tempory.markers.clear();
+
+        //Regenerate Path withouut collisions
+        std::vector<std::pair<int, geometry_msgs::Point>> robot_with_collisiosn = path_checker.GetCollisionsWithId();
+        // // std::cout << "Collision Points Vector:" << std::endl;
+        // for (const auto& collision : robot_with_collisiosn) {
+        //   int robot_id = collision.first;
+        //   double x = collision.second.x;
+        //   double y = collision.second.y;
+        //   // std::cout << "Robot ID: " << robot_id << " | Collision Point: (" << x << ", " << y << ")" << std::endl;
+        // }
+
+
+        std::cout << "size -----> " << robot_with_collisiosn.size() << std::endl;
+        CollisionMap collision_map;
+        processCollisions(robot_with_collisiosn, collision_map);
+        
+        // Iterate over each collision in the collision map
+        for (const auto& entry : collision_map) {
+          const auto& collision_point = entry.first;
+          const auto& robot_pairs = entry.second;
+
+          for (const auto& pair : robot_pairs) {
+            int robot1_id = pair.first;
+            int robot2_id = pair.second;
+
+            // Determine which robot has the larger trajectory
+            int robot_to_replan = (trajectory[robot1_id].size() > trajectory[robot2_id].size()) ? robot1_id : robot2_id;
+
+            // Generate blacklist for re-planning
+            std::vector<geometry_msgs::Point> collision_points_for_robot;
+            for (const auto& col : robot_with_collisiosn) {
+                if (col.first == robot_to_replan) {
+                    collision_points_for_robot.push_back(col.second);
+                }
+            }
+
+            
+
+            // Recalculate trajectory
+            geometry_msgs::Point start = trajectory[robot_to_replan].front();
+            geometry_msgs::Point goal = trajectory[robot_to_replan].back();
+            trajectory[robot_to_replan] = prmMap.A_star_To_Goal_With_Blacklist(start, goal, collision_points_for_robot);
+          }
+        }
+        path_checker.Update_paths(trajectory);
       }
+
+
 
       std::cout << "done visualising" << std::endl;
 
@@ -777,132 +843,50 @@ void Method::publishCollisons(const std::vector<geometry_msgs::Point>& nodes, ro
 }
 
 
-
-
-// #include "method.h"
-// #include <iostream>
-// #include <cmath>
-// #include <thread>
-// #include <chrono>
-// #include <time.h>
-// #include <nav_msgs/Odometry.h>
-
-// #include <visualization_msgs/MarkerArray.h>
-
-// #include "ros/ros.h"
-// #include <fstream>
-// #include <chrono>
-
-// #include "nav_msgs/OccupancyGrid.h"
-// #include "nav_msgs/MapMetaData.h"
-
-
-
-
-
-
-// Method::Method(ros::NodeHandle nh) :
-//   nh_(nh)
-
-// {
-  
-//   mapSub = nh_.subscribe("/map", 1000, &Method::mapCallback, this);
-  
-//   mapMetadataSub = nh_.subscribe("/map_metadata", 1000, &Method::mapMetadataCallback, this);
-
-//   marker_pub = nh.advertise<visualization_msgs::MarkerArray>("visualization_marker_array", 100);
-
-  
-  
-// }
-
-// void Method::testPathPlanningControl() {
-  
-
-//   taskAllo
-
-//   prmMap.GeneratePRM(latestMapData_, latestMapMetaData_);
-  
-//   std::vector<geometry_msgs::Point> trajectory;
-//   geometry_msgs::Point start;
-//   geometry_msgs::Point goal;
-
-//   start.x = 1;
-//   start.y = 1;
-//   goal.x = 5;
-//   goal.y = 5;
-
-//   trajectory = prmMap.DijkstraToGoal(start, goal);
-
-//   //SEND TO CONTROL
-
-// }
-
-
-
-
-// void Method::seperateThread() {
-//   //User input
-//   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// // Load the PGM map
-
-//   //FIX calback
-//   while (latestMapData_.data.empty()){
-//     std::this_thread::sleep_for(std::chrono::milliseconds(1));
-//   }
-
-
-//   std::cout << "openning" << std::endl;
- 
-//   prmMap.UpdateMapData(latestMapData_, latestMapMetaData_);
-//   std::vector<geometry_msgs::Point> trajectory;
-//   trajectory = prmMap.test();
-//   std::cout << "PRM FINISH" << std::endl;
-//   geometry_msgs::Point temp;
-//   temp.x = 0;z
-//   temp.y = 0;
-//   trajectory.push_back(temp);
-//   publishMarkers(trajectory, marker_pub);
-//   std::cout << "visualisation DONE" << std::endl;
-
-// }
-
-
-
-
-
-
-
-// void Method::publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub) {
-//     visualization_msgs::MarkerArray markerArray;
-//     int id = 0; // Unique ID for each marker
-
-//     for (const auto& node : nodes) {
-//         visualization_msgs::Marker marker;
-//         marker.header.frame_id = "map"; // or your relevant frame
-//         marker.header.stamp = ros::Time::now();
-//         marker.ns = "nodes";
-//         marker.id = id++; // Assign and increment the unique ID
-//         marker.type = visualization_msgs::Marker::SPHERE; // Use SPHERE, CUBE, etc., as preferred
-//         marker.action = visualization_msgs::Marker::ADD;
+void Method::processCollisions(const std::vector<std::pair<int, geometry_msgs::Point>>& robot_with_collisions, CollisionMap& collision_map) {
+    std::map<int, std::vector<std::pair<double, double>>> robot_points;
+    // Group collision points by robot IDs
+    for (const auto& collision : robot_with_collisions) {
+        int robot_id = collision.first;
+        double x = collision.second.x;
+        double y = collision.second.y;
         
-//         marker.pose.position.x = node.x;
-//         marker.pose.position.y = node.y;
-//         marker.pose.position.z = 0; // Assuming a flat map, set z to 0
-//         marker.pose.orientation.w = 1.0;
+        std::pair<double, double> collision_point = std::make_pair(x, y);
+        robot_points[robot_id].push_back(collision_point);
+    }
 
-//         marker.scale.x = 0.2; // Specify the size of the individual markers
-//         marker.scale.y = 0.2;
-//         marker.scale.z = 0.2; // Add z dimension for SPHERE, CUBE, etc.
+    // Check for collisions between different robots
+    for (const auto& robot1 : robot_points) {
+        for (const auto& point1 : robot1.second) {
+            for (const auto& robot2 : robot_points) {
+                if (robot1.first != robot2.first) {
+                    for (const auto& point2 : robot2.second) {
+                        if (point1 == point2) {
+                            CollisionPair robot_pair = std::make_pair(std::min(robot1.first, robot2.first), std::max(robot1.first, robot2.first));
+                            collision_map[point1].insert(robot_pair);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
-//         marker.color.r = 1.0; // Color: Red
-//         marker.color.g = 0.0;
-//         marker.color.b = 0.0;
-//         marker.color.a = 1.0; // Alpha (transparency)
 
-//         markerArray.markers.push_back(marker); // Add the marker to the array
-//     }
+void Method::printCollisions(const CollisionMap& collision_map) {
+     int total_collision_pairs = 0;
 
-//     marker_pub.publish(markerArray); // Publish the entire array
-// }
+    for (const auto& entry : collision_map) {
+        const auto& point = entry.first;
+        const auto& robot_pairs = entry.second;
+        
+        std::cout << "Collision at point (" << point.first << ", " << point.second << "):" << std::endl;
+        for (const auto& pair : robot_pairs) {
+            std::cout << "  Turtlebots " << pair.first << " and " << pair.second << std::endl;
+            total_collision_pairs++;
+        }
+    }
+
+    std::cout << "Total unique collision points: " << collision_map.size() << std::endl;
+    std::cout << "Total collision pairs: " << total_collision_pairs << std::endl;
+}

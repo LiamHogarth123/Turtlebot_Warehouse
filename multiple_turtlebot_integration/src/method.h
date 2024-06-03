@@ -23,6 +23,15 @@
 #include "std_msgs/Int16.h"
 #include "marker_msgs/marker.h"
 
+#include <map>
+#include <set>
+#include <utility>
+
+using CollisionPair = std::pair<int, int>;
+using CollisionMap = std::map<std::pair<double, double>, std::set<CollisionPair>>;
+
+
+
 
 
 /**
@@ -71,6 +80,11 @@ public:
 
   bool tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal, DefaultTurtleBot* tb1);
   double calcDistance(geometry_msgs::Point temp_point1, geometry_msgs::Point temp_point2);
+
+
+  void processCollisions(const std::vector<std::pair<int, geometry_msgs::Point>>& robot_with_collisions, CollisionMap& collision_map);
+
+  void printCollisions(const CollisionMap& collision_map);
 
 
   //visualisation variable

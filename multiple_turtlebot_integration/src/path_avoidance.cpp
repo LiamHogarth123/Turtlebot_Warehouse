@@ -26,6 +26,12 @@ bool path_avoidance_::find_collisions(std::vector<geometry_msgs::Point>& collide
     return collision_found;
 }
 
+std::vector<std::pair<int, geometry_msgs::Point>> path_avoidance_::GetCollisionsWithId(){
+    return collided_points_;
+}
+
+
+
 
 std::vector<geometry_msgs::Point> path_avoidance_::get_all_interpolated_points() {
     std::vector<geometry_msgs::Point> all_points;
@@ -80,7 +86,9 @@ void path_avoidance_::interpolated_trajectories() {
 
 bool path_avoidance_::will_collide() {
     bool collision = false;
-    std::vector<geometry_msgs::Point> temp;
+    collided_points_.clear(); // Ensure this is cleared before use
+
+    std::vector<std::pair<int, geometry_msgs::Point>> temp;
     int max_size = 0;
 
     // Determine the maximum size of the interpolated trajectories
@@ -89,23 +97,28 @@ bool path_avoidance_::will_collide() {
             max_size = traj.size();
         }
     }
-
+    std::cout << "got here" << std::endl;
     // Check for collisions at each timestep
     for (int k = 0; k < max_size; ++k) {
         temp.clear(); // Clear the temporary vector for each timestep
-        for (const auto& traj : interpolated_trajectories_) {
-            if (k >= traj.size()) {
-                temp.push_back(traj.back().position); // Use the last position if the index is out of bounds
+        for (int l = 0; l < interpolated_trajectories_.size() ; ++l) {
+            // std::cout << " size" << interpolated_trajectories_.at(k).size() << std::endl;
+            
+            if (k >= interpolated_trajectories_.at(l).size()) {
+
+                temp.push_back(std::make_pair(l, interpolated_trajectories_.at(l).back().position)); // Use the last position if the index is out of bounds
             } else {
-                temp.push_back(traj[k].position);
+                temp.push_back(std::make_pair(l, interpolated_trajectories_.at(l).at(k).position));
             }
+        
+        
         }
-        bool collision2 = checkCollisions(temp, 0.4);
+        bool collision2 = checkCollisions(temp, 0.3);
         if (collision2) {
             collision = true;
         }
     }
-
+     std::cout << "finished here" << std::endl;
     return collision;
 }
 
@@ -113,31 +126,31 @@ double path_avoidance_::calculateDistance(const geometry_msgs::Point& p1, const 
     return std::sqrt(std::pow(p2.x - p1.x, 2) + std::pow(p2.y - p1.y, 2) + std::pow(p2.z - p1.z, 2));
 }
 
-bool path_avoidance_::checkCollisions(const std::vector<geometry_msgs::Point>& points, double threshold) {
+bool path_avoidance_::checkCollisions(const std::vector<std::pair<int, geometry_msgs::Point>>& points_with_ids, double threshold) {
     bool collision = false;
-    for (size_t i = 0; i < points.size(); ++i) {
-        for (size_t j = i + 1; j < points.size(); ++j) {
-            if (calculateDistance(points[i], points[j]) < threshold) {
-                collided_points_.push_back(std::make_pair(i, points[i]));
+
+    for (size_t i = 0; i < points_with_ids.size(); ++i) {
+        for (size_t j = i + 1; j < points_with_ids.size(); ++j) {
+ 
+            if (calculateDistance(points_with_ids[i].second, points_with_ids[j].second) < threshold) {
+                collided_points_.push_back(std::make_pair(points_with_ids[i].first, points_with_ids[i].second));
+                collided_points_.push_back(std::make_pair(points_with_ids[j].first, points_with_ids[j].second));
                 collision = true;
 
                 // Print the points being pushed back
-                std::cout << "Collision detected between points: (" 
-                          << points[i].x << ", " << points[i].y << ", " << points[i].z 
-                          << ") and ("
-                          << points[j].x << ", " << points[j].y << ", " << points[j].z
-                          << ") - Pushing back point: ("
-                          << points[i].x << ", " << points[i].y << ", " << points[i].z
-                          << ")" << std::endl;
+                // std::cout << "Collision detected between TurtleBot " << points_with_ids[i].first 
+                //           << " and TurtleBot " << points_with_ids[j].first << " at point: ("
+                //           << points_with_ids[i].second.x << ", " << points_with_ids[i].second.y << ", " << points_with_ids[i].second.z 
+                //           << ")" << std::endl;
             }
         }
     }
 
     // Print if a collision was found
     if (collision) {
-        std::cout << "Collision detected and returning true." << std::endl;
+        // std::cout << "Collision detected and returning true." << std::endl;
     } else {
-        std::cout << "No collision detected and returning false." << std::endl;
+        // std::cout << "No collision detected and returning false." << std::endl;
     }
 
     return collision;

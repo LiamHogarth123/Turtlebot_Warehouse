@@ -18,6 +18,7 @@ public:
 
     std::vector<geometry_msgs::Point> get_all_interpolated_points();   
 
+std::vector<std::pair<int, geometry_msgs::Point>> GetCollisionsWithId();
 
 private:
     std::vector<std::vector<geometry_msgs::Point>> trajectories;
@@ -28,5 +29,5 @@ private:
     void interpolated_trajectories();
     bool will_collide();
     double calculateDistance(const geometry_msgs::Point& p1, const geometry_msgs::Point& p2);
-    bool checkCollisions(const std::vector<geometry_msgs::Point>& points, double threshold);
+    bool checkCollisions(const std::vector<std::pair<int, geometry_msgs::Point>>& points_with_ids, double threshold);
 };
