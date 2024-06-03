@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/liam/git/Turtlebot_Warehouse/multiple_turtlebot_integration/src/control.cpp" "/home/liam/git/Turtlebot_Warehouse/multiple_turtlebot_integration/build/CMakeFiles/multiple_turtlebot_integration_control.dir/src/control.cpp.o"
+  "/home/liam/git/Turtlebot_Warehouse/multiple_turtlebot_integration/src/sensorprocessing.cpp" "/home/liam/git/Turtlebot_Warehouse/multiple_turtlebot_integration/build/CMakeFiles/multiple_turtlebot_integration_control.dir/src/sensorprocessing.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -18,6 +19,7 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../include"
+  "/home/liam/catkin_ws/devel/include"
   "/opt/ros/melodic/include"
   "/opt/ros/melodic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
   "/usr/include/eigen3"

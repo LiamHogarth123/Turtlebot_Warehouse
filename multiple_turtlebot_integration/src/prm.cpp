@@ -223,7 +223,7 @@ std::vector<Node> PRM::samplePoints(){
     std::uniform_real_distribution<> distrX(0, latestMapMetaData_.width); // Define the range for x
     std::uniform_real_distribution<> distrY(0, latestMapMetaData_.height); // Define the range for y
 
- 
+    int barWidth = 70;
     while(Graph.size() < numberOfPoints_) {
         geometry_msgs::Point point;
         point.x = distrX(eng);
@@ -231,7 +231,7 @@ std::vector<Node> PRM::samplePoints(){
 
         cv::Point cvPoint(point.x, point.y);
 
-
+        
         if (isPointInLShape(cvPoint)){ 
             if(ValidPoint(point)) {
                 Node temp;
@@ -242,17 +242,31 @@ std::vector<Node> PRM::samplePoints(){
 
                 Graph.push_back(temp);
 
-                std::cout << "Point added to graph: (" << temp.x << ", " << temp.y << ")" << std::endl;
+                // std::cout << "Point added to graph: (" << temp.x << ", " << temp.y << ")" << std::endl;
             } else {
-                std::cout << "Point not valid" << std::endl;
+                // std::cout << "Point not valid" << std::endl;
             }
         } else {
-            std::cout << "Point not in L-shaped area" << std::endl;
+            // std::cout << "Point not in L-shaped area" << std::endl;
         }
 
         // Debugging: Print current size of the graph
-        std::cout << "Current Graph size: " << Graph.size() << std::endl;
-    }          
+        // std::cout << "Current Graph size: " << Graph.size() << std::endl;
+        
+        // Display progress bar
+        float progress = (float)Graph.size() / numberOfPoints_;
+        std::cout << "[";
+        int pos = barWidth * progress;
+        for (int i = 0; i < barWidth; ++i) {
+            if (i < pos) std::cout << "=";
+            else if (i == pos) std::cout << ">";
+            else std::cout << " ";
+        }
+        std::cout << "] " << int(progress * 100.0) << " %\r";
+        std::cout.flush();
+    }
+    std::cout << std::endl;
+             
     return Graph;
 }
 
@@ -277,13 +291,13 @@ bool PRM::isPointInLShape(const cv::Point& point) {
     E = convertPointToNodeCordinate(E);
     F = convertPointToNodeCordinate(F);
 
-    std::cout << "Vertices of L shape in grid coordinates:" << std::endl;
-    std::cout << "A: (" << A.x << ", " << A.y << ")" << std::endl;
-    std::cout << "B: (" << B.x << ", " << B.y << ")" << std::endl;
-    std::cout << "C: (" << C.x << ", " << C.y << ")" << std::endl;
-    std::cout << "D: (" << D.x << ", " << D.y << ")" << std::endl;
-    std::cout << "E: (" << E.x << ", " << E.y << ")" << std::endl;
-    std::cout << "F: (" << F.x << ", " << F.y << ")" << std::endl;
+    // std::cout << "Vertices of L shape in grid coordinates:" << std::endl;
+    // std::cout << "A: (" << A.x << ", " << A.y << ")" << std::endl;
+    // std::cout << "B: (" << B.x << ", " << B.y << ")" << std::endl;
+    // std::cout << "C: (" << C.x << ", " << C.y << ")" << std::endl;
+    // std::cout << "D: (" << D.x << ", " << D.y << ")" << std::endl;
+    // std::cout << "E: (" << E.x << ", " << E.y << ")" << std::endl;
+    // std::cout << "F: (" << F.x << ", " << F.y << ")" << std::endl;
 
     LPoints.push_back(A);
     LPoints.push_back(B);
@@ -296,7 +310,7 @@ bool PRM::isPointInLShape(const cv::Point& point) {
 
 
     bool result = cv::pointPolygonTest(LPoints, point, false) >= 0;
-    std::cout << "isPointInPolygon called with point: (" << point.x << ", " << point.y << "), result: " << result << std::endl;
+    // std::cout << "isPointInPolygon called with point: (" << point.x << ", " << point.y << "), result: " << result << std::endl;
     return result;
 }
 
@@ -477,19 +491,18 @@ std::vector<std::pair<int, int>> PRM::bresenhamLinePoints(int startX, int startY
 }
 
 
-std::vector<Node> PRM::createNodesAndEdges(std::vector<Node> Graph_){
+std::vector<Node> PRM::createNodesAndEdges(std::vector<Node> Graph_) {
     float max_distance = 1000;
     int edges = 0;
-    for (size_t k = 0; k < Graph_.size(); k++){
-        
+    int barWidth = 70;
+
+    for (size_t k = 0; k < Graph_.size(); k++) {
         std::vector<Node> local_nodes;
         std::vector<std::pair<float, size_t>> distances;
 
-        for (size_t m = 0; m < Graph_.size(); m++){
+        for (size_t m = 0; m < Graph_.size(); m++) {
             if (Graph_[m].id != Graph_[k].id) { // Skip the target node itself
-
                 float distance = sqrt(pow(Graph_[k].x - Graph_[m].x, 2) + pow(Graph_[k].y - Graph_[m].y, 2));
-
                 distances.push_back({distance, m});
             }
         }
@@ -500,31 +513,30 @@ std::vector<Node> PRM::createNodesAndEdges(std::vector<Node> Graph_){
 
         // Collect the closest nodes
         std::vector<Node> closestNodes;
-    
         for (size_t i = 0; i < numResults; ++i) {
             local_nodes.push_back(Graph_[distances[i].second]);
         }
 
-
-
-
-        for (size_t j = 0; j < local_nodes.size(); j++){
-            // std::cout << "inner loop" << j << std::endl;
-            // create a temp vector a sorting 
-
-
-            if (pathIsClear(Graph_[k], local_nodes[j])){
-
+        for (size_t j = 0; j < local_nodes.size(); j++) {
+            if (pathIsClear(Graph_[k], local_nodes[j])) {
                 Graph_[k].edges.push_back(local_nodes[j].id);
-                // std::cout << "adding edge " << local_nodes[j].id << std::endl;
-                // edges++;
-                // std::cout << Graph_[k].edges.size() << std::endl;
             }
         }
+
+        // Update progress bar
+        float progress = static_cast<float>(k + 1) / Graph_.size();
+        std::cout << "[";
+        int pos = barWidth * progress;
+        for (int i = 0; i < barWidth; ++i) {
+            if (i < pos) std::cout << "=";
+            else if (i == pos) std::cout << ">";
+            else std::cout << " ";
+        }
+        std::cout << "] " << int(progress * 100.0) << " %\r";
+        std::cout.flush();
     }
-    
 
-
+    std::cout << std::endl; // Ensure the progress bar moves to the next line after completion
     std::cout << edges << std::endl;
     return Graph_;
 }
@@ -567,7 +579,7 @@ cv::Mat PRM::visalise_prm(cv::Mat mapImage, std::vector<Node> Graph_){
             }            
         } 
         else {
-            std::cout << "out of bounds" << std::endl;
+            // std::cout << "out of bounds" << std::endl;
         }
     }
 
@@ -742,9 +754,66 @@ std::vector<int> PRM::findPathAStar(const std::vector<Node>& graph, int startId,
 }
 
 
+std::vector<int> PRM::findPathAStarWithBlackList(const std::vector<Node>& graph, int startId, int targetId, const std::unordered_set<int>& blacklist) {
+    std::priority_queue<std::pair<float, int>, std::vector<std::pair<float, int>>, ComparePair> pq;
+    std::unordered_map<int, float> dist; // Distance from start node to each node
+    std::unordered_map<int, int> prev;   // Previous node in optimal path from source
+    std::vector<int> path;               // Store the final path
+
+    // Initialize distances as infinity
+    for (const auto& node : graph) {
+        dist[node.id] = std::numeric_limits<float>::infinity();
+    }
+
+    dist[startId] = 0.0; // Distance from start node to itself is zero
+    pq.push({0.0 + euclideanDistance(graph[startId], graph[targetId]), startId}); // Include heuristic value in priority queue
+
+    while (!pq.empty()) {
+        int currentNodeId = pq.top().second;
+        pq.pop();
+
+        // Skip nodes that are in the blacklist
+        if (blacklist.find(currentNodeId) != blacklist.end()) {
+            continue;
+        }
+
+        if (currentNodeId == targetId) { // If target node is reached
+            // Reconstruct the path
+            while (currentNodeId != startId) {
+                path.push_back(currentNodeId);
+                currentNodeId = prev[currentNodeId];
+            }
+            path.push_back(startId); // Add start node at the end
+            std::reverse(path.begin(), path.end()); // Reverse to get the correct order from start to target
+            return path;
+        }
+
+        // Explore the neighbors of the current node
+        for (const auto& edgeId : graph[currentNodeId].edges) {
+            // Skip neighbors that are in the blacklist
+            if (blacklist.find(edgeId) != blacklist.end()) {
+                continue;
+            }
+
+            float alt = dist[currentNodeId] + euclideanDistance(graph[currentNodeId], graph[edgeId]);
+            if (alt < dist[edgeId]) {
+                dist[edgeId] = alt;
+                prev[edgeId] = currentNodeId;
+                pq.push({alt + euclideanDistance(graph[edgeId], graph[targetId]), edgeId}); // Include heuristic value in priority queue
+            }
+        }
+    }
+
+    return path; // Return an empty path if no path is found
+}
 
 
 
+std::vector<int> PRM::GenerateBlackList(std::vector<geometry_msgs::Point> CollisonPoints){
+    std::vector<int> BlackList;
+    
+    return BlackList;
+}
 
 
 
@@ -1003,7 +1072,7 @@ std::vector<cv::Point> PRM::getUserDefinedPolygon(const std::string& mapImagePat
         std::cerr << "Error: Could not load map image." << std::endl;
         return {};
     }
-    std::cout << "Map image loaded successfully" << std::endl;
+    // std::cout << "Map image loaded successfully" << std::endl;
 
     // Convert grayscale to BGR for drawing
     cv::Mat colorImage;
@@ -1013,9 +1082,9 @@ std::vector<cv::Point> PRM::getUserDefinedPolygon(const std::string& mapImagePat
 
     // Set up the window and callback
     cv::namedWindow("Draw Polygon");
-    std::cout << "window created" << std::endl;
+    // std::cout << "window created" << std::endl;
     cv::setMouseCallback("Draw Polygon", PRM::staticMouseCallback, this);
-    std::cout << "callback created" << std::endl;
+    // std::cout << "callback created" << std::endl;
 
     while (true) {
         cv::Mat tempImage = image.clone();
@@ -1035,7 +1104,7 @@ std::vector<cv::Point> PRM::getUserDefinedPolygon(const std::string& mapImagePat
     }
 
     cv::destroyWindow("Draw Polygon");
-    std::cout << "Polygon drawing window destroyed" << std::endl;
+    // std::cout << "Polygon drawing window destroyed" << std::endl;
     // Flip the polygon points on both x and y axes
     std::vector<cv::Point> flippedPolygonPoints;
     cv::Point center(colorImage.cols / 2, colorImage.rows / 2);
@@ -1055,16 +1124,16 @@ std::vector<cv::Point> PRM::getUserDefinedPolygon(const std::string& mapImagePat
 
 bool PRM::isPointInPolygon(const cv::Point& point, const std::vector<cv::Point>& polygon) {
     bool result = cv::pointPolygonTest(polygon, point, false) >= 0;
-    std::cout << "isPointInPolygon called with point: (" << point.x << ", " << point.y << "), result: " << result << std::endl;
+    // std::cout << "isPointInPolygon called with point: (" << point.x << ", " << point.y << "), result: " << result << std::endl;
     return result;
 }
 
 std::vector<Node> PRM::samplePointsCV() {
-    std::cout << "samplePointsCV called" << std::endl;
+    // std::cout << "samplePointsCV called" << std::endl;
 
     // Obtain user-defined polygon
     std::vector<cv::Point> inclusionPolygon = getUserDefinedPolygon("/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/map_server2/maps/map.pgm");
-    std::cout << "User-defined polygon obtained" << std::endl;
+    // std::cout << "User-defined polygon obtained" << std::endl;
 
     // Graph definition
     Graph.clear();
@@ -1083,7 +1152,7 @@ std::vector<Node> PRM::samplePointsCV() {
         geometry_msgs::Point point;
         point.x = distrX(eng);
         point.y = distrY(eng);
-        std::cout << "Random point generated: (" << point.x << ", " << point.y << ")" << std::endl;
+        // std::cout << "Random point generated: (" << point.x << ", " << point.y << ")" << std::endl;
 
         cv::Point cvPoint(point.x, point.y);
 
@@ -1094,7 +1163,7 @@ std::vector<Node> PRM::samplePointsCV() {
             temp.id = id;
             id++;
             Graph.push_back(temp);
-            std::cout << "Point added to graph: (" << temp.x << ", " << temp.y << ")" << std::endl;
+            // std::cout << "Point added to graph: (" << temp.x << ", " << temp.y << ")" << std::endl;
 
             if (temp.y > Max_y) {
                 Max_y = temp.y;
@@ -1104,6 +1173,6 @@ std::vector<Node> PRM::samplePointsCV() {
             }
         }
     }
-    std::cout << "Graph generation complete" << std::endl;
+    // std::cout << "Graph generation complete" << std::endl;
     return Graph;
 }

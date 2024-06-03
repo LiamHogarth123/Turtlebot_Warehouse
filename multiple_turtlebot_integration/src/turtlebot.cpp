@@ -45,25 +45,25 @@ sensor_msgs::Image DefaultTurtleBot::Getupdated_imageDepth(){
 }
 
 void DefaultTurtleBot::updateOdomWithTransform() {
-  tf::StampedTransform transform;
-  try {
-    listener_.lookupTransform("/map", namespace_ + "/odom", ros::Time(0), transform);
-    transformed_Odom = Current_Odom;
+  // tf::StampedTransform transform;
+  // try {
+  //   listener_.lookupTransform("/map", namespace_ + "/odom", ros::Time(0), transform);
+  //   transformed_Odom = Current_Odom;
 
-    // Apply the transformation to the odometry
-    tf::Vector3 new_origin = transform.getOrigin();
-    tf::Quaternion new_rotation = transform.getRotation();
+  //   // Apply the transformation to the odometry
+  //   tf::Vector3 new_origin = transform.getOrigin();
+  //   tf::Quaternion new_rotation = transform.getRotation();
 
-    transformed_Odom.pose.pose.position.x += new_origin.x();
-    transformed_Odom.pose.pose.position.y += new_origin.y();
-    transformed_Odom.pose.pose.position.z += new_origin.z();
-    transformed_Odom.pose.pose.orientation.x += new_rotation.x();
-    transformed_Odom.pose.pose.orientation.y += new_rotation.y();
-    transformed_Odom.pose.pose.orientation.z += new_rotation.z();
-    transformed_Odom.pose.pose.orientation.w += new_rotation.w();
-  } catch (tf::TransformException &ex) {
-    ROS_WARN("%s", ex.what());
-  }
+  //   transformed_Odom.pose.pose.position.x += new_origin.x();
+  //   transformed_Odom.pose.pose.position.y += new_origin.y();
+  //   transformed_Odom.pose.pose.position.z += new_origin.z();
+  //   transformed_Odom.pose.pose.orientation.x += new_rotation.x();
+  //   transformed_Odom.pose.pose.orientation.y += new_rotation.y();
+  //   transformed_Odom.pose.pose.orientation.z += new_rotation.z();
+  //   transformed_Odom.pose.pose.orientation.w += new_rotation.w();
+  // } catch (tf::TransformException &ex) {
+  //   ROS_WARN("%s", ex.what());
+  // }
 }
 
 double DefaultTurtleBot::GetCurrentSpeed(){

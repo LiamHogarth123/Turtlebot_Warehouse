@@ -5,7 +5,7 @@
 #include "nav_msgs/MapMetaData.h"
 #include <nav_msgs/Odometry.h>
 #include <nav_msgs/OccupancyGrid.h>
-
+#include <unordered_set>
 
 struct Node {
     int id;
@@ -114,9 +114,14 @@ private:
 
     std::vector<int> findPathAStar(const std::vector<Node>& graph, int startId, int targetId);
 
+    std::vector<int> findPathAStarWithBlackList(const std::vector<Node>& graph, int startId, int targetId, const std::unordered_set<int>& blacklist);
+
+
     std::vector<int> findPathDijkstra(const std::vector<Node>& graph, int startId, int targetId);
 
     void findPath(int startNodeId, int goalNodeId);
+
+    std::vector<int> GenerateBlackList(std::vector<geometry_msgs::Point> CollisonPoints);
 
 
     // Visualisation Functions
