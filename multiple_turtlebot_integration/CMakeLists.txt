@@ -10,10 +10,14 @@ find_package(catkin REQUIRED COMPONENTS
   rosbag
   roslib
   message_generation
+  marker_msgs
+  tf
 )
 
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(marker_msgs REQUIRED)
+
 # find_package(yaml-cpp REQUIRED) # Ensure yaml-cpp is found
 
 # Set compiler flags for deprecation warnings
@@ -39,8 +43,10 @@ add_executable(${PROJECT_NAME}_method src/main.cpp src/method.cpp)
 # add_library(${PROJECT_NAME}_readMap src/readMap.cpp)
 add_library(${PROJECT_NAME}_prm src/prm.cpp)
 add_library(${PROJECT_NAME}_taskAlloction src/taskAlloction.cpp)
-add_library(${PROJECT_NAME}_control src/control.cpp)
 add_library(${PROJECT_NAME}_turtlebot src/turtlebot.cpp)
+add_library(${PROJECT_NAME}_control src/control.cpp src/sensorprocessing.cpp)
+add_library(${PROJECT_NAME}_path_avoidance src/path_avoidance.cpp)
+
 
 # Link libraries with the executable
 target_link_libraries(${PROJECT_NAME}_method
@@ -52,6 +58,9 @@ target_link_libraries(${PROJECT_NAME}_method
   ${PROJECT_NAME}_taskAlloction
   ${PROJECT_NAME}_control
   ${PROJECT_NAME}_turtlebot
+  ${PROJECT_NAME}_taskAlloction
+  ${PROJECT_NAME}_path_avoidance
+
 )
 
 # Optional: Link against pthreads if threading issues arise

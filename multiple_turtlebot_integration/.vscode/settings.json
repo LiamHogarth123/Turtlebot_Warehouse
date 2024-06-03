@@ -65,7 +65,9 @@
         "set": "cpp",
         "string": "cpp",
         "string_view": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "any": "cpp",
+        "*.ipp": "cpp"
     },
     "cmake.configureOnOpen": false,
     "python.autoComplete.extraPaths": [

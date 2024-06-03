@@ -1,3 +1,11 @@
+// 1. Add start configuration cstart to R(N,E)
+// 2. Loop
+// 3. Randomly Select New Node c to expand
+// 4. Randomly Generate new Node c’ from c
+// 5. If edge e from c to c’ is collision-free
+// 6. Add (c’, e) to R
+// 7. If c’ belongs to endgame region, return path
+// 8. Return if stopping criteria is met
 
 #include <vector>
 #include <utility> // for std::pair
@@ -14,30 +22,66 @@
 #include <limits>
 #include <tf/tf.h>
 
-//To do list
-// --- Add diagonal criteria to check points
-// --- Add check to see if node edge overlaps another node
-// --- Add check that nodes are not on top of each themselve
-// --- Fix the goal node assignment
-// --- Add multiple different visualisation
+
+// Plath planning to aviod other turtlebots
+////////////////////////////////////////////////////////////////
+
+// add here
 
 
+
+
+bool PRM::checkCollision(const std::vector<geometry_msgs::Point>& traj1, const std::vector<geometry_msgs::Point>& traj2) {
+    // Ensure both trajectories have the same number of points
+    double threshold = 0.45;
+    double Max_size;
+    if (traj1.size() < traj2.size()) {
+        Max_size = traj2.size();
+    }
+
+    for (size_t i = 0; i < Max_size; ++i) {
+        double distance = calculateDistance(traj1[i], traj2[i]);
+        if (distance < threshold) {
+            return true; // Collision detected
+        }
+    }
+    return false; // No collision
+}
+
+
+
+
+// Initialize the static member variable
+std::vector<cv::Point> PRM::polygonPoints;
 
 PRM::PRM() {
+    // std::cout << "PRM constructor called" << std::endl;
+    LPoints.clear();
 }
+
+void PRM::User_remove_Nodes(){
+    cv::Mat MapImage = Load_Map();
+    MapImage = removeNodes(MapImage, Graph);
+}
+
+
 
 //User Functions
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void PRM::GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_) {
+void PRM::GeneratePRM(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_, bool User_controlled) {
     UpdateMapData(map, MapMetaData_);
-
     std::vector<Node> ProbablityRoadMap;
-    ProbablityRoadMap = samplePoints();
+    if (User_controlled){
+        ProbablityRoadMap = samplePointsCV();
+        
+    }
+    else {
+        ProbablityRoadMap = samplePoints();
+    }
     std::vector<Node> ProbablityRoadMap_ = createNodesAndEdges(ProbablityRoadMap);
-    std::vector<int> emptys;
     Graph = ProbablityRoadMap_;
-    // visualise_PRM(Graph, emptys);
+    User_remove_Nodes();
 }
 
 
@@ -79,6 +123,7 @@ std::vector<geometry_msgs::Point> PRM::A_star_To_Goal(geometry_msgs::Point start
     for (int x = 0; x < DijkstraNodes.size(); x++){
         trajectory.push_back(convertNodeToPoint(Graph.at(DijkstraNodes.at(x))));
     }
+    trajectory.push_back(goal);
     return trajectory;
 }
 
@@ -87,9 +132,11 @@ std::vector<geometry_msgs::Point> PRM::A_star_To_Goal(geometry_msgs::Point start
 void PRM::UpdateMapData(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_) {
     std::cout << "PRM map data openning" << std::endl;
     SlamMapData = map;
-    numberOfPoints_ = 1000;
+    numberOfPoints_ = 10000;
     latestMapMetaData_ = MapMetaData_;
 }
+
+
 
 
 
@@ -113,24 +160,30 @@ std::vector<geometry_msgs::Point> PRM::test(){
     std::cout << "Distance between nodes -> " << nodeDistance(ProbablityRoadMap_.at(2), ProbablityRoadMap_.at(10)) << std::endl;
     std::vector<geometry_msgs::Point> trajectory; 
     trajectory = ConvertParthToWorld(path, ProbablityRoadMap_);
-    return trajectory;
 
+    return trajectory;
 }
 
 void PRM::show_Prm(){
+    std::cout << "Show PRM Opens" << std::endl;
     cv::Mat MapImage = Load_Map();
     MapImage = visalise_prm(MapImage, Graph);
     save_map(MapImage);
+    show_map(MapImage);
 }
 
-PrmData PRM::ExportPrmData(){
-    
-    PrmData Export;
 
+
+
+
+
+
+
+PrmData PRM::ExportPrmData(){
+    PrmData Export;
     Export.Exported_Graph = Graph;
     Export.map = SlamMapData;
     Export.MapMetaData_= latestMapMetaData_;
-    
     return Export;
 }
 
@@ -141,6 +194,12 @@ void PRM::Load_PRM(PrmData Imports){
     latestMapMetaData_ = Imports.MapMetaData_;
 
 }
+
+
+// void setoffset(nav_msgs::odometry start_odom){
+    //do the math
+// }
+
 
 
 
@@ -157,65 +216,91 @@ std::vector<Node> PRM::samplePoints(){
     //graph definition
     Graph.clear();
     int id = 0;
-    // std::cout <<"map infor" << std::endl;
-    // std::cout << latestMapMetaData_.height << std::endl;
-    //     std::cout << latestMapMetaData_.width << std::endl;
-    //Random generators 
+
+    // Random generators 
     std::random_device rd; // Obtain a random number from hardware
     std::mt19937 eng(rd()); // Seed the generator
     std::uniform_real_distribution<> distrX(0, latestMapMetaData_.width); // Define the range for x
     std::uniform_real_distribution<> distrY(0, latestMapMetaData_.height); // Define the range for y
 
-    // std::cout << "sampling points" << std::endl;
  
-    double Max_y = 0;
-    double min_y = 9999999;
-
-    // std::cout <<numberOfPoints_ << std::endl;
     while(Graph.size() < numberOfPoints_) {
-        // std::cout << "loop started"<< std::endl;
-        // std::cout << "while loop opens" << std::endl;
-
         geometry_msgs::Point point;
         point.x = distrX(eng);
         point.y = distrY(eng);
-        
-        // std::cout << "random data point" << std::endl;
-        // std::cout << point.x << std::endl;
-        if (true){ //newPoint(point, Graph) adding error??
 
+        cv::Point cvPoint(point.x, point.y);
+
+
+        if (isPointInLShape(cvPoint)){ 
             if(ValidPoint(point)) {
-                // std::cout << "if opens" << std::endl;
                 Node temp;
                 temp.x = point.x;
                 temp.y = point.y;   
                 temp.id = id;
-                id ++;
-                // std::cout << "sampling points" << std::endl;
-                // std::cout << "Point : X" << temp.x << "  y :" << temp.y << std::endl;
+                id++;
+
                 Graph.push_back(temp);
-                // std::cout << "if finished" << std::endl;
 
-                if (temp.y > Max_y){
-                    Max_y = temp.y;
-                }
-                if (temp.y < min_y){
-                    min_y = temp.y;
-                }
-
-
+                std::cout << "Point added to graph: (" << temp.x << ", " << temp.y << ")" << std::endl;
+            } else {
+                std::cout << "Point not valid" << std::endl;
             }
-            else {
-            }
+        } else {
+            std::cout << "Point not in L-shaped area" << std::endl;
         }
-        // std::cout << "Graph.size"  << std::endl;
+
+        // Debugging: Print current size of the graph
+        std::cout << "Current Graph size: " << Graph.size() << std::endl;
     }          
     return Graph;
-   
-
-
-
 }
+
+bool PRM::isPointInLShape(const cv::Point& point) {
+    if (LPoints.empty()){
+
+    
+    cv::Point A, B, C, D, E, F;
+
+    // Set the coordinates for the corners of the L shape
+    A.x = 3; A.y = 5.5;
+    B.x = -5; B.y = 5.5;
+    C.x = -5; C.y = 1;
+    D.x = -0.2; D.y = 1;
+    E.x = -0.2; E.y = -1;
+    F.x = 3; F.y = -0.75;
+
+    A = convertPointToNodeCordinate(A);
+    B = convertPointToNodeCordinate(B);
+    C = convertPointToNodeCordinate(C);
+    D = convertPointToNodeCordinate(D);
+    E = convertPointToNodeCordinate(E);
+    F = convertPointToNodeCordinate(F);
+
+    std::cout << "Vertices of L shape in grid coordinates:" << std::endl;
+    std::cout << "A: (" << A.x << ", " << A.y << ")" << std::endl;
+    std::cout << "B: (" << B.x << ", " << B.y << ")" << std::endl;
+    std::cout << "C: (" << C.x << ", " << C.y << ")" << std::endl;
+    std::cout << "D: (" << D.x << ", " << D.y << ")" << std::endl;
+    std::cout << "E: (" << E.x << ", " << E.y << ")" << std::endl;
+    std::cout << "F: (" << F.x << ", " << F.y << ")" << std::endl;
+
+    LPoints.push_back(A);
+    LPoints.push_back(B);
+    LPoints.push_back(C);
+    LPoints.push_back(D);
+    LPoints.push_back(E);
+    LPoints.push_back(F);
+    }
+
+
+
+    bool result = cv::pointPolygonTest(LPoints, point, false) >= 0;
+    std::cout << "isPointInPolygon called with point: (" << point.x << ", " << point.y << "), result: " << result << std::endl;
+    return result;
+}
+
+
 
 bool PRM::ValidPoint(geometry_msgs::Point point){
     
@@ -223,7 +308,7 @@ bool PRM::ValidPoint(geometry_msgs::Point point){
     int grid_y = static_cast<int>(point.y);
 
     int index = grid_x + (grid_y * SlamMapData.info.width);
-   int grid_size = 5;
+   int grid_size = 8;
 
     // Loop through the grid_size x grid_size area around the point
     for (int dx = -grid_size/2; dx <= grid_size/2; ++dx) {
@@ -298,7 +383,7 @@ bool PRM::pathIsClear(Node Node_A, Node Node_B){
     for (const auto& pair : BressenhamPoints) {
         
         // cv::Point point(pair.first, pair.second-16);
-        // path_points.push_back(point);   
+        // path_points.push_back(point);   geometry_msgs
     }
 
     return true;
@@ -316,7 +401,7 @@ bool PRM::ValidPointForPath(int x1, int y1){
  
 
        // Define the size of the grid to check around the point
-    int grid_size = 5;
+    int grid_size = 8;
 
     // Loop through the grid_size x grid_size area around the point
     for (int dx = -grid_size/2; dx <= grid_size/2; ++dx) {
@@ -451,7 +536,7 @@ std::vector<Node> PRM::createNodesAndEdges(std::vector<Node> Graph_){
 
 cv::Mat PRM::Load_Map(){
     //READ Image
-    cv::Mat grayscaleMapImage = cv::imread("/home/liam/catkin_ws/src/navigation/map_server/maps/map.pgm", cv::IMREAD_GRAYSCALE);
+    cv::Mat grayscaleMapImage = cv::imread("/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/map_server2/maps/map.pgm", cv::IMREAD_GRAYSCALE);
     if (grayscaleMapImage.empty()) {
         std::cerr << "Could not open or find the map image" << std::endl;
     }
@@ -587,7 +672,7 @@ std::vector<int> PRM::findPathDijkstra(const std::vector<Node>& graph, int start
         int currentNodeId = pq.top().second;
         pq.pop();
 
-        std::cout << "loopping" <<std::endl;
+        // std::cout << "loopping" <<std::endl;
         if (currentNodeId == targetId) { // If target node is reached
             std::cout << "Total distance from start to target: " << dist[targetId] << std::endl; // Print the total distance to target
             while (currentNodeId != startId) { // Reconstruct the path
@@ -683,6 +768,10 @@ float PRM::euclideanDistance(const Node& node1, const Node& node2) {
     return sqrt(pow(node1.x - node2.x, 2) + pow(node1.y - node2.y, 2));
 }
 
+double PRM::calculateDistance(const geometry_msgs::Point& p1, const geometry_msgs::Point& p2) {
+    return std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
+}
+
 
 int PRM::setGoalNode(geometry_msgs::Point goal){
      // Convert world coordinates to map coordinates
@@ -723,6 +812,26 @@ geometry_msgs::Point PRM::convertNodeToPoint(Node temp){
     std::cout << "point x" << world_point.x << " y --" << world_point.y << std::endl;
 
     return world_point;
+}
+
+geometry_msgs::Point PRM::convertPointToNodeCordinate(geometry_msgs::Point temp){
+    geometry_msgs::Point temp2;
+
+    // Reverse the transformation from world coordinates to grid coordinates
+    temp2.x = (temp.x - latestMapMetaData_.origin.position.x) / latestMapMetaData_.resolution;
+    temp2.y = (temp.y - latestMapMetaData_.origin.position.y) / latestMapMetaData_.resolution;
+
+    return temp2;
+}
+
+cv::Point PRM::convertPointToNodeCordinate(cv::Point temp){
+    cv::Point temp2;
+
+    // Reverse the transformation from world coordinates to grid coordinates
+    temp2.x = (temp.x - latestMapMetaData_.origin.position.x) / latestMapMetaData_.resolution;
+    temp2.y = (temp.y - latestMapMetaData_.origin.position.y) / latestMapMetaData_.resolution;
+
+    return temp2;
 }
 
 
@@ -793,4 +902,208 @@ bool PRM::newPoint(geometry_msgs::Point point, std::vector<Node> temp) {
         }
     }
     return true;
+}
+
+//Open CV USER DEFINED BACKGROUND REMOVAL
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void PRM::staticRemoveNodeCallback(int event, int x, int y, int flags, void* userdata) {
+    PRM* self = static_cast<PRM*>(userdata);
+    self->removeNodeCallback(event, x, y, flags, userdata);
+}
+
+void PRM::removeNodeCallback(int event, int x, int y, int flags, void*) {
+    if (event == cv::EVENT_LBUTTONDOWN) {
+        // Adjust the click coordinates to account for the zoom factor
+        double zoomFactor = 2.0; // Ensure this matches the zoom factor used in the display function
+        int adjustedX = static_cast<int>(x / zoomFactor);
+        int adjustedY = static_cast<int>(y / zoomFactor);
+
+        // Find and remove nodes that are within a 3x3 area of the clicked point
+        std::vector<size_t> nodesToRemove;
+
+        for (size_t i = 0; i < Graph.size(); ++i) {
+            double dist = cv::norm(cv::Point(adjustedX, adjustedY) - cv::Point(Graph[i].x, Graph[i].y));
+            if (dist <= 3.0) { // 3x3 area threshold
+                nodesToRemove.push_back(i);
+            }
+        }
+
+        for (size_t i = 0; i < nodesToRemove.size(); ++i) {
+            size_t closestNodeIndex = nodesToRemove[i];
+            std::cout << "Removing node at (" << Graph[closestNodeIndex].x << ", " << Graph[closestNodeIndex].y << ")" << std::endl;
+
+            // Remove edges pointing to the deleted node
+            int deletedNodeId = Graph[closestNodeIndex].id;
+            for (auto& node : Graph) {
+                node.edges.erase(std::remove(node.edges.begin(), node.edges.end(), deletedNodeId), node.edges.end());
+            }
+
+            // Set the node coordinates out of bounds to effectively remove it
+            Graph.at(closestNodeIndex).edges.clear();
+            Graph.at(closestNodeIndex).x = 99999999;
+            Graph.at(closestNodeIndex).y = 99999999;
+        }
+    }
+}
+
+cv::Mat PRM::removeNodes(cv::Mat mapImage, std::vector<Node>& Graph_) {
+    // Graph;
+
+    // Set up the window and callback
+    cv::namedWindow("Remove Nodes");
+    cv::resizeWindow("Remove Nodes", 1200, 800);
+    cv::setMouseCallback("Remove Nodes", PRM::staticRemoveNodeCallback, this);
+
+    while (true) {
+        cv::Mat tempImage = visalise_prm(mapImage.clone(), Graph);
+        cv::Mat zoomedImage;
+        double zoomFactor = 2.0; // Adjust this factor to zoom in/out
+        cv::resize(tempImage, zoomedImage, cv::Size(), zoomFactor, zoomFactor, cv::INTER_LINEAR);
+        cv::imshow("Remove Nodes", zoomedImage);
+        int key = cv::waitKey(1);
+        if (key == 27) { // ESC key to exit
+            break;
+        }
+    }
+
+    cv::destroyWindow("Remove Nodes");
+    Graph = Graph_; // Update the original graph with the modified graph
+    return mapImage;
+}
+
+
+
+
+// OPEN CV USER DEFINED BOUNDARIES
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void PRM::staticMouseCallback(int event, int x, int y, int flags, void* userdata) {
+    PRM* self = static_cast<PRM*>(userdata);
+    std::cout << "staticMouseCallback called" << std::endl;
+    self->mouseCallback(event, x, y, flags, userdata);
+}
+
+void PRM::mouseCallback(int event, int x, int y, int flags, void*) {
+    std::cout << "mouseCallback called with event: " << event << ", x: " << x << ", y: " << y << std::endl;
+    if (event == cv::EVENT_LBUTTONDOWN) {
+        polygonPoints.push_back(cv::Point(x, y));
+        std::cout << "Point added: (" << x << ", " << y << ")" << std::endl;
+    } else if (event == cv::EVENT_RBUTTONDOWN) {
+        if (!polygonPoints.empty()) {
+            polygonPoints.pop_back();
+            std::cout << "Last point removed" << std::endl;
+        }
+    }
+}
+
+std::vector<cv::Point> PRM::getUserDefinedPolygon(const std::string& mapImagePath) {
+    cv::Mat image = cv::imread(mapImagePath, cv::IMREAD_GRAYSCALE); // Load as grayscale
+    if (image.empty()) {
+        std::cerr << "Error: Could not load map image." << std::endl;
+        return {};
+    }
+    std::cout << "Map image loaded successfully" << std::endl;
+
+    // Convert grayscale to BGR for drawing
+    cv::Mat colorImage;
+    cv::cvtColor(image, colorImage, cv::COLOR_GRAY2BGR);
+    // cv::flip(colorImage, colorImage, 0);
+    std::cout << "image processed" << std::endl;
+
+    // Set up the window and callback
+    cv::namedWindow("Draw Polygon");
+    std::cout << "window created" << std::endl;
+    cv::setMouseCallback("Draw Polygon", PRM::staticMouseCallback, this);
+    std::cout << "callback created" << std::endl;
+
+    while (true) {
+        cv::Mat tempImage = image.clone();
+        if (polygonPoints.size() > 1) {
+            for (size_t i = 0; i < polygonPoints.size() - 1; ++i) {
+                cv::line(tempImage, polygonPoints[i], polygonPoints[i + 1], cv::Scalar(0, 0, 0), 2);
+            }
+            cv::line(tempImage, polygonPoints.back(), polygonPoints.front(), cv::Scalar(0, 0, 0), 2);
+        }
+
+        cv::imshow("Draw Polygon", tempImage);
+        int key = cv::waitKey(1);
+        if (key == 27) { // ESC key to exit
+            std::cout << "ESC key pressed, exiting polygon drawing" << std::endl;
+            break;
+        }
+    }
+
+    cv::destroyWindow("Draw Polygon");
+    std::cout << "Polygon drawing window destroyed" << std::endl;
+    // Flip the polygon points on both x and y axes
+    std::vector<cv::Point> flippedPolygonPoints;
+    cv::Point center(colorImage.cols / 2, colorImage.rows / 2);
+    for (const auto& point : polygonPoints) {
+        int flippedY = center.y + (center.y - point.y);
+        int flippedX = center.x - (center.x - point.x);
+        
+        
+        // flippedX = point.x;
+        // flippedY = point.y;
+        flippedPolygonPoints.push_back(cv::Point(flippedX, flippedY));
+    }
+    polygonPoints = flippedPolygonPoints;
+    return polygonPoints;
+
+}
+
+bool PRM::isPointInPolygon(const cv::Point& point, const std::vector<cv::Point>& polygon) {
+    bool result = cv::pointPolygonTest(polygon, point, false) >= 0;
+    std::cout << "isPointInPolygon called with point: (" << point.x << ", " << point.y << "), result: " << result << std::endl;
+    return result;
+}
+
+std::vector<Node> PRM::samplePointsCV() {
+    std::cout << "samplePointsCV called" << std::endl;
+
+    // Obtain user-defined polygon
+    std::vector<cv::Point> inclusionPolygon = getUserDefinedPolygon("/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/map_server2/maps/map.pgm");
+    std::cout << "User-defined polygon obtained" << std::endl;
+
+    // Graph definition
+    Graph.clear();
+    int id = 0;
+
+    // Random generators
+    std::random_device rd; // Obtain a random number from hardware
+    std::mt19937 eng(rd()); // Seed the generator
+    std::uniform_real_distribution<> distrX(0, latestMapMetaData_.width); // Define the range for x
+    std::uniform_real_distribution<> distrY(0, latestMapMetaData_.height); // Define the range for y
+
+    double Max_y = 0;
+    double min_y = 9999999;
+
+    while (Graph.size() < numberOfPoints_) {
+        geometry_msgs::Point point;
+        point.x = distrX(eng);
+        point.y = distrY(eng);
+        std::cout << "Random point generated: (" << point.x << ", " << point.y << ")" << std::endl;
+
+        cv::Point cvPoint(point.x, point.y);
+
+        if (isPointInPolygon(cvPoint, inclusionPolygon) && ValidPoint(point)) {
+            Node temp;
+            temp.x = point.x;
+            temp.y = point.y;
+            temp.id = id;
+            id++;
+            Graph.push_back(temp);
+            std::cout << "Point added to graph: (" << temp.x << ", " << temp.y << ")" << std::endl;
+
+            if (temp.y > Max_y) {
+                Max_y = temp.y;
+            }
+            if (temp.y < min_y) {
+                min_y = temp.y;
+            }
+        }
+    }
+    std::cout << "Graph generation complete" << std::endl;
+    return Graph;
 }

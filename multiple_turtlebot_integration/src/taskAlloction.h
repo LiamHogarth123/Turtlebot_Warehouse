@@ -8,14 +8,17 @@ public:
     TaskAlloction();
 
     // Function declarations
-    std::vector<std::vector<geometry_msgs::Point>> taskAllocation();
+    std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> taskAllocation();
     double calculateDistance(const geometry_msgs::Point& p1, const geometry_msgs::Point& p2);
     void SetTurtlebotPositions(const std::vector<geometry_msgs::Point>& Turtlebot_Positions);
-    void SetGoals(const std::vector<geometry_msgs::Point> goals);
+    void SetGoals(const std::vector<std::pair<int, geometry_msgs::Point>> goals);
     void SetGoals();
+
+    std::vector<geometry_msgs::Point> Set_Delievery_goals(int num_robots);
+
   
 private:
-    std::vector<geometry_msgs::Point> itemLocations;
+    std::vector<std::pair<int, geometry_msgs::Point>> itemLocations;
     std::vector<geometry_msgs::Point> robotPositions;
 };
 

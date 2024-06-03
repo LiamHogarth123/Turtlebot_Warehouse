@@ -18,20 +18,22 @@ TaskAlloction::TaskAlloction()
 
 void TaskAlloction::SetTurtlebotPositions(const std::vector<geometry_msgs::Point>& Turtlebot_Positions){
     // std::vector<geometry_msgs::Point> robotPositions;
-    geometry_msgs::Point robot1Pos;
-    robot1Pos.x = 0.0;
-    robot1Pos.y = 0.0;
-    robot1Pos.z = 0.0;
-    robotPositions.push_back(robot1Pos);
+    robotPositions = Turtlebot_Positions;
+    
+    // geometry_msgs::Point robot1Pos;
+    // robot1Pos.x = 0.0;
+    // robot1Pos.y = 0.0;
+    // robot1Pos.z = 0.0;
+    // robotPositions.push_back(robot1Pos);
 
-    geometry_msgs::Point robot2Pos;
-    robot2Pos.x = 0.5;
-    robot2Pos.y = 1.25;
-    robot2Pos.z = 0.0;
-    robotPositions.push_back(robot2Pos);
+    // geometry_msgs::Point robot2Pos;
+    // robot2Pos.x = 0.5;
+    // robot2Pos.y = 1.25;
+    // robot2Pos.z = 0.0;
+    // robotPositions.push_back(robot2Pos);
 }
 
-void TaskAlloction::SetGoals(const std::vector<geometry_msgs::Point> goals){
+void TaskAlloction::SetGoals(const std::vector<std::pair<int, geometry_msgs::Point>> goals){
     itemLocations = goals;
 }
 
@@ -143,73 +145,109 @@ void TaskAlloction::SetGoals(){
     item20.z = 0.0;   
 
   
+    itemLocations.push_back({1, item1});
+    itemLocations.push_back({2, item2});
+    itemLocations.push_back({3, item3});
+    itemLocations.push_back({4, item4});
+    itemLocations.push_back({5, item5});
+    itemLocations.push_back({6, item6});
+    itemLocations.push_back({7, item7});
+    itemLocations.push_back({8, item8});
+    itemLocations.push_back({9, item9});
+    itemLocations.push_back({10, item10});
+    itemLocations.push_back({11, item11});
+    itemLocations.push_back({12, item12});
+    itemLocations.push_back({13, item13});
+    itemLocations.push_back({14, item14});
+    itemLocations.push_back({15, item15});
+    itemLocations.push_back({16, item16});
+    itemLocations.push_back({17, item17});
+    itemLocations.push_back({18, item18});
+    itemLocations.push_back({19, item19});
+    itemLocations.push_back({20, item20});
+}
 
-    itemLocations.push_back(item1);
-    itemLocations.push_back(item2);
-    itemLocations.push_back(item3);
-    itemLocations.push_back(item4);
-    itemLocations.push_back(item5);
-    itemLocations.push_back(item6);
-    itemLocations.push_back(item7);
-    itemLocations.push_back(item8);
-    itemLocations.push_back(item9);
-    itemLocations.push_back(item10);
-    itemLocations.push_back(item11);
-    itemLocations.push_back(item12);
-    itemLocations.push_back(item13);
-    itemLocations.push_back(item14);
-    itemLocations.push_back(item15);
-    itemLocations.push_back(item16);
-    itemLocations.push_back(item17);
-    itemLocations.push_back(item18);
-    itemLocations.push_back(item19);
-    itemLocations.push_back(item20);
+std::vector<geometry_msgs::Point> TaskAlloction::Set_Delievery_goals(int num_robots) {
+    std::vector<geometry_msgs::Point> deliveryLocations;
+
+    // Define the default delivery location
+    geometry_msgs::Point defaultDeliveryLocation;
+    defaultDeliveryLocation.x = 0;
+    defaultDeliveryLocation.y = 0;
+
+    // Define offsets
+    double lateralOffset = 0.6; // Offset to the left and right
+    double forwardOffset = 1.0; // Forward offset for the next set of robots
+
+    for (int i = 0; i < num_robots; ++i) {
+        geometry_msgs::Point location;
+
+        if (i == 0) {
+            // First robot's delivery location is at the default location
+            location = defaultDeliveryLocation;
+        } else {
+            int set = i / 3; // Determine which set of 3 the robot belongs to
+            int position = i % 3; // Determine the position within the set
+
+            // Set the y coordinate based on the set number and forwardOffset
+            location.x = set * forwardOffset;
+
+            // Set the x coordinate based on the position within the set
+            if (position == 0) {
+                location.y = 0.0; // Center
+            } else if (position == 1) {
+                location.y = -lateralOffset; // Left
+            } else if (position == 2) {
+                location.y = lateralOffset; // Right
+            }
+        }
+
+        deliveryLocations.push_back(location);
+    }
+
+    return deliveryLocations;
 }
 
 
-std::vector<std::vector<geometry_msgs::Point>> TaskAlloction::taskAllocation(){
+std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> TaskAlloction::taskAllocation(){
    
 
-    geometry_msgs::Point deliveryLocation;
-
     
-    // Hypothetical drop off location
-     // Hypothetical drop off location
-    deliveryLocation.x = 0;
-    deliveryLocation.y = 0.1;
-    deliveryLocation.z = 0.0;
+    
 
     // Store item locations in the vector
     
    
      // randomly select the goals
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::shuffle(itemLocations.begin(), itemLocations.end(), gen);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::shuffle(itemLocations.begin(), itemLocations.end(), gen);
     // Select the first 6 locations
-        itemLocations.resize(6); 
+    itemLocations.resize(6); 
 
 
 
-    // initial robot positions
-    std::vector<geometry_msgs::Point> robotPositions;
-    geometry_msgs::Point robot1Pos;
-    robot1Pos.x = 0.0;
-    robot1Pos.y = 0.0;
-    robot1Pos.z = 0.0;
-    robotPositions.push_back(robot1Pos);
+    // // initial robot positions
+    // std::vector<geometry_msgs::Point> robotPositions;
+    // geometry_msgs::Point robot1Pos;
+    // robot1Pos.x = 0.0;
+    // robot1Pos.y = 0.0;
+    // robot1Pos.z = 0.0;
+    // robotPositions.push_back(robot1Pos);
 
-    geometry_msgs::Point robot2Pos;
-    robot2Pos.x = 0.5;
-    robot2Pos.y = 1.25;
-    robot2Pos.z = 0.0;
-    robotPositions.push_back(robot2Pos);
+    // geometry_msgs::Point robot2Pos;
+    // robot2Pos.x = 0.5;
+    // robot2Pos.y = 1.25;
+    // robot2Pos.z = 0.0;
+    // robotPositions.push_back(robot2Pos);
 
     // Set number of robots
     const int numRobots = robotPositions.size();
 
+    std::vector<geometry_msgs::Point> deliveryLocation = Set_Delievery_goals(numRobots);
+
     // Vector to store points allocated to each robot
-    std::vector<std::vector<geometry_msgs::Point>> allocatedPoints(numRobots);
+    std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> allocatedPoints(numRobots);
 
     while (!itemLocations.empty()) {
         // Allocate one point to each robot based on distance
@@ -220,7 +258,7 @@ std::vector<std::vector<geometry_msgs::Point>> TaskAlloction::taskAllocation(){
 
             // Find the closest item to the current robot position
             for (size_t j = 0; j < itemLocations.size(); ++j) {
-                double distance = calculateDistance(itemLocations[j], robotPositions[i]);
+                double distance = calculateDistance(itemLocations[j].second, robotPositions[i]);
                 if (distance < minDistance) {
                     minDistance = distance;
                     closestItemIndex = j;
@@ -238,14 +276,14 @@ std::vector<std::vector<geometry_msgs::Point>> TaskAlloction::taskAllocation(){
         for (int i = 0; i < numRobots; ++i) {
             std::cout << "Robot " << i + 1 << " allocated points:" << std::endl;
             for (const auto& point : allocatedPoints[i]) {
-                std::cout << "Point: (" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl;
+                std::cout << "Point: (" << point.second.x << ", " << point.second.y << ", " << point.second.z << ")" << std::endl;
             }
         }
 
         // Update robot positions to the first allocated points
         for (int i = 0; i < numRobots; ++i) {
             if (!allocatedPoints[i].empty()) {
-                robotPositions[i] = allocatedPoints[i][0];
+                robotPositions[i] = allocatedPoints[i][0].second;
                 // Clear the allocated points for the robot
                 // allocatedPoints[i].clear();
                 std::cout << "Robot " << i + 1 << " position after goal: (" << robotPositions[i].x << ", " << robotPositions[i].y << ", " << robotPositions[i].z << ")" << std::endl;
@@ -255,8 +293,8 @@ std::vector<std::vector<geometry_msgs::Point>> TaskAlloction::taskAllocation(){
 
     // Visit drop-off location after completing item collections
     for (int i = 0; i < numRobots; ++i) {
-        allocatedPoints[i].push_back(deliveryLocation);
-        std::cout << "Robot " << i + 1 << " visited drop-off location: (" << deliveryLocation.x << ", " << deliveryLocation.y << ", " << deliveryLocation.z << ")" << std::endl;
+        allocatedPoints[i].push_back({-1, deliveryLocation.at(i)}); // Use the ID:'-1' to indicate the drop-off location
+        std::cout << "Robot " << i + 1 << " visited drop-off location: (" << deliveryLocation.at(i).x << ", " << deliveryLocation.at(i).y << ", " << deliveryLocation.at(i).z << ")" << std::endl;
     }
     //  for (size_t i = 0; i < RobotGoals.size(); ++i) {
     // std::cout << "Vector " << i << ":\n";
@@ -275,3 +313,6 @@ std::vector<std::vector<geometry_msgs::Point>> TaskAlloction::taskAllocation(){
 double TaskAlloction::calculateDistance(const geometry_msgs::Point& p1, const geometry_msgs::Point& p2) {
     return std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2));
 }
+
+
+
