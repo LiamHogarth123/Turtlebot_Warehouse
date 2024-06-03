@@ -396,9 +396,9 @@ bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double 
     if (index < arTag.yaws.data.size()) {
       float yawError = arTag.yaws.data[index];
       
-      if (fabs(yawError) > 0.05){ // within tolerance
+      if (fabs(yawError) > 0.5){ // within tolerance
       // simple proportional control
-      float yawControl = 0.1 * yawError;
+      float yawControl = 0.05 * yawError;
 
       rotation.angular.z = yawControl;
       } else{

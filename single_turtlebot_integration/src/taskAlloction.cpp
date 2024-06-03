@@ -165,6 +165,89 @@ void TaskAlloction::SetGoals(){
     item20.y = 1.0532;
     item20.z = 0.0;   
 
+    if (true){ // set to false if you want TB to be on top of goal
+        // Define offsetted item locations
+        item1.x = -3.2544;
+        item1.y = 3.8730; // +0.3
+        item1.z = 0.0;
+        
+        item2.x = -2.7472;
+        item2.y = 3.8726; // +0.3
+        item2.z = 0.0;
+
+        item3.x = -1.2976;
+        item3.y = 3.9621; // +0.3
+        item3.z = 0.0;
+
+        item4.x = -0.7855;
+        item4.y = 3.9251; // +0.3
+        item4.z = 0.0;
+        
+        item5.x = 0.7801;
+        item5.y = 4.0118; // +0.3
+        item5.z = 0.0;
+
+        item6.x = 1.2212;
+        item6.y = 4.0347; // +0.3
+        item6.z = 0.0; 
+
+        item7.x = 1.2171;
+        item7.y = 2.8830; // -0.3
+        item7.z = 0.0;
+
+        item8.x = 0.7765;
+        item8.y = 2.8796; // -0.3
+        item8.z = 0.0;
+
+        item9.x = -0.7314;
+        item9.y = 2.7769; // -0.3
+        item9.z = 0.0;
+
+        item10.x = -1.2151;
+        item10.y = 2.7938; // -0.3
+        item10.z = 0.0;
+
+        item11.x = -2.6439;
+        item11.y = 2.7570; // -0.3
+        item11.z = 0.0;
+
+        item12.x = -3.1716;
+        item12.y = 2.7556; // -0.3
+        item12.z = 0.0;
+
+        item13.x = 1.2809;
+        item13.y = 1.9715; // +0.3
+        item13.z = 0.0;
+
+        item14.x = 0.7911;
+        item14.y = 1.9353; // +0.3
+        item14.z = 0.0;
+
+        item15.x = -0.7227;
+        item15.y = 1.9829; // +0.3
+        item15.z = 0.0;
+
+        item16.x = -1.1151;
+        item16.y = 1.9685; // +0.3
+        item16.z = 0.0;
+
+        item17.x = -2.6844;
+        item17.y = 1.9303; // +0.3
+        item17.z = 0.0;
+
+        item18.x = -3.1243;
+        item18.y = 1.9487; // +0.3
+        item18.z = 0.0;
+
+        item19.x = 0.8086;
+        item19.y = 0.7466; // -0.3
+        item19.z = 0.0;
+
+        item20.x = 1.2534;
+        item20.y = 0.7532; // -0.3
+        item20.z = 0.0; 
+    }
+
   
     itemLocations.push_back(location1 = {1, item1});
     itemLocations.push_back(location2 = {2, item2});
