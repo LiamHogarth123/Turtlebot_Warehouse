@@ -17,6 +17,9 @@ DefaultTurtleBot::DefaultTurtleBot(const std::string& name, const ros::NodeHandl
 
   sub4_ = nh_.subscribe(namespace_ + "/camera/depth/image_raw", 1000, &DefaultTurtleBot::ImageDepthCallback, this);
 
+  sub5_ = nh_.subscribe("/boundary/detection", 10, &DefaultTurtleBot::boundaryCallback,this); 
+
+  sub6_ = nh_.subscribe("/markers/info", 10, &DefaultTurtleBot::tagCallback,this); 
 }
 
 void DefaultTurtleBot::Send_cmd_tb1(geometry_msgs::Twist intructions){
@@ -45,6 +48,14 @@ sensor_msgs::Image DefaultTurtleBot::Getupdated_imageDepth(){
 double DefaultTurtleBot::GetCurrentSpeed(){
   return current_speed_;
 }
+marker_msgs::marker DefaultTurtleBot::getARtag(){
+  return arTag;
+}  
+
+std_msgs::Int16 DefaultTurtleBot::getBoundaryStatus(){
+  return boundaryStatus;
+}
+
 
 //callbacks
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,4 +87,14 @@ void DefaultTurtleBot::ImageDepthCallback(const sensor_msgs::Image::ConstPtr& Ms
 void DefaultTurtleBot::guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg){
   std::unique_lock<std::mutex> lck3 (odom_locker2);
   guider_Odom = *odomMsg;
+}
+
+void DefaultTurtleBot::boundaryCallback(const std_msgs::Int16::ConstPtr& Msg){
+  std::unique_lock<std::mutex> lck3 (boundary_locker);
+  boundaryStatus = *Msg;
+}
+
+void DefaultTurtleBot::tagCallback(const marker_msgs::marker::ConstPtr& Msg){
+  std::unique_lock<std::mutex> lck3 (marker_locker);
+  arTag = *Msg;
 }

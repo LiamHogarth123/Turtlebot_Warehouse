@@ -13,6 +13,8 @@
 TaskAlloction::TaskAlloction()
 {
     robotPositions.clear();
+    itemLocations.clear();
+
   
 }
 
@@ -33,8 +35,27 @@ void TaskAlloction::SetTurtlebotPositions(const std::vector<geometry_msgs::Point
     // robotPositions.push_back(robot2Pos);
 }
 
-void TaskAlloction::SetGoals(const std::vector<std::pair<int, geometry_msgs::Point>> goals){
-    itemLocations = goals;
+void TaskAlloction::SetGoals(std::vector<int> temp_goalIds){
+    SetGoals(); // loads all goal locations
+    std::vector<int> goalIds = temp_goalIds;
+    std::vector<std::pair<int, geometry_msgs::Point>> filteredLocations;
+
+        // Iterate through itemLocations
+        for (const auto& location : itemLocations) {
+            // Check if the index is in goalIds
+            if (std::find(goalIds.begin(), goalIds.end(), location.first) != goalIds.end()) {
+                // If it is, add it to the filteredLocations vector
+                filteredLocations.push_back(location);
+            }
+        }
+    itemLocations = filteredLocations;
+
+    // std::cout << "Item Location IDs:" << std::endl;
+    // for (const auto& location : itemLocations) {
+    //     std::cout << "ID: " << location.first << std::endl;
+    // }
+
+    randomiseGoals = false;
 }
 
 void TaskAlloction::SetGoals(){
@@ -67,7 +88,7 @@ void TaskAlloction::SetGoals(){
     item1.x = -3.2544;
     item1.y = 3.5730;
     item1.z = 0.0;
-
+    
     item2.x = -2.7472;
     item2.y = 3.5726;
     item2.z = 0.0;
@@ -79,7 +100,7 @@ void TaskAlloction::SetGoals(){
     item4.x = -0.7855;
     item4.y = 3.6251;
     item4.z = 0.0;
-
+    
     item5.x = 0.7801;
     item5.y = 3.7118;
     item5.z = 0.0;
@@ -145,26 +166,28 @@ void TaskAlloction::SetGoals(){
     item20.z = 0.0;   
 
   
-    itemLocations.push_back({1, item1});
-    itemLocations.push_back({2, item2});
-    itemLocations.push_back({3, item3});
-    itemLocations.push_back({4, item4});
-    itemLocations.push_back({5, item5});
-    itemLocations.push_back({6, item6});
-    itemLocations.push_back({7, item7});
-    itemLocations.push_back({8, item8});
-    itemLocations.push_back({9, item9});
-    itemLocations.push_back({10, item10});
-    itemLocations.push_back({11, item11});
-    itemLocations.push_back({12, item12});
-    itemLocations.push_back({13, item13});
-    itemLocations.push_back({14, item14});
-    itemLocations.push_back({15, item15});
-    itemLocations.push_back({16, item16});
-    itemLocations.push_back({17, item17});
-    itemLocations.push_back({18, item18});
-    itemLocations.push_back({19, item19});
-    itemLocations.push_back({20, item20});
+    itemLocations.push_back(location1 = {1, item1});
+    itemLocations.push_back(location2 = {2, item2});
+    itemLocations.push_back(location3 = {3, item3});
+    itemLocations.push_back(location4 = {4, item4});
+    itemLocations.push_back(location5 = {5, item5});
+    itemLocations.push_back(location6 = {6, item6});
+    itemLocations.push_back(location7 = {7, item7});
+    itemLocations.push_back(location8 = {8, item8});
+    itemLocations.push_back(location9 = {9, item9});
+    itemLocations.push_back(location10 = {10, item10});
+    itemLocations.push_back(location11 = {11, item11});
+    itemLocations.push_back(location12 = {12, item12});
+    itemLocations.push_back(location13 = {13, item13});
+    itemLocations.push_back(location14 = {14, item14});
+    itemLocations.push_back(location15 = {15, item15});
+    itemLocations.push_back(location16 = {16, item16});
+    itemLocations.push_back(location17 = {17, item17});
+    itemLocations.push_back(location18 = {18, item18});
+    itemLocations.push_back(location19 = {19, item19});
+    itemLocations.push_back(location20 = {20, item20});
+
+    randomiseGoals = true;
 }
 
 
@@ -175,20 +198,18 @@ std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> TaskAlloction::ta
 
     
     // Hypothetical drop off location
-    // Hypothetical drop off location
     deliveryLocation.x = 0;
-    deliveryLocation.y = 0.1;
+    deliveryLocation.y = 0.0;
     deliveryLocation.z = 0.0;
-
-    // Store item locations in the vector
     
-   
-     // randomly select the goals
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::shuffle(itemLocations.begin(), itemLocations.end(), gen);
-    // Select the first 6 locations
-    itemLocations.resize(6); 
+    if (randomiseGoals){
+        // randomly select the goals
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::shuffle(itemLocations.begin(), itemLocations.end(), gen);
+        // Select the first 6 locations
+        itemLocations.resize(6); 
+    }
 
 
 

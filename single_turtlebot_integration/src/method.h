@@ -17,11 +17,10 @@
 
 #include "visualization_msgs/MarkerArray.h"
 
-#include "std_msgs/Int16.h"
 #include "turtlebot.h"
 #include "taskAlloction.h"
 
-#include "marker_msgs/marker.h"
+
 
 
 
@@ -47,8 +46,7 @@ public:
 
   void mapMetadataCallback(const nav_msgs::MapMetaData::ConstPtr& msg);
 
-  void tagCallback(const marker_msgs::marker::ConstPtr& Msg);
-  void boundaryCallback(const std_msgs::Int16::ConstPtr& Msg);
+
 
 
  
@@ -99,8 +97,7 @@ public:
   std::mutex Lida_locker;
   std::mutex ImageDepth_locker;
   std::mutex goal_lock;
-  std::mutex marker_locker;
-  std::mutex boundary_locker;
+  
 
 //variables for callbacks
   DefaultTurtleBot* tb1; 
@@ -121,10 +118,6 @@ public:
 
   bool teleop_mode;
   bool missionComplete;
-
-
-  marker_msgs::marker arTag;
-  std_msgs::Int16 boundaryStatus;
 
 
 

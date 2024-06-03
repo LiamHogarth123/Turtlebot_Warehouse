@@ -7,6 +7,8 @@
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/LaserScan.h>
 #include <sensor_msgs/Image.h>
+#include "marker_msgs/marker.h"
+#include "std_msgs/Int16.h"
 
 
 class DefaultTurtleBot {
@@ -20,6 +22,9 @@ public:
     void RGBCallback(const sensor_msgs::Image::ConstPtr& Msg);
     void ImageDepthCallback(const sensor_msgs::Image::ConstPtr& Msg);
     void guiderOdomCallback(const nav_msgs::Odometry::ConstPtr& odomMsg);
+    void tagCallback(const marker_msgs::marker::ConstPtr& Msg);
+    void boundaryCallback(const std_msgs::Int16::ConstPtr& Msg);
+    
 
     DefaultTurtleBot(const DefaultTurtleBot&) = delete;
     DefaultTurtleBot& operator=(const DefaultTurtleBot&) = delete;
@@ -29,6 +34,8 @@ public:
     sensor_msgs::LaserScan Getupdated_Lida();
     sensor_msgs::Image Getupdated_imageDepth();
     double GetCurrentSpeed();
+    marker_msgs::marker getARtag();
+    std_msgs::Int16 getBoundaryStatus();
     
 
     // void callback(const SomeMessageTypeConstPtr& msg);
@@ -43,12 +50,16 @@ private:
     ros::Subscriber sub2_;
     ros::Subscriber sub3_;
     ros::Subscriber sub4_;
+    ros::Subscriber sub5_;
+    ros::Subscriber sub6_;
 
     std::mutex odom_locker;
     std::mutex odom_locker2;
     std::mutex RGB_locker;
     std::mutex Lida_locker;
     std::mutex ImageDepth_locker;
+    std::mutex marker_locker;
+    std::mutex boundary_locker;
 
     //variables for callbacks
     nav_msgs::Odometry Current_Odom;
@@ -56,6 +67,8 @@ private:
     sensor_msgs::Image updated_RGB;
     sensor_msgs::LaserScan updated_Lida;
     sensor_msgs::Image updated_imageDepth;
+    marker_msgs::marker arTag;
+    std_msgs::Int16 boundaryStatus;
 
     double current_speed_;
 

@@ -65,23 +65,6 @@ void Method::separateThread() {
 
   
 
-
-
-  //Brendan task allocation
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  std::vector<geometry_msgs::Point> roboPos;
-  roboPos.push_back(tb1->GetCurrent_Odom().pose.pose.position);
-  std::cout << "Task allocation next state" << std::endl;
-  TA.SetGoals();
-  TA.SetTurtlebotPositions(roboPos);
-  std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> RobotGoals;
-  RobotGoals = TA.taskAllocation();
-
-
-
-  
-
-
   
 
   //Liam Map generation
@@ -98,7 +81,7 @@ void Method::separateThread() {
 
   char v;
   int input = 1;
-  std::cout << "UserDefined Goals (1) or constant goals (2)";
+  std::cout << "Enter (1) for User Defined Position, (2) for Random Goals, (3) for UserDefined Goals" << std::endl;
   std::cin >> input;
 
   // USER INPUT GOALS
@@ -108,10 +91,10 @@ void Method::separateThread() {
     while (true){
 
 
-      std::cout << "Enter x-coordinate: ";
+      std::cout << "Enter x-coordinate: " << std::endl;
       std::cin >> goal.x;
 
-      std::cout << "Enter y-coordinate: ";
+      std::cout << "Enter y-coordinate: " << std::endl;
       std::cin >> goal.y;
       start.x = tb1->GetCurrent_Odom().pose.pose.position.x;
       start.y = tb1->GetCurrent_Odom().pose.pose.position.y; 
@@ -166,7 +149,7 @@ void Method::separateThread() {
 
 
         // Checks for boundary and kills program if detected
-        if (boundaryStatus.data == 1){ // blue detected
+        if (tb1->getBoundaryStatus().data == 1){ // blue detected
           falsePositiveCheck++;
           if (falsePositiveCheck > 3) {
             std::cout << "Boundary Detected!! Seek Operator Assistance" << std::endl;
@@ -179,7 +162,7 @@ void Method::separateThread() {
         std::cout << botTraj.linear.x << std::endl;
         tb1->Send_cmd_tb1(botTraj);
       
-        std::cout << "Look-Ahead Point: (" << targetGoal.x << ", " << targetGoal.y << ")" << std::endl;
+        // std::cout << "Look-Ahead Point: (" << targetGoal.x << ", " << targetGoal.y << ")" << std::endl;
         publishLookAheadMarker(targetGoal);
         
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -205,7 +188,7 @@ void Method::separateThread() {
       missionComplete = false;
       goal_index = 0;
 
-      std::cout << "Would you like to continue driving? (y/n): ";
+      std::cout << "Would you like to continue driving? (y/n): " << std::endl;
       std::cin >> v;
       if (v == 'n' || v == 'N') {
           break;
@@ -219,6 +202,45 @@ void Method::separateThread() {
   ///////////////////////////////////////////////////////////////////////////////////////
   
   else {
+    
+
+    //Brendan task allocation
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> RobotGoals;
+    std::vector<geometry_msgs::Point> roboPos;
+    roboPos.push_back(tb1->GetCurrent_Odom().pose.pose.position);
+    
+    if (input == 3){
+      std::vector<int> goalIDs;
+      
+      int input;
+      std::cout << "Enter a Goal" << std::endl;
+      std::cin >> input;
+      goalIDs.push_back(input);
+      char condition;
+      std::cout << "Do you want to enter another goal? y or n" << std::endl;
+      std::cin >> condition;
+      while (condition == 'y'){
+        std::cout << "Enter a Goal" << std::endl;
+        std::cin >> input;
+        goalIDs.push_back(input);
+        std::cout << "Do you want to enter another goal? y or n" << std::endl;
+        std::cin >> condition;
+      }
+
+      TA.SetGoals(goalIDs);
+      TA.SetTurtlebotPositions(roboPos);
+      RobotGoals = TA.taskAllocation();
+    } else {
+      TA.SetGoals();
+      TA.SetTurtlebotPositions(roboPos);
+      RobotGoals = TA.taskAllocation();
+    }
+    
+    
+    
+    
+    
     double goal_list_index = 0;
 
     while (goal_list_index < RobotGoals[0].size()){
@@ -272,7 +294,7 @@ void Method::separateThread() {
         }
 
         // Checks for boundary and kills program if detected
-      if (boundaryStatus.data == 1){ // blue detected
+      if (tb1->getBoundaryStatus().data == 1){ // blue detected
         falsePositiveCheck++;
         if (falsePositiveCheck > 3) {
           std::cout << "Boundary Detected!! Seek Operator Assistance" << std::endl;
@@ -285,7 +307,7 @@ void Method::separateThread() {
         std::cout << botTraj.linear.x << std::endl;
         tb1->Send_cmd_tb1(botTraj);
       
-        std::cout << "Look-Ahead Point: (" << targetGoal.x << ", " << targetGoal.y << ")" << std::endl;
+        // std::cout << "Look-Ahead Point: (" << targetGoal.x << ", " << targetGoal.y << ")" << std::endl;
         publishLookAheadMarker(targetGoal);
         
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -296,11 +318,10 @@ void Method::separateThread() {
       // if the current goal is not the last goal, then execute
       if (goal_list_index < RobotGoals[0].size() - 1){
         int count = 0;
-        double angleToGoal = TurtleGPS.angleToGoal(tb1->GetCurrent_Odom(), RobotGoals[0][goal_list_index].second);
-        while (tagAlignment(RobotGoals[0][goal_list_index], angleToGoal) == false){
+        while (tagAlignment(RobotGoals[0][goal_list_index], TurtleGPS.angleToGoal(tb1->GetCurrent_Odom(), RobotGoals[0][goal_list_index].second)) == false){
           std::this_thread::sleep_for(std::chrono::milliseconds(200));
           count++;
-          if (count == 10){ // roughly looks 60degrees turning in the direction of the tag
+          if (count == 20){ // roughly looks 86degrees turning in the direction of the tag
             std::cout << "Could not find Tag: " << RobotGoals[0][goal_list_index].first << std::endl;
             break;
           }
@@ -340,16 +361,10 @@ void Method::separateThread() {
 
 
 
-
-
-
-
-
-
-
 bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal){
   
   // current tag info
+  marker_msgs::marker arTag = tb1->getARtag();
   int tagID = temp_tag.first;
   geometry_msgs::Point tagPosition = temp_tag.second;
   // velocity variables
@@ -376,23 +391,25 @@ bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double 
       } else{
         rotation.angular.z = 0;
         tb1->Send_cmd_tb1(rotation);
+        std::cout << "Found and Confirmed AR Tag: " << tagID << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
         return true;
       }
     } 
   } else {
     // The value was not found in the array        
-    // rotates in the tags direction until tag detected
-    if (angle > 0){
-      rotation.angular.z = 0.5;
+    // rotates using simple proportional control in the tags direction until tag detected
+    float yawControl = 0;
+    if (abs(angle) > 0.1){
+      yawControl = 0.1 * angle;
+      rotation.angular.z = yawControl;
       
-    } else if (angle < 0){
-      rotation.angular.z = -0.5;
-    }
+    } 
   }
   std::cout << "sending rotation: " << rotation.angular.z << std::endl;
   tb1->Send_cmd_tb1(rotation);
 
-  return false;;
+  return false;
 
 }
 
@@ -513,16 +530,6 @@ void Method::mapMetadataCallback(const nav_msgs::MapMetaData::ConstPtr& msg) {
   ROS_INFO("Received map metadata. Width: %d, Height: %d", msg->width, msg->height);
   std::unique_lock<std::mutex> lck3 (MapMetaData_Lock);
   latestMapMetaData_ = *msg;  
-}
-
-void Method::boundaryCallback(const std_msgs::Int16::ConstPtr& Msg){
-  std::unique_lock<std::mutex> lck3 (boundary_locker);
-  boundaryStatus = *Msg;
-}
-
-void Method::tagCallback(const marker_msgs::marker::ConstPtr& Msg){
-  std::unique_lock<std::mutex> lck3 (marker_locker);
-  arTag = *Msg;
 }
 
 
