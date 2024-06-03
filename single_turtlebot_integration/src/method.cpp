@@ -65,11 +65,24 @@ void Method::separateThread() {
 
   
 
-  
+    char user_input;
+  bool map_choice;
+
+  std::cout << "Would you like a custom map or predefined map Y/N";
+  std::cin >> user_input;
+
+  if (user_input == 'y' || user_input == 'Y') {
+      map_choice = true;
+    } else if (user_input == 'n' || user_input == 'N') {
+      map_choice = false;
+    } else {
+      std::cout << "invalid input deflaut being used" << std::endl;
+      map_choice = false;
+    }
 
   //Liam Map generation
   /////////////////////////////////////////////////////////////////////////
-  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_);
+  prmMap.GeneratePRM(latestMapData_, latestMapMetaData_, map_choice);
   prmMap.show_Prm();
   std::vector<geometry_msgs::Point> trajectory;
 

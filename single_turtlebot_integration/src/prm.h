@@ -5,7 +5,7 @@
 #include "nav_msgs/MapMetaData.h"
 #include <nav_msgs/Odometry.h>
 #include <nav_msgs/OccupancyGrid.h>
-
+#include <unordered_set>
 
 struct Node {
     int id;
@@ -41,6 +41,9 @@ public:
 
     std::vector<geometry_msgs::Point> A_star_To_Goal(geometry_msgs::Point start, geometry_msgs::Point goal);
 
+    std::vector<geometry_msgs::Point> A_star_To_Goal_With_Blacklist(geometry_msgs::Point start, geometry_msgs::Point goal, std::vector<geometry_msgs::Point> CollisonPoints);
+
+
     void UpdateMapData(nav_msgs::OccupancyGrid map, nav_msgs::MapMetaData MapMetaData_);
 
     std::vector<geometry_msgs::Point> test();
@@ -64,6 +67,11 @@ private:
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     std::vector<Node> samplePoints();
 
+    bool isPointInLShape(const cv::Point& point);
+    
+    std::vector<cv::Point> LPoints;
+
+
     bool ValidPoint(geometry_msgs::Point point);
 
     bool pathIsClear(Node Node_A, Node Node_B);
@@ -73,6 +81,8 @@ private:
     bool ValidPointForPath(int x1, int y1);
 
     std::vector<Node> createNodesAndEdges(std::vector<Node> Graph_);
+
+
 
     
 
@@ -99,15 +109,29 @@ private:
 
     bool newPoint(geometry_msgs::Point point, std::vector<Node> temp);
 
+    geometry_msgs::Point convertPointToNodeCordinate(geometry_msgs::Point temp);
+
+    cv::Point convertPointToNodeCordinate(cv::Point temp);
+
 
     // Path finding
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     std::vector<int> findPathAStar(const std::vector<Node>& graph, int startId, int targetId);
 
+    std::vector<int> findPathAStarWithBlackList(const std::vector<Node>& graph, int startId, int targetId, const std::unordered_set<int>& blacklist);
+
+
     std::vector<int> findPathDijkstra(const std::vector<Node>& graph, int startId, int targetId);
 
     void findPath(int startNodeId, int goalNodeId);
+
+    std::unordered_set<int> GenerateBlackList(std::vector<geometry_msgs::Point> CollisonPoints);
+
+    int findClosestNode(const geometry_msgs::Point& point);
+
+    std::vector<int> getNodesInArea(int nodeId, int areaSize);
+
 
 
     // Visualisation Functions
@@ -173,6 +197,8 @@ private:
 
 
     int numberOfPoints_;
+
+
 
     std::vector<cv::Point> path_points_withoutValidation;
     std::vector<cv::Point> path_points;
