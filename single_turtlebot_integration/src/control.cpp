@@ -69,7 +69,7 @@ geometry_msgs::Twist Control::reachGoal(){
 
 
     if (obstacleMidpoint > 0) {
-        std::cout << obstacleMidpoint << std::endl;
+        // std::cout << obstacleMidpoint << std::endl;
         std::cout << "avoiding object on left" << std::endl;
         velocityZ = avoidanceFactor/pow(obstacleMidpoint+0.23,2); 
         if (velocityZ < -maxVelz) {

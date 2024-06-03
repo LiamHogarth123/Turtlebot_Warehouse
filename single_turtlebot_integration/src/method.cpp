@@ -151,7 +151,7 @@ void Method::separateThread() {
             // adjust TurtleBot to be on top of last goal
             botTraj.linear.x = 0.10;
             tb1->Send_cmd_tb1(botTraj);
-            std::cout << "Sleeping for 1000ms to adjust position..." << std::endl;
+            //std::cout << "Sleeping for 3000ms to adjust position..." << std::endl;
             std::this_thread::sleep_for(std::chrono::milliseconds(3000));
             botTraj.linear.x = 0;
             std::cout << "Goal Reached!!!!!!!!" << std::endl;
@@ -161,7 +161,7 @@ void Method::separateThread() {
         
 
 
-        // Checks for boundary and kills program if detected
+        //// Checks for boundary and kills program if detected ////
         if (tb1->getBoundaryStatus().data == 1){ // blue detected
           falsePositiveCheck++;
           if (falsePositiveCheck > 3) {
@@ -172,7 +172,7 @@ void Method::separateThread() {
           falsePositiveCheck = 0;
         }
 
-        std::cout << botTraj.linear.x << std::endl;
+        // std::cout << botTraj.linear.x << std::endl;
         tb1->Send_cmd_tb1(botTraj);
       
         // std::cout << "Look-Ahead Point: (" << targetGoal.x << ", " << targetGoal.y << ")" << std::endl;
@@ -183,7 +183,7 @@ void Method::separateThread() {
       }
 
       
-      // tagAlignment();
+      
       
 
       while (tb1->GetCurrentSpeed() > 0){
@@ -306,7 +306,7 @@ void Method::separateThread() {
         
         }
 
-        // Checks for boundary and kills program if detected
+      //// Checks for boundary and kills program if detected ////
       if (tb1->getBoundaryStatus().data == 1){ // blue detected
         falsePositiveCheck++;
         if (falsePositiveCheck > 3) {
@@ -317,7 +317,7 @@ void Method::separateThread() {
         falsePositiveCheck = 0;
       }
 
-        std::cout << botTraj.linear.x << std::endl;
+        // std::cout << botTraj.linear.x << std::endl;
         tb1->Send_cmd_tb1(botTraj);
       
         // std::cout << "Look-Ahead Point: (" << targetGoal.x << ", " << targetGoal.y << ")" << std::endl;
@@ -328,19 +328,21 @@ void Method::separateThread() {
         
       }
 
-      // if the current goal is not the last goal, then execute
+      //// Tag Alignment /////
+      // if the current goal is not the last goal, then execute (because last goal is the dropoff zone)
       if (goal_list_index < RobotGoals[0].size() - 1){
         int count = 0;
-        while (tagAlignment(RobotGoals[0][goal_list_index], TurtleGPS.angleToGoal(tb1->GetCurrent_Odom(), RobotGoals[0][goal_list_index].second)) == false){
+        while (tagAlignment(RobotGoals[0][goal_list_index], TurtleGPS.angleToGoal(tb1->GetCurrent_Odom(), TA.getGoalPos(RobotGoals[0][goal_list_index].first))) == false){
           std::this_thread::sleep_for(std::chrono::milliseconds(200));
-          count++;
-          if (count == 20){ // roughly looks 86degrees turning in the direction of the tag
-            std::cout << "Could not find Tag: " << RobotGoals[0][goal_list_index].first << std::endl;
-            break;
-          }
+          if (abs(TurtleGPS.angleToGoal(tb1->GetCurrent_Odom(), TA.getGoalPos(RobotGoals[0][goal_list_index].first))) < 0.05)
+            count++;
+            if (count == 20){ 
+              std::cout << "Could not find Tag: " << RobotGoals[0][goal_list_index].first << std::endl;
+              break;
+            }
         }
       }
-
+      
       
       if (tb1->GetCurrentSpeed() > 0){
         geometry_msgs::Twist zero_vel;
@@ -398,7 +400,7 @@ bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double 
       
       if (fabs(yawError) > 0.5){ // within tolerance
       // simple proportional control
-      float yawControl = 0.05 * yawError;
+      float yawControl = 0.1 * yawError;
 
       rotation.angular.z = yawControl;
       } else{
@@ -413,8 +415,8 @@ bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double 
     // The value was not found in the array        
     // rotates using simple proportional control in the tags direction until tag detected
     float yawControl = 0;
-    if (abs(angle) > 0.1){
-      yawControl = 0.1 * angle;
+    if (abs(angle) > 0.05){
+      yawControl = 0.3 * angle;
       rotation.angular.z = yawControl;
       
     } 
@@ -579,9 +581,8 @@ void Method::publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros:
       marker.color.a = 1.0; // Alpha (transparency)
 
       markerArray.markers.push_back(marker); // Add the marker to the array
-      std::cout << "marker created" << std::endl;
-      std::cout << "tesrt" << std::endl;
-      std::cout << "tesrt" << std::endl;  
+      // std::cout << "marker created" << std::endl;
+
   }
   
   marker_pub.publish(markerArray); // Publish the entire array

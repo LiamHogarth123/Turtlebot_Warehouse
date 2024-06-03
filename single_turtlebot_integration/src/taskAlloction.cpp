@@ -40,15 +40,18 @@ void TaskAlloction::SetGoals(std::vector<int> temp_goalIds){
     std::vector<int> goalIds = temp_goalIds;
     std::vector<std::pair<int, geometry_msgs::Point>> filteredLocations;
 
-        // Iterate through itemLocations
-        for (const auto& location : itemLocations) {
-            // Check if the index is in goalIds
-            if (std::find(goalIds.begin(), goalIds.end(), location.first) != goalIds.end()) {
-                // If it is, add it to the filteredLocations vector
-                filteredLocations.push_back(location);
-            }
+    // Iterate through itemLocations
+    for (const auto& location : itemLocations) {
+        // Check if the index is in goalIds
+        if (std::find(goalIds.begin(), goalIds.end(), location.first) != goalIds.end()) {
+            // If it is, add it to the filteredLocations vector
+            filteredLocations.push_back(location);
         }
+    }
     itemLocations = filteredLocations;
+
+
+
 
     // std::cout << "Item Location IDs:" << std::endl;
     // for (const auto& location : itemLocations) {
@@ -165,6 +168,27 @@ void TaskAlloction::SetGoals(){
     item20.y = 1.0532;
     item20.z = 0.0;   
 
+    actualItemLocations.push_back(location1 = {1, item1});
+    actualItemLocations.push_back(location2 = {2, item2});
+    actualItemLocations.push_back(location3 = {3, item3});
+    actualItemLocations.push_back(location4 = {4, item4});
+    actualItemLocations.push_back(location5 = {5, item5});
+    actualItemLocations.push_back(location6 = {6, item6});
+    actualItemLocations.push_back(location7 = {7, item7});
+    actualItemLocations.push_back(location8 = {8, item8});
+    actualItemLocations.push_back(location9 = {9, item9});
+    actualItemLocations.push_back(location10 = {10, item10});
+    actualItemLocations.push_back(location11 = {11, item11});
+    actualItemLocations.push_back(location12 = {12, item12});
+    actualItemLocations.push_back(location13 = {13, item13});
+    actualItemLocations.push_back(location14 = {14, item14});
+    actualItemLocations.push_back(location15 = {15, item15});
+    actualItemLocations.push_back(location16 = {16, item16});
+    actualItemLocations.push_back(location17 = {17, item17});
+    actualItemLocations.push_back(location18 = {18, item18});
+    actualItemLocations.push_back(location19 = {19, item19});
+    actualItemLocations.push_back(location20 = {20, item20});
+
     if (true){ // set to false if you want TB to be on top of goal
         // Define offsetted item locations
         item1.x = -3.2544;
@@ -246,6 +270,8 @@ void TaskAlloction::SetGoals(){
         item20.x = 1.2534;
         item20.y = 0.7532; // -0.3
         item20.z = 0.0; 
+        
+
     }
 
   
@@ -270,7 +296,22 @@ void TaskAlloction::SetGoals(){
     itemLocations.push_back(location19 = {19, item19});
     itemLocations.push_back(location20 = {20, item20});
 
+    
+
     randomiseGoals = true;
+}
+
+
+geometry_msgs::Point TaskAlloction::getGoalPos(int temp_ID){
+    int ID = temp_ID;
+    // Iterate through actualItemLocations
+    for (const auto& item : actualItemLocations) {
+        // Find the ID
+        if (item.first == ID) {
+            // return the goal point
+            return item.second;
+        }
+    }
 }
 
 
@@ -341,9 +382,9 @@ std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> TaskAlloction::ta
 
         // Print allocated points for each robot
         for (int i = 0; i < numRobots; ++i) {
-            std::cout << "Robot " << i + 1 << " allocated points:" << std::endl;
+            // std::cout << "Robot " << i + 1 << " allocated points:" << std::endl;
             for (const auto& point : allocatedPoints[i]) {
-                std::cout << "Point: (" << point.second.x << ", " << point.second.y << ", " << point.second.z << ")" << std::endl;
+                // std::cout << "Point: (" << point.second.x << ", " << point.second.y << ", " << point.second.z << ")" << std::endl;
             }
         }
 
@@ -353,7 +394,7 @@ std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> TaskAlloction::ta
                 robotPositions[i] = allocatedPoints[i][0].second;
                 // Clear the allocated points for the robot
                 // allocatedPoints[i].clear();
-                std::cout << "Robot " << i + 1 << " position after goal: (" << robotPositions[i].x << ", " << robotPositions[i].y << ", " << robotPositions[i].z << ")" << std::endl;
+                // std::cout << "Robot " << i + 1 << " position after goal: (" << robotPositions[i].x << ", " << robotPositions[i].y << ", " << robotPositions[i].z << ")" << std::endl;
             }
         }
     }
@@ -361,7 +402,7 @@ std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> TaskAlloction::ta
     // Visit drop-off location after completing item collections
     for (int i = 0; i < numRobots; ++i) {
         allocatedPoints[i].push_back({-1, deliveryLocation}); // Use the ID:'-1' to indicate the drop-off location
-        std::cout << "Robot " << i + 1 << " visited drop-off location: (" << deliveryLocation.x << ", " << deliveryLocation.y << ", " << deliveryLocation.z << ")" << std::endl;
+        // std::cout << "Robot " << i + 1 << " visited drop-off location: (" << deliveryLocation.x << ", " << deliveryLocation.y << ", " << deliveryLocation.z << ")" << std::endl;
     }
     //  for (size_t i = 0; i < RobotGoals.size(); ++i) {
     // std::cout << "Vector " << i << ":\n";

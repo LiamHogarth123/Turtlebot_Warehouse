@@ -13,10 +13,13 @@ public:
     void SetTurtlebotPositions(const std::vector<geometry_msgs::Point>& Turtlebot_Positions);
     void SetGoals(std::vector<int> temp_goalIds);
     void SetGoals();
+    geometry_msgs::Point getGoalPos(int temp_ID);
   
 private:
     std::vector<std::pair<int, geometry_msgs::Point>> itemLocations;
+    std::vector<std::pair<int, geometry_msgs::Point>> actualItemLocations;
     std::vector<geometry_msgs::Point> robotPositions;
+    bool randomiseGoals;
 
     std::pair<int, geometry_msgs::Point> location1;
     std::pair<int, geometry_msgs::Point> location2;
@@ -39,7 +42,8 @@ private:
     std::pair<int, geometry_msgs::Point> location19;
     std::pair<int, geometry_msgs::Point> location20;
 
-    bool randomiseGoals;
+    
+    
 
 };
 
