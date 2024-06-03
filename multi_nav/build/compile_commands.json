@@ -1,6 +1,12 @@
 [
 {
   "directory": "/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/build",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"multi_nav\\\" -I../include -I../src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp  -g   -o CMakeFiles/global_path2.dir/src/global_path2.cpp.o -c /home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/src/global_path2.cpp",
+  "file": "/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/src/global_path2.cpp"
+},
+
+{
+  "directory": "/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/build",
   "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"multi_nav\\\" -I../include -I../src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp  -g   -o CMakeFiles/global_position3.dir/src/global_position3.cpp.o -c /home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/src/global_position3.cpp",
   "file": "/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/src/global_position3.cpp"
 },
@@ -9,6 +15,12 @@
   "directory": "/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/build",
   "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"multi_nav\\\" -I../include -I../src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp  -g   -o CMakeFiles/global_position2.dir/src/global_position2.cpp.o -c /home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/src/global_position2.cpp",
   "file": "/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/src/global_position2.cpp"
+},
+
+{
+  "directory": "/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/build",
+  "command": "/usr/bin/c++  -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\\\"multi_nav\\\" -I../include -I../src -I/opt/ros/noetic/include -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp  -g   -o CMakeFiles/global_path3.dir/src/global_path3.cpp.o -c /home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/src/global_path3.cpp",
+  "file": "/home/john/catkin_ws/src/Turtlebot_Warehouse/multi_nav/src/global_path3.cpp"
 },
 
 {

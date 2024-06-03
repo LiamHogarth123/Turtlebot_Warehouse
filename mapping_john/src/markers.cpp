@@ -7,8 +7,8 @@ Markers::Markers(ros::NodeHandle nh, const std::string tb)
 {
     dictionary_ = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
     parameters_ = cv::aruco::DetectorParameters::create();
-    cameraMatrix_ = (cv::Mat_<double>(3, 3) << 912.5086, 0.0, 651.25220, 0.0, 912.21368, 348.58951, 0.0, 0.0, 1.0);
-    distCoeffs_ = (cv::Mat_<double>(1, 5) << 0.0, 0.0, 0.0, 0.0, 0.0);
+    cameraMatrix_ = (cv::Mat_<double>(3, 3) << 185.3779597817634, 0.0, 420.4714500110169, 0.0, 110.4809558378501, 185.4293684347473, 0.0, 0.0, 1.0);
+    distCoeffs_ = (cv::Mat_<double>(1, 5) << 3.605937639760235, -5.302786121320458, 0.01918017332596672, 0.1073449618422037, 1.921209164854993);
 
     /** Identify topic names*/
     std::string idsTopic;
@@ -112,7 +112,9 @@ void Markers::markerPose(bool publish)
             }
             cv::solvePnP(objPoints, markerCorners_.at(i), cameraMatrix_, distCoeffs_, rvecs_.at(i), tvecs_.at(i));
             xErrors_.push_back(tvecs_.at(i).at<double>(0));
-            yaws_.push_back(rvecs_.at(i).at<double>(2));
+            cv::Mat rotMat;
+            cv::Rodrigues(rvecs_.at(i), rotMat);
+            yaws_.push_back(atan2(rotMat.at<double>(1, 0), rotMat.at<double>(0, 0)));
         }
     }
     else

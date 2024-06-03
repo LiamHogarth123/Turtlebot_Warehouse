@@ -206,7 +206,8 @@
 				5,
 				7,
 				9,
-				11
+				11,
+				12
 			]
 		}
 	],
@@ -1046,7 +1047,8 @@
 				5,
 				7,
 				9,
-				11
+				11,
+				12
 			]
 		},
 		{
@@ -1128,6 +1130,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/imageconverter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/calibration.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "devel/lib/multi_nav/global_position2"
+			"path" : "devel/lib/multi_nav/global_path3"
 		}
 	],
 	"backtrace" : 1,
@@ -35,7 +35,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 41,
+				"line" : 60,
 				"parent" : 0
 			},
 			{
@@ -115,7 +115,7 @@
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 35,
+				"line" : 36,
 				"parent" : 0
 			}
 		]
@@ -170,7 +170,7 @@
 			]
 		}
 	],
-	"id" : "global_position2::@6890427a1f51a3e7e1df",
+	"id" : "global_path3::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -278,8 +278,8 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "global_position2",
-	"nameOnDisk" : "global_position2",
+	"name" : "global_path3",
+	"nameOnDisk" : "global_path3",
 	"paths" : 
 	{
 		"build" : ".",
@@ -300,7 +300,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/global_position2.cpp",
+			"path" : "src/global_path3.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

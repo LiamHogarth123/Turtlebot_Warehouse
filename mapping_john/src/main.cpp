@@ -4,6 +4,7 @@
 #include "errorcalc.h"
 #include "markers.h"
 #include "imageconverter.h"
+#include "calibration.h"
 #include <iostream>
 #include <thread>
 

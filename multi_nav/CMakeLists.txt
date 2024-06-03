@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   visualization_msgs
   geometry_msgs
   std_msgs
+  nav_msgs
 )
 
 ################################################################################
@@ -47,6 +48,18 @@ target_link_libraries(global_position2
 add_executable(global_position3 src/global_position3.cpp)
 
 target_link_libraries(global_position3
+  ${catkin_LIBRARIES}
+)
+
+add_executable(global_path2 src/global_path2.cpp)
+
+target_link_libraries(global_path2
+  ${catkin_LIBRARIES}
+)
+
+add_executable(global_path3 src/global_path3.cpp)
+
+target_link_libraries(global_path3
   ${catkin_LIBRARIES}
 )
 

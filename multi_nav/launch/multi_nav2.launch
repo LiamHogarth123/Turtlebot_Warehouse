@@ -1,10 +1,12 @@
 <launch>
   <!-- Arguments -->
-  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
-  <arg name="map_file" default="$(find multi_nav)/maps/map.yaml"/>
-  <arg name="open_rviz" default="true"/>
-  <arg name="tb0" default="tb3_0"/>
-  <arg name="tb1" default="tb3_1"/>
+  <arg name="model"           default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+  <arg name="map_file"        default="$(find multi_nav)/maps/map.yaml"/>
+  <arg name="open_rviz"       default="true"/>
+  <arg name="global_position" default="true"/>
+  <arg name="global_path"     default="false"/>
+  <arg name="tb0"             default="tb3_0"/>
+  <arg name="tb1"             default="tb3_1"/>
 
   <!-- Map Server -->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)">
@@ -51,11 +53,21 @@
     </node>
   </group>
 
-  <!-- Launch global position node -->
-  <node name="global_position2" pkg="multi_nav" type="global_position2" output="screen">
-        <param name="tb3_0" value="$(arg tb0)" />
-        <param name="tb3_1" value="$(arg tb1)" />
+  <!-- Launch global path node -->
+  <group if="$(arg global_path)">
+    <node name="global_path2" pkg="multi_nav" type="global_path2" output="screen">
+          <param name="tb0" value="$(arg tb0)" />
+          <param name="tb1" value="$(arg tb1)" />
     </node>
+  </group>
+
+  <!-- Launch global position node -->
+  <group if="$(arg global_position)">
+    <node name="global_position2" pkg="multi_nav" type="global_position2" output="screen">
+          <param name="tb0" value="$(arg tb0)" />
+          <param name="tb1" value="$(arg tb1)" />
+    </node>
+  </group>
 
   <!-- Launch a move_base node -->
   <include file="$(find multi_nav)/launch/includes/move_base2.launch">

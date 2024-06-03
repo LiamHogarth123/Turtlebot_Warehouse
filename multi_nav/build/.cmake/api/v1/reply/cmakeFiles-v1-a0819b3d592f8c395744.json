@@ -821,6 +821,18 @@
 			"path" : "/opt/ros/noetic/share/std_msgs/cmake/std_msgsConfig.cmake"
 		},
 		{
+			"isExternal" : true,
+			"path" : "/opt/ros/noetic/share/nav_msgs/cmake/nav_msgsConfig-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/ros/noetic/share/nav_msgs/cmake/nav_msgsConfig.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/opt/ros/noetic/share/nav_msgs/cmake/nav_msgs-msg-extras.cmake"
+		},
+		{
 			"isGenerated" : true,
 			"path" : "build/catkin_generated/ordered_paths.cmake"
 		},
