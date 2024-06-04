@@ -32,7 +32,7 @@
     <node pkg="amcl" type="amcl" name="amcl">
 
       <param name="tf_prefix" value="$(arg tb)"/>
-      <param name="global_frame_id"           value="$(arg tb)/map"/>
+      <param name="global_frame_id"           value="map"/>
 
       <param name="min_particles"             value="500"/>
       <param name="max_particles"             value="3000"/>
@@ -68,8 +68,8 @@
       <param name="odom_frame_id"             value="$(arg tb)/odom"/>
       <param name="base_frame_id"             value="$(arg tb)/base_footprint"/>
 
-      <remap from="map" to="/$(arg tb)/map"/>
-      <!-- <param name="use_map_topic" value="true" /> -->
+      <!-- <remap from="map" to="/$(arg tb)/map"/> -->
+      <param name="use_map_topic" value="true" />
     </node>
 
     <!-- Move Base -->
@@ -89,12 +89,12 @@
       <param name="tf_prefix" value="$(arg tb)"/>
     </node>
     
-    <!-- Rviz -->
-    <group if="$(arg open_rviz)"> 
-      <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find multi_nav)/rviz/turtlebot3_$(arg tb).rviz"/>
-      <!-- <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find multi_nav)/rviz/turtlebot3_navigation_$(arg tb).rviz"/> -->
-            <param name="tf_prefix" value="$(arg tb)"/>
-    </group>
+    
+  </group>
+
+  <!-- Rviz -->
+  <group if="$(arg open_rviz)"> 
+    <node pkg="rviz" type="rviz" name="rviz_$(arg tb)" required="true" args="-d $(find multi_nav)/rviz/navigation_$(arg tb).rviz"/>
   </group>
   
 </launch>
