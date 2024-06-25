@@ -8,7 +8,7 @@
 #include <tf/transform_datatypes.h>
 /**
  @file dataprocessing.h
- @brief This file contains the implementation of the DataProcessing class.
+ @brief This file contains the implementation of the DataProcessing class
 */
 
 Control::Control(){
