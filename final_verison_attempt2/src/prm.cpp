@@ -569,7 +569,7 @@ std::vector<Node> PRM::createNodesAndEdges(std::vector<Node> Graph_) {
 
 cv::Mat PRM::Load_Map(){
     //READ Image
-    cv::Mat grayscaleMapImage = cv::imread("/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/map_server2/maps/map_sim.pgm", cv::IMREAD_GRAYSCALE);
+    cv::Mat grayscaleMapImage = cv::imread("/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/map_server2/maps/map.pgm", cv::IMREAD_GRAYSCALE);
     if (grayscaleMapImage.empty()) {
         std::cerr << "Could not open or find the map image" << std::endl;
     }
@@ -1199,7 +1199,7 @@ std::vector<Node> PRM::samplePointsCV() {
     // std::cout << "samplePointsCV called" << std::endl;
 
     // Obtain user-defined polygon
-    std::vector<cv::Point> inclusionPolygon = getUserDefinedPolygon("/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/map_server2/maps/map_sim.pgm");
+    std::vector<cv::Point> inclusionPolygon = getUserDefinedPolygon("/home/liam/git/Turtlebot_Warehouse/turtlebot_sims/map_server2/maps/map.pgm");
     // std::cout << "User-defined polygon obtained" << std::endl;
 
     // Graph definition
