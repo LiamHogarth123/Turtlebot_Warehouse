@@ -1,0 +1,8 @@
+prefix=/home/liam/git/Turtlebot_Warehouse/stop_all/build/devel
+
+Name: stop_all
+Description: Description of stop_all
+Version: 0.0.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
