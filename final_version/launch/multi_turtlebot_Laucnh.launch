@@ -1,4 +1,0 @@
-<launch>
-    <node name="multiple_turtlebot_integration" pkg="multiple_turtlebot_integration" type="multiple_turtlebot_integration_method" output="screen">
-    </node>
-</launch>
