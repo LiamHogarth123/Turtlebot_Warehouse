@@ -15,6 +15,8 @@ public:
     void SetGoals();
     void SetGoals(std::vector<int> temp_goalIds);
 
+    geometry_msgs::Point getGoalPos(int temp_ID);
+
 
     std::vector<geometry_msgs::Point> Set_Delievery_goals(int num_robots);
 
@@ -42,6 +44,8 @@ private:
     std::pair<int, geometry_msgs::Point> location18;
     std::pair<int, geometry_msgs::Point> location19;
     std::pair<int, geometry_msgs::Point> location20;
+
+    std::vector<std::pair<int, geometry_msgs::Point>> actualItemLocations;
 
     bool randomiseGoals;
 

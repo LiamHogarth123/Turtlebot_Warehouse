@@ -26,14 +26,6 @@ Method::Method(ros::NodeHandle nh) :
   pub_ = nh_.advertise<visualization_msgs::MarkerArray>("/visualization_marker_array",3,false);
 
 
-  cmd_velocity_tb1 = nh_.advertise<geometry_msgs::Twist>("/cmd_vel",10);
-
-  // Robot 2 guider ---------------------
-
-
-
-  cmd_velocity_tb2 = nh.advertise<geometry_msgs::Twist>("tb3_1/cmd_vel",10);
-
 
   // Map ros topics
   mapSub = nh_.subscribe("/map", 1000, &Method::mapCallback, this);
@@ -42,115 +34,17 @@ Method::Method(ros::NodeHandle nh) :
 
   marker_pub = nh.advertise<visualization_msgs::MarkerArray>("visualization_marker_array", 100);
 
-
- 
-    zero_vel.linear.x = 0.0;
-    zero_vel.linear.y = 0.0;
-    zero_vel.linear.z = 0.0;
-    zero_vel.angular.x = 0.0;
-    zero_vel.angular.y = 0.0;
-    zero_vel.angular.z = 0.0;
+  zero_vel.linear.x = 0.0;
+  zero_vel.linear.y = 0.0;
+  zero_vel.linear.z = 0.0;
+  zero_vel.angular.x = 0.0;
+  zero_vel.angular.y = 0.0;
+  zero_vel.angular.z = 0.0;
 
   
   
 }
 
-
-
-bool Method::path_checker_function(std::vector<std::vector<geometry_msgs::Point>>& trajectorys, std::vector<double>& time_offset){
-  std::vector<geometry_msgs::Point> collided_points;
-  
-  for (int x = 0; x < trajectorys.size(); x++){
-    std::cout << "printing start traject" << std::endl;
-    std::cout << trajectorys.at(x).size() << std::endl;
-  }
-        
-  
-  path_checker.Update_paths(trajectorys, time_offset);
-  bool collisionFound = true;
-  bool trajectoryModified = false;
-  int max_iterations = 100;  // Maximum number of iterations to prevent infinite loop
-  int iteration_count = 0;
-  std::vector<std::vector<geometry_msgs::Point>> Newtrajectorys = trajectorys;
-  
-  while (collisionFound) {
-    if (path_checker.find_collisions(collided_points) && iteration_count < max_iterations) {
-      std::cout <<"collision found" << std::endl;
-      trajectoryModified = true;
-      iteration_count++;
-      // visualisation
-      visualization_msgs::MarkerArray tempory = publishMarkers(path_checker.get_all_interpolated_points(), marker_pub);
-      publishCollisons(collided_points, marker_pub, tempory);
-      tempory.markers.clear();
-
-      //Regenerate Path withouut collisions
-      std::vector<std::pair<int, geometry_msgs::Point>> robot_with_collisiosn = path_checker.GetCollisionsWithId();
-      // std::cout << "size -----> " << robot_with_collisiosn.size() << std::endl;
-      CollisionMap collision_map;
-      processCollisions(robot_with_collisiosn, collision_map);
-      
-      // Iterate over each collision in the collision map
-      for (const auto& entry : collision_map) {
-        const auto& collision_point = entry.first;
-        const auto& robot_pairs = entry.second;
-
-        for (const auto& pair : robot_pairs) {
-          int robot1_id = pair.first;
-          int robot2_id = pair.second;
-
-          // Determine which robot has the larger trajectory
-          int robot_to_replan = (Newtrajectorys[robot1_id].size() > Newtrajectorys[robot2_id].size()) ? robot1_id : robot2_id;
-
-          // Generate blacklist for re-planning
-          std::vector<geometry_msgs::Point> collision_points_for_robot;
-          for (const auto& col : robot_with_collisiosn) {
-              if (col.first == robot_to_replan) {
-                  collision_points_for_robot.push_back(col.second);
-              }
-          }
-          // Recalculate trajectory
-          geometry_msgs::Point start = Newtrajectorys[robot_to_replan].front();
-          geometry_msgs::Point goal = Newtrajectorys[robot_to_replan].back();
-          Newtrajectorys[robot_to_replan] = prmMap.A_star_To_Goal_With_Blacklist(start, goal, collision_points_for_robot);
-        }
-      }
-      // for (int x = 0; x < trajectorys.size(); x++){
-      //   std::cout << "printing start traject" << std::endl;
-      //   std::cout << trajectorys.at(x).size() << std::endl;
-      //  }
-
-
-      //add check here
-      for (int x = 0; x < Newtrajectorys.size(); x++){
-        if (Newtrajectorys.at(x).size() < 3){
-          time_offset.at(x) += 10;
-          // std::cout << "adding time offset" << std::endl;
-          // std::cout << Newtrajectorys.at(x).size() << std::endl;
-          // std::cout << time_offset.at(x) << std::endl;
-          Newtrajectorys.at(x) = trajectorys.at(x); 
-          // std::cout << Newtrajectorys.at(x).size() << std::endl;
-        }
-        std::cout << "printing info offset" << std::endl;
-        std::cout << Newtrajectorys.at(x).size() << std::endl;
-        std::cout << time_offset.at(x) << std::endl;
-        
-      }
-
-
-      path_checker.Update_paths(Newtrajectorys,time_offset);
-    }
-    else {
-      collisionFound = false;
-
-    }
-  }
-  if (trajectoryModified){
-    trajectorys = Newtrajectorys;
-  }
-  return trajectoryModified; 
-
-
-}
 
 
 
@@ -300,7 +194,7 @@ void Method::separateThread() {
 
   // Asychous turtlebots
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  else if (true) {
+  else if (turtlebots.size() < 1) {
     PrmData Gernerated_Map = prmMap.ExportPrmData();
 
 
@@ -329,18 +223,124 @@ void Method::separateThread() {
 
   }
 
-  // Asychous Turtlebot with Trajectory thread
-  else if (false) {
+  // SINGLE TURTLEBOT
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  else if (true) {
+    int goal_list_index = 0;
+    std::vector<geometry_msgs::Point> single_trajectory;
+    while (goal_list_index < RobotGoals[0].size()){
 
-  // }
+      start = turtlebots.at(0)->GetCurrent_Odom().pose.pose.position;
+      goal = RobotGoals[0][goal_list_index].second;
 
- 
-  // for (auto ptr : turtlebots) {
-  //   delete ptr;
+      single_trajectory = prmMap.A_star_To_Goal(start, goal);
+      // publishMarkers(trajectory, marker_pub);
+      Leader_goals = single_trajectory;
+
+
+      //Dan control start
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////      
+      int falsePositiveCheck = 0;
+      int loop_interation = 0;
+      while (!missionComplete){
+        geometry_msgs::Point targetGoal;
+        geometry_msgs::Twist botTraj;
+        
+
+        if (loop_interation < 1) {
+          targetGoal = Leader_goals.at(loop_interation+1);
+          Turtle_Controllers.at(0)->updateControlParam(targetGoal, calcDistance(turtlebots.at(0)->GetCurrent_Odom().pose.pose.position, Leader_goals.back()), turtlebots.at(0)->GetCurrent_Odom(), turtlebots.at(0)->Getupdated_Lida());
+          botTraj = Turtle_Controllers.at(0)->reachGoal();
+
+          if (Turtle_Controllers.at(0)->goal_hit(targetGoal, turtlebots.at(0)->GetCurrent_Odom())){
+            loop_interation++;  
+          }
+        }
+        else {
+
+          targetGoal = findLookAheadPoint(Leader_goals, turtlebots.at(0)->GetCurrent_Odom().pose.pose.position, 0.5);
+
+          Turtle_Controllers.at(0)->updateControlParam(targetGoal,calcDistance(turtlebots.at(0)->GetCurrent_Odom().pose.pose.position, Leader_goals.back()) , turtlebots.at(0)->GetCurrent_Odom(), turtlebots.at(0)->Getupdated_Lida());
+          botTraj = Turtle_Controllers.at(0)->reachGoal();
+        
+          if (Turtle_Controllers.at(0)->goal_hit(Leader_goals.back(), turtlebots.at(0)->GetCurrent_Odom())){
+            // end of goals reached
+            missionComplete = true;
+            botTraj.angular.z = 0;
+            // adjust TurtleBot to be on top of last goal
+            botTraj.linear.x = 0.10;
+            turtlebots.at(0)->Send_cmd_tb1(botTraj);
+            std::cout << "Sleeping for 1000ms to adjust position..." << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+            botTraj.linear.x = 0;
+            std::cout << "Goal Reached!!!!!!!!" << std::endl;
+          }
+        
+        }
+
+      //// Checks for boundary and kills program if detected ////
+      if (turtlebots.at(0)->getBoundaryStatus().data == 1){ // blue detected
+        falsePositiveCheck++;
+        if (falsePositiveCheck > 3) {
+          std::cout << "Boundary Detected!! Seek Operator Assistance" << std::endl;
+          break;
+        }
+      } else { // red = 2, nothing = 0
+        falsePositiveCheck = 0;
+      }
+
+        // std::cout << botTraj.linear.x << std::endl;
+        turtlebots.at(0)->Send_cmd_tb1(botTraj);
+      
+        // std::cout << "Look-Ahead Point: (" << targetGoal.x << ", " << targetGoal.y << ")" << std::endl;
+        // publishLookAheadMarker(targetGoal);
+        
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
+        
+      }
+
+      //// Tag Alignment /////
+      // if the current goal is not the last goal, then execute (because last goal is the dropoff zone)
+      if (goal_list_index < RobotGoals[0].size() - 1){
+        int count = 0;
+        while (single_turtlebot_tagAlignment(RobotGoals[0][goal_list_index], Turtle_Controllers.at(0)->angleToGoal(turtlebots.at(0)->GetCurrent_Odom(), TA.getGoalPos(RobotGoals[0][goal_list_index].first))) == false){
+          std::this_thread::sleep_for(std::chrono::milliseconds(200));
+          if (abs(Turtle_Controllers.at(0)->angleToGoal(turtlebots.at(0)->GetCurrent_Odom(), TA.getGoalPos(RobotGoals[0][goal_list_index].first))) < 0.05)
+            count++;
+            if (count == 20){ 
+              std::cout << "Could not find Tag: " << RobotGoals[0][goal_list_index].first << std::endl;
+              break;
+            }
+        }
+      }
+      
+      
+      if (turtlebots.at(0)->GetCurrentSpeed() > 0){
+        geometry_msgs::Twist zero_vel;
+        zero_vel.linear.x = 0.0;
+        zero_vel.linear.y = 0.0;
+        zero_vel.linear.z = 0.0;
+        zero_vel.angular.x = 0.0;
+        zero_vel.angular.y = 0.0;
+        zero_vel.angular.z = 0.0;
+        turtlebots.at(0)->Send_cmd_tb1(zero_vel);
+      }
+
+    
+      missionComplete = false;
+      goal_index = 0;
+      goal_list_index++;
+
+
+    }
+
   }
 }
 
 
+//Main Functions
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Method::Function(std::vector<geometry_msgs::Point> trajectory , DefaultTurtleBot* turtleboi, Control* Turtle_GPS, double time_offset){
   
   std::chrono::milliseconds sleep_duration(static_cast<long long>(time_offset * 1000)); // Convert seconds to milliseconds
@@ -555,20 +555,158 @@ void Method::Function2(PRM* Trajectory_Planner, DefaultTurtleBot* turtleboi, Con
 
 
 
+// High level functions
+///////////////////////////////////////////////////////////////////////
 
 
-void Method::turtleMovement(){
 
-    
+bool Method::path_checker_function(std::vector<std::vector<geometry_msgs::Point>>& trajectorys, std::vector<double>& time_offset){
+  std::vector<geometry_msgs::Point> collided_points;
+  
+  for (int x = 0; x < trajectorys.size(); x++){
+    std::cout << "printing start traject" << std::endl;
+    std::cout << trajectorys.at(x).size() << std::endl;
+  }
+        
+  
+  path_checker.Update_paths(trajectorys, time_offset);
+  bool collisionFound = true;
+  bool trajectoryModified = false;
+  int max_iterations = 100;  // Maximum number of iterations to prevent infinite loop
+  int iteration_count = 0;
+  std::vector<std::vector<geometry_msgs::Point>> Newtrajectorys = trajectorys;
+  
+  while (collisionFound) {
+    if (path_checker.find_collisions(collided_points) && iteration_count < max_iterations) {
+      std::cout <<"collision found" << std::endl;
+      trajectoryModified = true;
+      iteration_count++;
+      // visualisation
+      visualization_msgs::MarkerArray tempory = publishMarkers(path_checker.get_all_interpolated_points(), marker_pub);
+      publishCollisons(collided_points, marker_pub, tempory);
+      tempory.markers.clear();
+
+      //Regenerate Path withouut collisions
+      std::vector<std::pair<int, geometry_msgs::Point>> robot_with_collisiosn = path_checker.GetCollisionsWithId();
+      // std::cout << "size -----> " << robot_with_collisiosn.size() << std::endl;
+      CollisionMap collision_map;
+      processCollisions(robot_with_collisiosn, collision_map);
+      
+      // Iterate over each collision in the collision map
+      for (const auto& entry : collision_map) {
+        const auto& collision_point = entry.first;
+        const auto& robot_pairs = entry.second;
+
+        for (const auto& pair : robot_pairs) {
+          int robot1_id = pair.first;
+          int robot2_id = pair.second;
+
+          // Determine which robot has the larger trajectory
+          int robot_to_replan = (Newtrajectorys[robot1_id].size() > Newtrajectorys[robot2_id].size()) ? robot1_id : robot2_id;
+
+          // Generate blacklist for re-planning
+          std::vector<geometry_msgs::Point> collision_points_for_robot;
+          for (const auto& col : robot_with_collisiosn) {
+              if (col.first == robot_to_replan) {
+                  collision_points_for_robot.push_back(col.second);
+              }
+          }
+          // Recalculate trajectory
+          geometry_msgs::Point start = Newtrajectorys[robot_to_replan].front();
+          geometry_msgs::Point goal = Newtrajectorys[robot_to_replan].back();
+          Newtrajectorys[robot_to_replan] = prmMap.A_star_To_Goal_With_Blacklist(start, goal, collision_points_for_robot);
+        }
+      }
+      // for (int x = 0; x < trajectorys.size(); x++){
+      //   std::cout << "printing start traject" << std::endl;
+      //   std::cout << trajectorys.at(x).size() << std::endl;
+      //  }
+
+
+      //add check here
+      for (int x = 0; x < Newtrajectorys.size(); x++){
+        if (Newtrajectorys.at(x).size() < 3){
+          time_offset.at(x) += 10;
+          // std::cout << "adding time offset" << std::endl;
+          // std::cout << Newtrajectorys.at(x).size() << std::endl;
+          // std::cout << time_offset.at(x) << std::endl;
+          Newtrajectorys.at(x) = trajectorys.at(x); 
+          // std::cout << Newtrajectorys.at(x).size() << std::endl;
+        }
+        std::cout << "printing info offset" << std::endl;
+        std::cout << Newtrajectorys.at(x).size() << std::endl;
+        std::cout << time_offset.at(x) << std::endl;
+        
+      }
+
+
+      path_checker.Update_paths(Newtrajectorys,time_offset);
+    }
+    else {
+      collisionFound = false;
+
+    }
+  }
+  if (trajectoryModified){
+    trajectorys = Newtrajectorys;
+  }
+  return trajectoryModified; 
+
+
 }
 
 
+bool Method::single_turtlebot_tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal){
+  
+  // current tag info
+  marker_msgs::marker arTag = turtlebots.at(0)->getARtag();
+  int tagID = temp_tag.first;
+  geometry_msgs::Point tagPosition = temp_tag.second;
+  // velocity variables
+  geometry_msgs::Twist rotation;
+  rotation.angular.z = 0;
+  double angle = temp_angleToGoal; // heading angle to goal used to turn in the optimal direction of the goal
+  
+  // searches array to find the target tag and gets the index
+  auto it = std::find(arTag.ids.data.begin(), arTag.ids.data.end(), tagID);
 
+  if (it != arTag.ids.data.end()) {
+    // The value was found, output the index
+    int index = std::distance(arTag.ids.data.begin(), it);
 
-// High level functions DefaultTurtleBot* tb1
-//////////////////////////////////////////////////
+    // Gets the associated yaw
+    if (index < arTag.yaws.data.size()) {
+      float yawError = arTag.yaws.data[index];
+      
+      if (fabs(yawError) > 0.5){ // within tolerance
+      // simple proportional control
+      float yawControl = 0.1 * yawError;
 
+      rotation.angular.z = yawControl;
+      } else{
+        rotation.angular.z = 0;
+        turtlebots.at(0)->Send_cmd_tb1(rotation);
+        std::cout << "Found and Confirmed AR Tag: " << tagID << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+        return true;
+      }
+    } 
+  } else {
+    // The value was not found in the array        
+    // rotates using simple proportional control in the tags direction until tag detected
+    float yawControl = 0;
+    if (abs(angle) > 0.05){
+      yawControl = 0.3 * angle;
+      rotation.angular.z = yawControl;
+      
+    } 
+  }
+  std::cout << "sending rotation: " << rotation.angular.z << std::endl;
+  turtlebots.at(0)->Send_cmd_tb1(rotation);
 
+  return false;
+
+}
 
 
 
@@ -623,8 +761,68 @@ bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double 
 
 }
 
+//High levl functions
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+geometry_msgs::Point Method::findLookAheadPoint(const std::vector<geometry_msgs::Point>& path, const geometry_msgs::Point& current_position, double look_ahead_distance) {
+    double cumulative_distance = 0.0;
+    double closest_goal = 9999999;
+    size_t current_gaol_id;
+    geometry_msgs::Point look_ahead_point = path[0];
 
-// bool Method::tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal){
+    // Find the closest point on the path to the current position (could be in front or behind the TB)
+    for (size_t j = 0; j< path.size(); j++){
+      
+      double temp = calcDistance(path[j], current_position);
+      if (temp < closest_goal){
+        look_ahead_point = path[j];
+        current_gaol_id = j;
+        closest_goal = temp;
+      }
+    }
+
+    // // Checks if the lookahead is inside object
+    // if (goalInObstacleCheck()){
+    //   current_gaol_id++;
+    //   look_ahead_point = path[current_gaol_id];
+    // }
+  
+  // Ensure that the current goal / closest point is the one in front of the TB
+  double p1_p2 = calcDistance(path[current_gaol_id], path[current_gaol_id + 1]); // between current(p1) and next(p2) points
+  double p1_p3 = calcDistance(path[current_gaol_id], current_position); // between current point(p1) and current pos(p3)
+  double p2_p3 = calcDistance(path[current_gaol_id + 1], current_position); // between next point(p2) and current pos(p3)
+  // Determine if goal is behind TB (which is bad)
+    if (p1_p2 >= p2_p3 && p1_p2 >= p1_p3){ // current pos is middle point so current point is behind the TB, thus we must increment to the next point
+      current_gaol_id++;
+      look_ahead_point = path[current_gaol_id];
+    }
+
+  // Calculate cumulative distance along the path starting from the current position
+  double distanceToNextPoint = calcDistance(current_position, path[current_gaol_id]);
+  cumulative_distance += distanceToNextPoint; 
+  for (size_t i = current_gaol_id; i < path.size() - 1; ++i) {
+    double segment_length = calcDistance(path[i], path[i+1]);
+    cumulative_distance += segment_length;
+    // sets lookahead point
+    if (cumulative_distance >= look_ahead_distance) {
+      double overshoot = cumulative_distance - look_ahead_distance;
+      double ratio = (segment_length - overshoot) / segment_length;
+      look_ahead_point.x = path[i].x + ratio * (path[i+1].x - path[i].x);
+      look_ahead_point.y = path[i].y + ratio * (path[i+1].y - path[i].y);
+      return look_ahead_point;
+    }
+  }
+
+  return path.back();
+
+}
+
+
+
+double Method::calcDistance(geometry_msgs::Point temp_point1, geometry_msgs::Point temp_point2){
+  return sqrt(pow(temp_point2.x - temp_point1.x, 2) + pow(temp_point2.y - temp_point1.y, 2));
+}
+
+
   
 
 
@@ -773,80 +971,12 @@ void Method::Task_Alloction_Completion(){
 
 
 
-//High levl functions
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-geometry_msgs::Point Method::findLookAheadPoint(const std::vector<geometry_msgs::Point>& path, const geometry_msgs::Point& current_position, double look_ahead_distance) {
-    double cumulative_distance = 0.0;
-    double closest_goal = 9999999;
-    size_t current_gaol_id;
-    geometry_msgs::Point look_ahead_point = path[0];
-
-    // Find the closest point on the path to the current position (could be in front or behind the TB)
-    for (size_t j = 0; j< path.size(); j++){
-      
-      double temp = calcDistance(path[j], current_position);
-      if (temp < closest_goal){
-        look_ahead_point = path[j];
-        current_gaol_id = j;
-        closest_goal = temp;
-      }
-    }
-
-    // // Checks if the lookahead is inside object
-    // if (goalInObstacleCheck()){
-    //   current_gaol_id++;
-    //   look_ahead_point = path[current_gaol_id];
-    // }
-  
-  // Ensure that the current goal / closest point is the one in front of the TB
-  double p1_p2 = calcDistance(path[current_gaol_id], path[current_gaol_id + 1]); // between current(p1) and next(p2) points
-  double p1_p3 = calcDistance(path[current_gaol_id], current_position); // between current point(p1) and current pos(p3)
-  double p2_p3 = calcDistance(path[current_gaol_id + 1], current_position); // between next point(p2) and current pos(p3)
-  // Determine if goal is behind TB (which is bad)
-    if (p1_p2 >= p2_p3 && p1_p2 >= p1_p3){ // current pos is middle point so current point is behind the TB, thus we must increment to the next point
-      current_gaol_id++;
-      look_ahead_point = path[current_gaol_id];
-    }
-
-  // Calculate cumulative distance along the path starting from the current position
-  double distanceToNextPoint = calcDistance(current_position, path[current_gaol_id]);
-  cumulative_distance += distanceToNextPoint; 
-  for (size_t i = current_gaol_id; i < path.size() - 1; ++i) {
-    double segment_length = calcDistance(path[i], path[i+1]);
-    cumulative_distance += segment_length;
-    // sets lookahead point
-    if (cumulative_distance >= look_ahead_distance) {
-      double overshoot = cumulative_distance - look_ahead_distance;
-      double ratio = (segment_length - overshoot) / segment_length;
-      look_ahead_point.x = path[i].x + ratio * (path[i+1].x - path[i].x);
-      look_ahead_point.y = path[i].y + ratio * (path[i+1].y - path[i].y);
-      return look_ahead_point;
-    }
-  }
-
-  return path.back();
-
-}
-
-
-
-double Method::calcDistance(geometry_msgs::Point temp_point1, geometry_msgs::Point temp_point2){
-  return sqrt(pow(temp_point2.x - temp_point1.x, 2) + pow(temp_point2.y - temp_point1.y, 2));
-}
 
 
 
 
 
-// Publishing functions 
-///////////////////////////////////////////////////////////////////////////////////////////
-void Method::Send_cmd_tb1(geometry_msgs::Twist intructions){
-  cmd_velocity_tb1.publish(intructions);
-}
 
-void Method::Send_cmd_tb2(geometry_msgs::Twist intructions){
-  cmd_velocity_tb2.publish(intructions);
-}
 
 
 
@@ -869,6 +999,8 @@ void Method::mapMetadataCallback(const nav_msgs::MapMetaData::ConstPtr& msg) {
 
 
 
+// Visualisation support functions
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 visualization_msgs::MarkerArray Method::publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub) {
   visualization_msgs::MarkerArray markerArray;
@@ -908,6 +1040,8 @@ visualization_msgs::MarkerArray Method::publishMarkers(const std::vector<geometr
 
 }
 
+
+
 void Method::publishCollisons(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub, visualization_msgs::MarkerArray trajectory_makers) {
   
   for (const auto& node : nodes) {
@@ -943,6 +1077,8 @@ void Method::publishCollisons(const std::vector<geometry_msgs::Point>& nodes, ro
 }
 
 
+// collision support functions
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Method::processCollisions(const std::vector<std::pair<int, geometry_msgs::Point>>& robot_with_collisions, CollisionMap& collision_map) {
     std::map<int, std::vector<std::pair<double, double>>> robot_points;
     // Group collision points by robot IDs

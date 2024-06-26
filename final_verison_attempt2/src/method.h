@@ -41,63 +41,76 @@ using CollisionMap = std::map<std::pair<double, double>, std::set<CollisionPair>
 class Method
 {
 public:
-  /*
-  @brief Default constructor.
-  @param nh The ROS node handle.
-  */
+
   Method(ros::NodeHandle nh);
 
-
-  void Generate_Turtlebots(int x);
-  std::vector<DefaultTurtleBot*> turtlebots;
-  std::vector<Control*> Turtle_Controllers;
-  std::vector<bool> Finished;
-
-  void generate_Prm();
-  void Task_Alloction_Completion();
-  size_t largestSize;
-  std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> RobotGoals;
-
-  bool path_checker_function(std::vector<std::vector<geometry_msgs::Point>>& trajectorys, std::vector<double>& time_offset);
-  path_avoidance_ path_checker;
-  
-
-  void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
-  void mapMetadataCallback(const nav_msgs::MapMetaData::ConstPtr& msg);
-
-
-  void Send_cmd_tb1(geometry_msgs::Twist intructions);
-
-  void Send_cmd_tb2(geometry_msgs::Twist intructions);
-
-
+  //Main functions
   void separateThread();
-
-  void turtleMovement();
-
 
   void Function(std::vector<geometry_msgs::Point> trajectory , DefaultTurtleBot* turtleboi, Control* Turtle_GPS, double time_offset);
 
   void Function2(PRM* Trajectory_Planner, DefaultTurtleBot* turtleboi, Control* Turtle_GPS, std::vector<std::pair<int, geometry_msgs::Point>> Goals);
 
-  
-  visualization_msgs::MarkerArray publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub);
-  void publishCollisons(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub, visualization_msgs::MarkerArray trajectory_makers);
-
-
-  // ros::Publisher marker_pub;
-
+  //High level functions
+  bool path_checker_function(std::vector<std::vector<geometry_msgs::Point>>& trajectorys, std::vector<double>& time_offset);
+  bool single_turtlebot_tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal);
+  bool tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal, DefaultTurtleBot* tb1);
+  double calcDistance(geometry_msgs::Point temp_point1, geometry_msgs::Point temp_point2);
   geometry_msgs::Point findLookAheadPoint(const std::vector<geometry_msgs::Point>& path, const geometry_msgs::Point& current_position, double look_ahead_distance);
 
 
 
-  bool tagAlignment(std::pair<int, geometry_msgs::Point> temp_tag, double temp_angleToGoal, DefaultTurtleBot* tb1);
-  double calcDistance(geometry_msgs::Point temp_point1, geometry_msgs::Point temp_point2);
 
+  //Generating functions
+  void Generate_Turtlebots(int x);
+  void generate_Prm();
+  void Task_Alloction_Completion();
 
+  //visualisation
+  visualization_msgs::MarkerArray publishMarkers(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub);
+  void publishCollisons(const std::vector<geometry_msgs::Point>& nodes, ros::Publisher& marker_pub, visualization_msgs::MarkerArray trajectory_makers);
+
+  //support collision functions
   void processCollisions(const std::vector<std::pair<int, geometry_msgs::Point>>& robot_with_collisions, CollisionMap& collision_map);
-
   void printCollisions(const CollisionMap& collision_map);
+
+  //Ros functions
+  void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg);
+  void mapMetadataCallback(const nav_msgs::MapMetaData::ConstPtr& msg);
+
+
+  //Main global variables
+  std::vector<DefaultTurtleBot*> turtlebots;
+  std::vector<Control*> Turtle_Controllers;
+  std::vector<bool> Finished;
+  size_t largestSize;
+  std::vector<std::vector<std::pair<int, geometry_msgs::Point>>> RobotGoals;
+  path_avoidance_ path_checker;
+  PRM prmMap; 
+  TaskAlloction TA;
+  
+
+
+
+
+
+
+  
+
+
+  
+
+  
+
+
+  // ros::Publisher marker_pub;
+
+
+
+
+  
+
+  
 
 
   //visualisation variable
@@ -173,8 +186,7 @@ public:
   
   // readMap mapReader;
 
-  PRM prmMap; 
-  TaskAlloction TA;
+
   
 
   nav_msgs::OccupancyGrid latestMapData_;

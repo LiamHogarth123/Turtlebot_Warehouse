@@ -191,14 +191,74 @@ void TaskAlloction::SetGoals(){
     // itemLocations.push_back(location18 = {18, item18});
     // itemLocations.push_back(location3 = {3, item3});
 
+    // item1.x = 2;
+    // item1.y = -4;
+    // item1.z = 0.0;
+    
+    // item2.x = 2;
+    // item2.y = -1.6;
+    // item2.z = 0.0;
 
+    // item3.x = -1.82;
+    // item3.y = -5;
+    // item3.z = 0.0;
 
+    // item4.x = -1.4855;
+    // item4.y = -5;
+    // item4.z = 0.0;
+    
+    // item5.x = -3.17;
+    // item5.y = -2;
+    // item5.z = 0.0;
+
+    // item6.x = -5;
+    // item6.y = -4.84;
+    // item6.z = 0.0; 
+
+    // item7.x = -4.43;
+    // item7.y = -2;
+    // item7.z = 0.0;
+
+    // item8.x = -5.54;
+    // item8.y = -4.47;
+    // item8.z = 0.0;
+
+    // item9.x = 0;
+    // item9.y = -4.0769;
+    // item9.z = 0.0;
+
+    // item10.x = -1.2151;
+    // item10.y = 3.0938;
+    // item10.z = 0.0;
+
+    // item11.x = -2.6439;
+    // item11.y = -3.0570;
+    // item11.z = 0.0;
+
+    // itemLocations.push_back(location2 = {2, item2});
+    // itemLocations.push_back(location4 = {4, item4});
+    // itemLocations.push_back(location5 = {5, item5});
+    // itemLocations.push_back(location6 = {6, item6});
+    // itemLocations.push_back(location7 = {7, item7});
+    // itemLocations.push_back(location8 = {8, item8});
+    // itemLocations.push_back(location9 = {9, item9});
+    // itemLocations.push_back(location10 = {10, item10});
 
     randomiseGoals = true;
 }
 
 
-
+geometry_msgs::Point TaskAlloction::getGoalPos(int temp_ID){
+    int ID = temp_ID;
+    // Iterate through actualItemLocations
+    for (const auto& item : itemLocations) {
+        // Find the ID
+        if (item.first == ID) {
+            // return the goal point
+            return item.second;
+        }
+    }
+}
 
 
 
